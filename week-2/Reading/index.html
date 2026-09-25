@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Week 2 Reading</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Welcome to My Website</h1>
+
+    <p>This is my Week 2 HTML and CSS exercise.</p>
+
+    <button id="colorButton">Change Heading Color</button>
+
+    <script>
+        document
+            .getElementById("colorButton")
+            .addEventListener("click", function() {
+                document
+                    .querySelector("h1")
+                    .style
+                    .color = "green";
+
+                console.log("Button clicked!");
+            });
+    </script>
+</body>
+</html>
