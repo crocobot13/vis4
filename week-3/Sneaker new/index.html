@@ -12,45 +12,50 @@
 
 <body>
 
-    <div class="app">
+    <div class="phone">
+
+        <!-- BACKGROUND GLOW -->
+        <div class="glow glow-purple"></div>
+        <div class="glow glow-pink"></div>
+        <div class="glow glow-blue"></div>
+
 
         <!-- HEADER -->
-
         <header>
 
-            <div class="welcome">
+            <div>
+                <p class="small-text">
+                    GOOD EVENING
+                </p>
 
-                <p>Good evening,</p>
-
-                <h1>Zhang</h1>
-
+                <h1>
+                    Zhang
+                </h1>
             </div>
 
-            <div class="battery">
-
-                <p>Shoe Battery</p>
-
-                <h3>82%</h3>
-
-            </div>
+            <button class="circle-button">
+                ⚙
+            </button>
 
         </header>
 
 
         <!-- HERO -->
-
         <section class="hero">
 
-            <div class="hero-text">
+            <div class="hero-copy">
+
+                <p class="small-text">
+                    ADAPTIVE FOOTWEAR
+                </p>
 
                 <h2>
-                    Ready to
-                    <br>
+                    Ready to<br>
                     move?
                 </h2>
 
-                <p>
-                    One shoe.
+                <p class="subtitle">
+                    One shoe.<br>
                     Three ways to move.
                 </p>
 
@@ -66,41 +71,34 @@
         </section>
 
 
-        <!-- MODE SELECT -->
-
+        <!-- MODES -->
         <section class="mode-section">
 
-            <p class="section-label">
-                ACTIVITY MODE
-            </p>
+            <div class="section-header">
+
+                <p class="small-text">
+                    ACTIVITY MODE
+                </p>
+
+                <p class="connected">
+                    ● CONNECTED
+                </p>
+
+            </div>
 
 
-            <div class="mode-buttons">
+            <div class="mode-switch">
 
                 <button class="mode active">
-
-                    <span class="icon">🚶</span>
-
-                    Walk
-
+                    WALK
                 </button>
 
-
                 <button class="mode">
-
-                    <span class="icon">🏃</span>
-
-                    Run
-
+                    RUN
                 </button>
 
-
                 <button class="mode">
-
-                    <span class="icon">🏀</span>
-
-                    Basketball
-
+                    BASKETBALL
                 </button>
 
             </div>
@@ -109,14 +107,13 @@
 
 
         <!-- CURRENT FIT -->
+        <section class="glass-card current-fit">
 
-        <section class="fit-section">
-
-            <div class="section-title">
+            <div class="section-header">
 
                 <div>
 
-                    <p class="section-label">
+                    <p class="small-text">
                         CURRENT FIT
                     </p>
 
@@ -126,9 +123,9 @@
 
                 </div>
 
-                <button class="small-button">
-                    Adjust
-                </button>
+                <div class="fit-number">
+                    01
+                </div>
 
             </div>
 
@@ -138,20 +135,19 @@
 
                 <!-- ARCH SUPPORT -->
 
-                <div class="fit-card">
+                <div class="metric-card">
 
                     <p>
                         Arch Support
                     </p>
 
-                    <h2>
-                        60%
-                    </h2>
+                    <h4>
+                        60<span>%</span>
+                    </h4>
 
-                    <div class="progress">
+                    <div class="metric-line">
 
-                        <div
-                            class="progress-fill arch">
+                        <div class="metric-fill arch-fill">
                         </div>
 
                     </div>
@@ -161,67 +157,39 @@
 
                 <!-- CUSHIONING -->
 
-                <div class="fit-card featured">
+                <div class="metric-card highlight-card">
 
                     <p>
                         Cushioning
                     </p>
 
-                    <h2>
-                        45%
-                    </h2>
+                    <h4>
+                        45<span>%</span>
+                    </h4>
 
-                    <div class="progress">
+                    <div class="metric-line">
 
-                        <div
-                            class="progress-fill cushion">
-                        </div>
-
-                    </div>
-
-                    <span>
-                        Soft
-                    </span>
-
-                </div>
-
-
-                <!-- HEEL LOCK -->
-
-                <div class="fit-card">
-
-                    <p>
-                        Heel Lock
-                    </p>
-
-                    <h2>
-                        50%
-                    </h2>
-
-                    <div class="progress">
-
-                        <div
-                            class="progress-fill heel">
+                        <div class="metric-fill cushion-fill">
                         </div>
 
                     </div>
 
                 </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- CUSHIONING CONTROL -->
+        <!-- LIVE CUSHIONING CONTROL -->
+        <section class="glass-card control-card">
 
-        <section class="adjust-section">
-
-            <div class="adjust-title">
+            <div class="section-header">
 
                 <div>
 
-                    <p class="section-label">
+                    <p class="small-text">
                         LIVE ADJUSTMENT
                     </p>
 
@@ -231,155 +199,97 @@
 
                 </div>
 
+                <div class="status-pill">
+                    ACTIVE
+                </div>
 
-                <span class="status">
+            </div>
 
-                    ● Active
 
-                </span>
+            <div class="plate-visual">
+
+                <div class="plate-glow"></div>
+
+                <div class="plate-line"></div>
+
+                <div class="plate-dot"></div>
 
             </div>
 
 
             <p class="description">
 
-                Motorized carbon plate shifts
-                position to change cushioning
-                and response.
+                Motorized carbon plate shifts position
+                inside the sole to change softness,
+                stability and energy return.
 
             </p>
 
 
-            <div class="slider-area">
+            <div class="slider-labels">
 
                 <span>
-                    Soft
+                    SOFT
                 </span>
 
-
-                <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value="45"
-                >
-
+                <span>
+                    BALANCED
+                </span>
 
                 <span>
-                    Firm
+                    FIRM
                 </span>
 
             </div>
 
 
-            <div class="cushion-info">
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="45"
+                class="cushion-slider"
+            >
+
+
+            <div class="performance-grid">
+
 
                 <div>
+
+                    <p>
+                        COMFORT
+                    </p>
 
                     <strong>
-                        SOFT
+                        72
                     </strong>
-
-                    <p>
-                        Daily comfort
-                    </p>
 
                 </div>
 
 
-                <div class="center-info">
+                <div>
+
+                    <p>
+                        RESPONSE
+                    </p>
 
                     <strong>
-                        BALANCED
+                        45
                     </strong>
-
-                    <p>
-                        Everyday
-                    </p>
 
                 </div>
 
 
                 <div>
+
+                    <p>
+                        SUPPORT
+                    </p>
 
                     <strong>
-                        FIRM
+                        60
                     </strong>
-
-                    <p>
-                        Quick response
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ACTIVITY DATA -->
-
-        <section class="activity">
-
-            <div class="section-title">
-
-                <div>
-
-                    <p class="section-label">
-                        TODAY
-                    </p>
-
-                    <h3>
-                        Activity
-                    </h3>
-
-                </div>
-
-                <span>
-                    View Data →
-                </span>
-
-            </div>
-
-
-            <div class="activity-grid">
-
-
-                <div>
-
-                    <h2>
-                        4,821
-                    </h2>
-
-                    <p>
-                        steps
-                    </p>
-
-                </div>
-
-
-                <div>
-
-                    <h2>
-                        3.2
-                    </h2>
-
-                    <p>
-                        miles
-                    </p>
-
-                </div>
-
-
-                <div>
-
-                    <h2>
-                        46
-                    </h2>
-
-                    <p>
-                        minutes
-                    </p>
 
                 </div>
 
@@ -389,48 +299,110 @@
         </section>
 
 
-        <!-- CHARGING -->
+        <!-- ACTIVITY -->
+        <section class="activity-grid">
 
-        <section class="charging">
+
+            <div class="glass-card mini-card">
+
+                <p class="small-text">
+                    STEPS
+                </p>
+
+                <h3 class="data-number">
+                    4821
+                </h3>
+
+                <div class="mini-chart">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <div class="glass-card mini-card pink-card">
+
+                <p class="small-text">
+                    DISTANCE
+                </p>
+
+                <h3 class="data-number">
+                    3.2
+                </h3>
+
+                <p class="unit">
+                    miles
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- BATTERY -->
+        <section class="glass-card battery-card">
 
             <div>
 
-                <p class="section-label">
-                    CHARGING
+                <p class="small-text">
+                    SHOE BATTERY
                 </p>
 
                 <h3>
-                    Shoe Battery
+                    Charging Status
                 </h3>
 
             </div>
 
 
-            <div class="charging-grid">
+            <div class="battery-grid">
 
 
-                <div class="shoe-charge">
+                <div class="battery-side">
 
-                    <span>
+                    <p>
                         LEFT
-                    </span>
+                    </p>
 
                     <strong>
                         82%
                     </strong>
 
+                    <div class="battery-bar">
+
+                        <div class="battery-fill left-battery">
+                        </div>
+
+                    </div>
+
                 </div>
 
 
-                <div class="shoe-charge">
+                <div class="battery-side">
 
-                    <span>
+                    <p>
                         RIGHT
-                    </span>
+                    </p>
 
                     <strong>
                         78%
                     </strong>
+
+                    <div class="battery-bar">
+
+                        <div class="battery-fill right-battery">
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -441,12 +413,39 @@
 
 
         <!-- STOP -->
-
         <button class="stop-button">
 
-            STOP ADAPTATION
+            <span>
+                STOP ADAPTATION
+            </span>
+
+            <span>
+                →
+            </span>
 
         </button>
+
+
+        <!-- NAV -->
+        <nav>
+
+            <button class="nav-active">
+                HOME
+            </button>
+
+            <button>
+                DATA
+            </button>
+
+            <button>
+                FIT
+            </button>
+
+            <button>
+                CHARGE
+            </button>
+
+        </nav>
 
 
     </div>
