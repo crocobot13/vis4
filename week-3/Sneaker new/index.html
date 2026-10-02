@@ -1,346 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zhang Adaptive Shoe</title>
 
-    <!-- Montserrat -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet"
-          href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-
 <div class="phone">
 
-    <!-- Background Glow -->
-
     <div class="glow glow-pink"></div>
-
     <div class="glow glow-blue"></div>
 
-
     <!-- HEADER -->
-
     <header>
-
         <div>
-
-            <p class="small-text">
-                GOOD EVENING
-            </p>
-
-            <h1>
-                Zhang
-            </h1>
-
+            <p class="small-text">GOOD EVENING</p>
+            <h1>Zhang</h1>
         </div>
 
-
-        <button class="circle-button">
-            •••
-        </button>
-
+        <button class="circle-button">•••</button>
     </header>
 
-
-
     <!-- HERO -->
-
     <section class="hero">
-
         <div class="hero-copy">
-
-            <p class="small-text">
-                ADAPTIVE FOOTWEAR
-            </p>
-
-            <h2>
-                Ready to<br>
-                move?
-            </h2>
-
+            <p class="small-text">ADAPTIVE FOOTWEAR</p>
+            <h2>Ready to<br>move?</h2>
             <p class="subtitle">
                 One shoe.<br>
                 Three ways to move.
             </p>
-
         </div>
 
-
         <img
-            src="./images/shoe.png"
+            src="shoe.png"
             alt="Adaptive Shoe"
             class="shoe-image"
         >
-
     </section>
-
-
 
     <!-- ACTIVITY MODE -->
-
     <section class="mode-section">
-
         <div class="section-header">
-
-            <p class="small-text">
-                ACTIVITY MODE
-            </p>
-
-            <p class="connected">
-                ● CONNECTED
-            </p>
-
+            <p class="small-text">ACTIVITY MODE</p>
+            <p class="connected">● CONNECTED</p>
         </div>
-
 
         <div class="mode-switch">
-
-            <button
-                class="mode active"
-                data-mode="walk">
-
-                WALK
-
-            </button>
-
-
-            <button
-                class="mode"
-                data-mode="run">
-
-                RUN
-
-            </button>
-
-
-            <button
-                class="mode"
-                data-mode="basketball">
-
-                BASKETBALL
-
-            </button>
-
+            <button class="mode active" data-mode="walk">WALK</button>
+            <button class="mode" data-mode="run">RUN</button>
+            <button class="mode" data-mode="basketball">BASKETBALL</button>
         </div>
-
     </section>
-
-
 
     <!-- CURRENT SETTING -->
-
     <section class="glass-card current-fit">
-
         <div class="section-header">
-
             <div>
-
-                <p class="small-text">
-                    CURRENT SETTING
-                </p>
-
-                <h3 id="fitTitle">
-                    Everyday Comfort
-                </h3>
-
+                <p class="small-text">CURRENT SETTING</p>
+                <h3 id="fitTitle">Everyday Comfort</h3>
             </div>
 
-
-            <div class="mode-number"
-                 id="modeNumber">
-
-                01
-
-            </div>
-
+            <div class="mode-number" id="modeNumber">01</div>
         </div>
 
-
-        <p class="fit-description"
-           id="fitDescription">
-
+        <p class="fit-description" id="fitDescription">
             Softer cushioning for comfortable everyday movement.
-
         </p>
-
-
 
         <div class="fit-grid">
-
-
-            <!-- ARCH SUPPORT -->
-
             <div class="metric-card">
-
-                <p>
-                    Arch Support
-                </p>
-
+                <p>Arch Support</p>
                 <div class="metric-value">
-
-                    <h4 id="archValue">
-                        60
-                    </h4>
-
-                    <span>
-                        %
-                    </span>
-
+                    <h4 id="archValue">60</h4>
+                    <span>%</span>
                 </div>
-
-
                 <div class="metric-line">
-
-                    <div
-                        class="metric-fill"
-                        id="archFill">
-                    </div>
-
+                    <div class="metric-fill" id="archFill"></div>
                 </div>
-
             </div>
-
-
-
-            <!-- CUSHIONING -->
 
             <div class="metric-card pink-card">
-
-                <p>
-                    Cushioning
-                </p>
-
-
+                <p>Cushioning</p>
                 <div class="metric-value">
-
-                    <h4 id="cushionValue">
-                        45
-                    </h4>
-
-                    <span>
-                        %
-                    </span>
-
+                    <h4 id="cushionValue">45</h4>
+                    <span>%</span>
                 </div>
-
-
                 <div class="metric-line">
-
-                    <div
-                        class="metric-fill cushion-fill"
-                        id="cushionFill">
-                    </div>
-
+                    <div class="metric-fill cushion-fill" id="cushionFill"></div>
                 </div>
-
             </div>
-
-
         </div>
-
     </section>
 
-
-
-    <!-- CUSHIONING CONTROL -->
-
+    <!-- LIVE ADJUSTMENT -->
     <section class="glass-card control-card">
-
         <div class="section-header">
-
             <div>
-
-                <p class="small-text">
-                    LIVE ADJUSTMENT
-                </p>
-
-                <h3>
-                    Cushioning
-                </h3>
-
+                <p class="small-text">LIVE ADJUSTMENT</p>
+                <h3>Cushioning</h3>
             </div>
-
 
             <div class="live-value">
-
-                <span id="liveCushionValue">
-                    45
-                </span>
-
-                <small>
-                    %
-                </small>
-
+                <span id="liveCushionValue">45</span>
+                <small>%</small>
             </div>
-
         </div>
-
-
-
-        <!-- simple visual -->
 
         <div class="plate-visual">
-
             <div class="plate-track"></div>
-
             <div class="plate-glow"></div>
-
-            <div
-                class="plate-position"
-                id="platePosition">
-            </div>
-
+            <div class="plate-position" id="platePosition"></div>
         </div>
-
-
 
         <p class="description">
-
-            The motorized carbon plate shifts inside the sole
-            to change softness and response.
-
+            The motorized carbon plate shifts inside the sole to change softness and response.
         </p>
 
-
-
         <div class="slider-labels">
-
-            <span>
-                SOFT
-            </span>
-
-            <span>
-                BALANCED
-            </span>
-
-            <span>
-                FIRM
-            </span>
-
+            <span>SOFT</span>
+            <span>BALANCED</span>
+            <span>FIRM</span>
         </div>
-
-
 
         <input
             id="cushionSlider"
@@ -351,195 +143,163 @@
             class="cushion-slider"
         >
 
-
-
         <div class="response-row">
-
             <div>
-
-                <p>
-                    COMFORT
-                </p>
-
-                <strong id="comfortValue">
-                    72
-                </strong>
-
+                <p>COMFORT</p>
+                <strong id="comfortValue">72</strong>
             </div>
 
-
             <div>
-
-                <p>
-                    RESPONSE
-                </p>
-
-                <strong id="responseValue">
-                    45
-                </strong>
-
+                <p>RESPONSE</p>
+                <strong id="responseValue">45</strong>
             </div>
-
         </div>
-
     </section>
-
-
 
     <!-- ACTIVITY -->
-
     <section class="activity-section">
-
         <div class="section-header">
-
             <div>
-
-                <p class="small-text">
-                    TODAY
-                </p>
-
-                <h3>
-                    Activity
-                </h3>
-
+                <p class="small-text">TODAY</p>
+                <h3>Activity</h3>
             </div>
 
-
-            <span class="activity-type"
-                  id="activityLabel">
-
-                WALK
-
-            </span>
-
+            <span class="activity-type" id="activityLabel">WALK</span>
         </div>
-
 
         <div class="activity-content">
-
             <div>
-
-                <h4>
-                    4,821
-                </h4>
-
-                <p>
-                    steps
-                </p>
-
+                <h4>4,821</h4>
+                <p>steps</p>
             </div>
 
-
             <div>
-
-                <h4>
-                    3.2
-                </h4>
-
-                <p>
-                    miles
-                </p>
-
+                <h4>3.2</h4>
+                <p>miles</p>
             </div>
 
-
             <div>
-
-                <h4>
-                    46
-                </h4>
-
-                <p>
-                    min
-                </p>
-
+                <h4>46</h4>
+                <p>min</p>
             </div>
-
         </div>
-
     </section>
-
-
 
     <!-- BATTERY -->
-
-    <section class="battery-section">
-
+    <section class="battery-section" id="batteryCard">
         <div class="battery-top">
-
             <div>
-
-                <p class="small-text">
-                    SHOE BATTERY
-                </p>
-
-                <h3>
-                    82%
-                </h3>
-
+                <p class="small-text">SHOE BATTERY</p>
+                <h3 id="batteryMainValue">82%</h3>
             </div>
 
-
-            <div class="battery-status">
-
-                Charging pad connected
-
-            </div>
-
+            <button class="battery-detail-btn" id="openChargingBtn">
+                View charging →
+            </button>
         </div>
-
 
         <div class="battery-progress">
-
-            <div class="battery-fill"></div>
-
+            <div class="battery-fill" id="batteryFillBar"></div>
         </div>
-
 
         <div class="battery-bottom">
-
-            <span>
-                LEFT 82%
-            </span>
-
-            <span>
-                RIGHT 78%
-            </span>
-
+            <span id="leftBatteryLabel">LEFT 82%</span>
+            <span id="rightBatteryLabel">RIGHT 78%</span>
         </div>
-
     </section>
 
-
-
-    <!-- STOP -->
-
     <button class="stop-button">
-
-        <span>
-            STOP ADAPTATION
-        </span>
-
-        <span>
-            ×
-        </span>
-
+        <span>STOP ADAPTATION</span>
+        <span>×</span>
     </button>
-
-
-
-    <!-- Decorative iPhone home indicator -->
 
     <div class="home-indicator"></div>
 
 
+    <!-- CHARGING DETAIL OVERLAY -->
+    <section class="charging-modal" id="chargingModal">
+
+        <div class="charging-panel">
+
+            <div class="charging-header">
+                <button class="back-btn" id="closeChargingBtn">←</button>
+
+                <div>
+                    <p class="small-text">CHARGING DETAILS</p>
+                    <h3>Live Charging</h3>
+                </div>
+
+                <div class="charging-status-chip" id="chargingStatusChip">
+                    CHARGING
+                </div>
+            </div>
+
+
+            <!-- circular charging area -->
+            <div class="charge-visual">
+
+                <div class="pulse-ring pulse-ring-1"></div>
+                <div class="pulse-ring pulse-ring-2"></div>
+                <div class="pulse-ring pulse-ring-3"></div>
+
+                <div class="charge-circle">
+                    <div class="charge-circle-inner">
+                        <span id="chargePercent">82</span>
+                        <small>%</small>
+                    </div>
+                </div>
+
+                <div class="charge-shoe-wrap">
+                    <div class="charging-pad"></div>
+
+                    <img
+                        src="./images/shoe.png"
+                        alt="Shoe charging"
+                        class="charge-shoe"
+                    >
+                </div>
+            </div>
+
+            <div class="charge-stats">
+                <div class="charge-stat-card">
+                    <p>Estimated Time</p>
+                    <strong id="remainingTime">18 min</strong>
+                </div>
+
+                <div class="charge-stat-card">
+                    <p>Estimated Range</p>
+                    <strong id="rangeValue">12.4 mi</strong>
+                </div>
+            </div>
+
+            <div class="charge-two-col">
+                <div class="charge-mini-card">
+                    <p>Left Shoe</p>
+                    <strong id="leftChargeValue">82%</strong>
+                    <div class="mini-bar">
+                        <div class="mini-fill" id="leftMiniFill"></div>
+                    </div>
+                </div>
+
+                <div class="charge-mini-card">
+                    <p>Right Shoe</p>
+                    <strong id="rightChargeValue">78%</strong>
+                    <div class="mini-bar">
+                        <div class="mini-fill" id="rightMiniFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="charge-toggle-btn" id="toggleChargingBtn">
+                Remove from charging pad
+            </button>
+
+        </div>
+
+    </section>
+
 </div>
 
-
-
 <script src="script.js"></script>
-
-
 </body>
-
 </html>
