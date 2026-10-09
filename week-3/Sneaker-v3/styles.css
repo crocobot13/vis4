@@ -4,9 +4,8 @@
 
 :root {
   font-family: Arial, Helvetica, sans-serif;
-  color: #181818;
-  background: #e8e8e6;
-  font-synthesis: none;
+  color: #202020;
+  background: #e8e8e5;
 }
 
 body {
@@ -14,7 +13,6 @@ body {
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 24px;
 }
 
 button,
@@ -29,223 +27,283 @@ button {
 
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid #555;
+  outline: 2px solid #777;
   outline-offset: 5px;
 }
 
-/* 桌面上的手机尺寸 */
-.phone {
-  width: 390px;
-  min-height: 844px;
-  background: #f7f7f5;
-  border-radius: 36px;
-  padding: 36px 28px 24px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 16px 50px #00000012;
+[hidden] {
+  display: none !important;
 }
 
-header {
+/* Phone-sized app */
+.app {
+  width: 390px;
+  height: 844px;
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #f6f6f3;
+  border-radius: 36px;
+}
+
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88px;
+  padding: 32px 28px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 5;
 }
 
 .brand {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
 }
 
-/* 小电池 */
 .battery-button {
+  border: none;
+  background: transparent;
   display: flex;
-  gap: 7px;
   align-items: center;
-  border: 0;
-  background: none;
-  font-size: 11px;
+  gap: 7px;
   padding: 6px;
+  font-size: 11px;
+  color: #202020;
 }
 
-.battery {
-  width: 23px;
+.battery-icon {
+  width: 24px;
   height: 12px;
-  border: 1px solid #333;
+  border: 1px solid #202020;
   border-radius: 3px;
   padding: 2px;
   position: relative;
 }
 
-.battery::after {
+.battery-icon::after {
   content: "";
+  width: 2px;
+  height: 4px;
+  background: #202020;
   position: absolute;
   right: -3px;
   top: 3px;
-  width: 2px;
-  height: 4px;
-  background: #333;
 }
 
-.battery span {
+.battery-fill {
   display: block;
-  width: 82%;
   height: 100%;
-  background: #333;
+  width: 82%;
   border-radius: 1px;
+  background: #202020;
 }
 
-.charging .battery span {
-  background: #27884c;
+.is-charging .battery-fill {
+  background: #269c51;
 }
 
-#bolt {
-  font-size: 19px;
-  color: #27884c;
+#chargingBolt {
+  font-size: 20px;
+  color: #269c51;
 }
 
-/* 标题 */
-.intro {
-  margin-top: 39px;
+.screen {
+  position: absolute;
+  inset: 88px 0 30px;
+  padding: 0 28px 28px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.screen::-webkit-scrollbar {
+  display: none;
+}
+
+.screen.entering {
+  animation: screen-enter 0.28s ease;
+}
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Home */
+.home-title {
+  margin-top: 42px;
 }
 
 .eyebrow {
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  color: #81817d;
-  margin: 0 0 13px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888880;
+  margin: 0 0 20px;
 }
 
 h1 {
-  font-size: 38px;
-  line-height: 1.08;
-  font-weight: 500;
-  letter-spacing: -1.6px;
+  font-size: 54px;
+  font-weight: 400;
+  letter-spacing: -3px;
+  line-height: 1.03;
   margin: 0;
 }
 
-/* 左右鞋选择 */
-.selection {
+.shoe-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 28px;
+  margin-top: 58px;
 }
 
-.shoe {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  height: 158px;
-  border: 1px solid #ddd;
-  border-radius: 18px;
-
+.shoe-card {
+  height: 310px;
+  border: 1px solid #d7d7d0;
+  border-radius: 90px 90px 28px 28px;
   background: transparent;
-  color: #999;
+  color: #202020;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 35px 12px 20px;
 
-  /* 保留纵向上滑手势给鞋子选择 */
+  /* Upward gestures select a shoe */
   touch-action: pan-x;
 
-  transition:
-    background 0.2s,
-    color 0.2s,
-    transform 0.15s;
+  transition: background 0.15s, transform 0.15s;
 }
 
-.shoe.selected {
-  background: #202020;
-  color: #fafafa;
-  border-color: #202020;
+.shoe-card:active {
+  background: #eaeae5;
 }
 
-.arrow {
-  position: absolute;
-  top: 10px;
-  right: 13px;
-  font-size: 16px;
-  color: #999;
-}
-
-.shoe strong {
-  font-size: 60px;
-  line-height: 1;
+.shoe-letter {
+  font-size: 94px;
   font-weight: 400;
-  letter-spacing: -3px;
+  line-height: 1;
+  letter-spacing: -5px;
 }
 
-.shoe-name {
+.shoe-caption {
   font-size: 9px;
-  letter-spacing: 1.5px;
-  margin-top: 12px;
+  letter-spacing: 1.4px;
+  margin-top: 15px;
 }
 
-.shoe-summary {
-  font-size: 9px;
-  margin-top: 8px;
-  opacity: 0.65;
+.shoe-values {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+  font-size: 10px;
+  color: #888880;
 }
 
-.hint {
+.shoe-values b {
+  font-weight: 400;
+  color: #202020;
+}
+
+.swipe-arrow {
+  margin-top: auto;
+  font-size: 26px;
+}
+
+.swipe-hint {
+  font-size: 11px;
+  color: #888880;
   text-align: center;
-  font-size: 10px;
-  color: #8c8c86;
-  margin: 13px 0 26px;
+  margin-top: 24px;
 }
 
-/* 调节区 */
-.section-heading,
-.mode-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-h2 {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-}
-
-.section-heading #status {
-  font-size: 10px;
-  color: #81817d;
-}
-
-.slider-label {
+/* Control screen */
+.navigation {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 12px;
   font-size: 13px;
-  margin-top: 25px;
+}
+
+.back-button,
+.switch-button {
+  border: none;
+  background: transparent;
+  color: #202020;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
+
+.back-button {
+  text-align: left;
+  font-size: 26px;
+}
+
+.switch-button {
+  text-align: right;
+  font-size: 13px;
+}
+
+.support-display {
+  text-align: center;
+  margin: 28px 0 40px;
+}
+
+.selected-letter {
+  display: block;
+  font-size: 130px;
+  line-height: 1;
+  letter-spacing: -7px;
+}
+
+.current-mode {
+  color: #888880;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin: 15px 0 0;
+}
+
+.control-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
 }
 
 output {
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
-/* 滑条：深色部分表示当前值 */
 input[type="range"] {
-  display: block;
   appearance: none;
   -webkit-appearance: none;
-
+  display: block;
   width: 100%;
-  height: 4px;
-  border-radius: 3px;
+  height: 5px;
+  margin: 28px 0 17px;
+  border-radius: 4px;
 
   background: linear-gradient(
     to right,
-    #222 0%,
-    #222 var(--fill, 50%),
-    #deded9 var(--fill, 50%),
-    #deded9 100%
+    #202020 0%,
+    #202020 var(--fill, 50%),
+    #dcdcd5 var(--fill, 50%),
+    #dcdcd5 100%
   );
 
-  margin: 24px 0 13px;
   cursor: pointer;
   touch-action: pan-y;
 }
@@ -253,175 +311,167 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
-  background: #f7f7f5;
-  border: 2px solid #222;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
+  background: #f6f6f3;
+  border: 2px solid #202020;
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  background: #f7f7f5;
-  border: 2px solid #222;
+  width: 21px;
+  height: 21px;
   border-radius: 50%;
+  background: #f6f6f3;
+  border: 2px solid #202020;
 }
 
-.endpoints {
+.range-labels {
   display: flex;
   justify-content: space-between;
-  color: #91918b;
   font-size: 10px;
+  color: #888880;
 }
 
-.second {
-  margin-top: 27px;
+.firmness-heading {
+  margin-top: 38px;
 }
 
-.detail {
+.control-description {
+  color: #888880;
   font-size: 10px;
-  color: #91918b;
-  margin: 7px 0 0;
+  margin: 9px 0 0;
 }
 
-/* Mode */
 .mode-heading {
-  margin-top: 29px;
+  font-size: 15px;
+  margin-top: 38px;
 }
 
-.mode-heading span {
-  font-size: 10px;
-  color: #91918b;
-}
-
-.modes {
+.mode-options {
   display: flex;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 9px;
+  margin-top: 18px;
 }
 
-.modes button {
+.mode-options button {
   flex: 1;
-  border: 1px solid #d9d9d3;
-  border-radius: 30px;
+  height: 45px;
+  border: 1px solid #d7d7d0;
+  border-radius: 25px;
   background: transparent;
+  color: #777770;
   font-size: 12px;
-  padding: 12px 0;
-  color: #777;
 }
 
-.modes button[aria-pressed="true"] {
+.mode-options button[aria-pressed="true"] {
   background: #202020;
   border-color: #202020;
-  color: white;
-}
-
-/* 底部 */
-footer {
-  display: flex;
-  align-items: center;
-  font-size: 9px;
-  color: #999;
-  margin-top: 32px;
-  gap: 5px;
-}
-
-.dot {
-  width: 4px;
-  height: 4px;
-  background: #999;
-  border-radius: 50%;
-}
-
-.footer-right {
-  margin-left: auto;
-}
-
-.home-indicator {
-  width: 110px;
-  height: 4px;
-  border-radius: 3px;
-  background: #252525;
-  margin: 28px auto 0;
-}
-
-/* 短暂出现的充电提示 */
-.charging-popup {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 22px;
-
-  border-radius: 24px;
-  background: #202020;
   color: #fff;
-  text-align: center;
-  padding: 24px;
-
-  box-shadow: 0 12px 40px #0003;
-  animation: arrive 0.25s ease;
 }
 
-.charging-popup[hidden] {
-  display: none;
+.feedback {
+  font-size: 10px;
+  text-align: center;
+  color: #888880;
+  margin-top: 28px;
+}
+
+/* Charging */
+.charging-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #f6f6f3f2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: screen-enter 0.25s ease;
+}
+
+.charging-card {
+  text-align: center;
 }
 
 .large-battery {
-  display: block;
-  color: #58c57d;
-  font-size: 42px;
+  width: 126px;
+  height: 62px;
+  border: 3px solid #269c51;
+  border-radius: 13px;
+  padding: 5px;
+  position: relative;
 }
 
-.charging-popup h2 {
-  font-size: 21px;
-  margin-top: 7px;
+.large-battery::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 18px;
+  width: 6px;
+  height: 20px;
+  border-radius: 2px;
+  background: #269c51;
 }
 
-.charging-popup p {
-  font-size: 11px;
-  color: #aaa;
-  margin-bottom: 0;
+.large-battery span {
+  display: grid;
+  place-items: center;
+  width: 82%;
+  height: 100%;
+  background: #269c51;
+  border-radius: 6px;
+  color: white;
+  font-size: 36px;
 }
 
-@keyframes arrive {
-  from {
-    transform: translateY(-120%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
+.charging-card h2 {
+  font-weight: 400;
+  font-size: 25px;
+  margin-top: 28px;
 }
 
-/* 手机上自动占满屏幕 */
+.charging-card p {
+  font-size: 13px;
+  color: #888880;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 4px;
+  border-radius: 4px;
+  background: #202020;
+  z-index: 12;
+}
+
 @media (max-width: 450px) {
   body {
-    padding: 0;
-    background: #f7f7f5;
     display: block;
+    background: #f6f6f3;
   }
 
-  .phone {
+  .app {
     width: 100%;
-    min-height: 100dvh;
+    height: 100dvh;
     border-radius: 0;
-    box-shadow: none;
+  }
 
-    padding-top: max(
-      28px,
-      env(safe-area-inset-top)
-    );
+  .topbar {
+    padding-top: max(24px, env(safe-area-inset-top));
+  }
 
-    padding-bottom: max(
-      20px,
-      env(safe-area-inset-bottom)
-    );
+  .home-indicator {
+    bottom: max(10px, env(safe-area-inset-bottom));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
