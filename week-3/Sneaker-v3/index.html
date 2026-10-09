@@ -2,162 +2,255 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
-  <meta name="theme-color" content="#f6f6f3">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <title>Adaptive</title>
+  <meta name="theme-color" content="#eeeeea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <title>Adaptive Shoe — App Prototype</title>
+
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 
 <body>
-  <main class="app">
+  <main class="phone">
 
-    <header class="topbar">
-      <span class="brand">ADAPTIVE</span>
+    <!-- Phone status bar -->
+    <div class="status-bar">
+      <span id="clock">9:41</span>
+      <span class="camera" aria-hidden="true"></span>
 
       <button
         id="batteryButton"
         class="battery-button"
-        aria-label="Simulate charger connection"
+        aria-label="Simulate charging"
       >
+        <span id="chargingBolt" hidden>ϟ</span>
         <span>82%</span>
         <span class="battery-icon">
-          <span class="battery-fill"></span>
+          <span></span>
         </span>
-        <span id="chargingBolt" hidden>ϟ</span>
       </button>
+    </div>
+
+    <!-- App header -->
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">ADAPTIVE</p>
+        <h1>Shoe control</h1>
+      </div>
+
+      <span class="prototype-label">PROTOTYPE</span>
     </header>
 
-    <!-- Home screen -->
-    <section id="homeScreen" class="screen">
-      <div class="home-title">
-        <p class="eyebrow">SHOE CONTROL</p>
-        <h1>Your next<br>move.</h1>
-      </div>
-
-      <div class="shoe-selector">
-        <button class="shoe-card" data-side="L">
-          <span class="shoe-letter">L</span>
-          <span class="shoe-caption">LEFT SHOE</span>
-
-          <span class="shoe-values">
-            <span>Arch <b id="leftArch">50</b></span>
-            <span>Firmness <b id="leftFirmness">50</b></span>
-          </span>
-
-          <span class="swipe-arrow">↑</span>
-        </button>
-
-        <button class="shoe-card" data-side="R">
-          <span class="shoe-letter">R</span>
-          <span class="shoe-caption">RIGHT SHOE</span>
-
-          <span class="shoe-values">
-            <span>Arch <b id="rightArch">50</b></span>
-            <span>Firmness <b id="rightFirmness">50</b></span>
-          </span>
-
-          <span class="swipe-arrow">↑</span>
-        </button>
-      </div>
-
-      <p class="swipe-hint">Swipe up to adjust</p>
-    </section>
-
-    <!-- Shoe control screen -->
-    <section id="controlScreen" class="screen" hidden>
-      <div class="navigation">
-        <button id="backButton" class="back-button" aria-label="Back">
-          ←
-        </button>
-
-        <span id="shoeTitle">Left shoe</span>
-
-        <button
-          id="switchButton"
-          class="switch-button"
-          aria-label="Switch to right shoe"
-        >
-          R ⇄
-        </button>
-      </div>
-
-      <div class="support-display">
-        <span id="selectedLetter" class="selected-letter">L</span>
-        <p id="currentMode" class="current-mode">CUSTOM</p>
-      </div>
-
-      <div class="adjustments">
-        <div class="control-heading">
-          <label for="archSlider">Arch support</label>
-          <output id="archOutput" for="archSlider">50%</output>
-        </div>
-
-        <input
-          id="archSlider"
-          type="range"
-          min="0"
-          max="100"
-          value="50"
-        >
-
-        <div class="range-labels">
-          <span>Low</span>
-          <span>High</span>
-        </div>
-
-        <div class="control-heading firmness-heading">
-          <label for="firmnessSlider">Cushioning</label>
-          <output id="firmnessOutput" for="firmnessSlider">50%</output>
-        </div>
-
-        <p class="control-description">Carbon plate adjustment</p>
-
-        <input
-          id="firmnessSlider"
-          type="range"
-          min="0"
-          max="100"
-          value="50"
-        >
-
-        <div class="range-labels">
-          <span>Soft</span>
-          <span>Firm</span>
-        </div>
-
-        <div class="mode-heading">
-          <span>Mode</span>
-        </div>
-
-        <div class="mode-options" role="group" aria-label="Mode">
-          <button data-mode="Walk" aria-pressed="false">Walk</button>
-          <button data-mode="Run" aria-pressed="false">Run</button>
-          <button data-mode="Court" aria-pressed="false">Court</button>
-        </div>
-      </div>
-
-      <p class="feedback" id="feedback" role="status">
-        Adjust your support
-      </p>
-    </section>
-
-    <!-- Brief charging overlay -->
-    <div id="chargingOverlay" class="charging-overlay" hidden>
-      <div class="charging-card" role="status">
-        <div class="large-battery">
-          <span>ϟ</span>
-        </div>
-        <h2>82% Charged</h2>
-        <p>Charging</p>
-      </div>
+    <!-- Gesture instructions -->
+    <div class="gesture-guide">
+      <span><b>↕</b> Arch height</span>
+      <span><b>↔</b> Cushion firmness</span>
     </div>
+
+    <!-- Independent left and right gesture zones -->
+    <section class="shoe-grid" aria-label="Shoe controls">
+
+      <article
+        class="shoe-zone selected"
+        data-side="L"
+        tabindex="0"
+        aria-label="Left shoe. Swipe vertically to adjust arch, horizontally to adjust cushioning."
+      >
+        <div class="zone-header">
+          <span class="side-letter">L</span>
+          <span class="side-name">LEFT SHOE</span>
+          <span class="selected-dot" aria-hidden="true"></span>
+        </div>
+
+        <div class="arch-readout">
+          <span class="metric-label">ARCH HEIGHT</span>
+          <div class="large-value">
+            <output id="archL">50</output><span>%</span>
+          </div>
+        </div>
+
+        <div class="arch-diagram" aria-hidden="true">
+          <div class="height-scale">
+            <span>High</span>
+            <span>Low</span>
+          </div>
+
+          <div class="height-track">
+            <div class="height-fill" id="heightFillL"></div>
+            <span class="height-marker" id="heightMarkerL"></span>
+          </div>
+
+          <div class="foot-outline">
+            <span class="heel-pad"></span>
+            <span class="arch-pad" id="archPadL"></span>
+            <span class="toe-pad"></span>
+          </div>
+
+          <span class="vertical-arrow">↕</span>
+        </div>
+
+        <div class="step-buttons" aria-label="Left arch adjustment">
+          <button data-side="L" data-metric="arch" data-step="-5"
+            aria-label="Decrease left arch">−</button>
+          <span>Arch</span>
+          <button data-side="L" data-metric="arch" data-step="5"
+            aria-label="Increase left arch">+</button>
+        </div>
+
+        <div class="cushion-section">
+          <div class="cushion-heading">
+            <span class="metric-label">CUSHIONING</span>
+            <output id="firmnessL">50%</output>
+          </div>
+
+          <div class="firmness-track" aria-hidden="true">
+            <div class="firmness-fill" id="firmnessFillL"></div>
+            <span class="firmness-marker" id="firmnessMarkerL"></span>
+          </div>
+
+          <div class="range-labels">
+            <span>Soft</span>
+            <span>Firm</span>
+          </div>
+
+          <div class="step-buttons" aria-label="Left cushioning adjustment">
+            <button data-side="L" data-metric="firmness" data-step="-5"
+              aria-label="Soften left cushioning">−</button>
+            <span>↔</span>
+            <button data-side="L" data-metric="firmness" data-step="5"
+              aria-label="Firm left cushioning">+</button>
+          </div>
+        </div>
+
+        <p class="zone-mode" id="modeL">Custom</p>
+      </article>
+
+      <article
+        class="shoe-zone"
+        data-side="R"
+        tabindex="0"
+        aria-label="Right shoe. Swipe vertically to adjust arch, horizontally to adjust cushioning."
+      >
+        <div class="zone-header">
+          <span class="side-letter">R</span>
+          <span class="side-name">RIGHT SHOE</span>
+          <span class="selected-dot" aria-hidden="true"></span>
+        </div>
+
+        <div class="arch-readout">
+          <span class="metric-label">ARCH HEIGHT</span>
+          <div class="large-value">
+            <output id="archR">50</output><span>%</span>
+          </div>
+        </div>
+
+        <div class="arch-diagram" aria-hidden="true">
+          <div class="height-scale">
+            <span>High</span>
+            <span>Low</span>
+          </div>
+
+          <div class="height-track">
+            <div class="height-fill" id="heightFillR"></div>
+            <span class="height-marker" id="heightMarkerR"></span>
+          </div>
+
+          <div class="foot-outline">
+            <span class="heel-pad"></span>
+            <span class="arch-pad" id="archPadR"></span>
+            <span class="toe-pad"></span>
+          </div>
+
+          <span class="vertical-arrow">↕</span>
+        </div>
+
+        <div class="step-buttons" aria-label="Right arch adjustment">
+          <button data-side="R" data-metric="arch" data-step="-5"
+            aria-label="Decrease right arch">−</button>
+          <span>Arch</span>
+          <button data-side="R" data-metric="arch" data-step="5"
+            aria-label="Increase right arch">+</button>
+        </div>
+
+        <div class="cushion-section">
+          <div class="cushion-heading">
+            <span class="metric-label">CUSHIONING</span>
+            <output id="firmnessR">50%</output>
+          </div>
+
+          <div class="firmness-track" aria-hidden="true">
+            <div class="firmness-fill" id="firmnessFillR"></div>
+            <span class="firmness-marker" id="firmnessMarkerR"></span>
+          </div>
+
+          <div class="range-labels">
+            <span>Soft</span>
+            <span>Firm</span>
+          </div>
+
+          <div class="step-buttons" aria-label="Right cushioning adjustment">
+            <button data-side="R" data-metric="firmness" data-step="-5"
+              aria-label="Soften right cushioning">−</button>
+            <span>↔</span>
+            <button data-side="R" data-metric="firmness" data-step="5"
+              aria-label="Firm right cushioning">+</button>
+          </div>
+        </div>
+
+        <p class="zone-mode" id="modeR">Custom</p>
+      </article>
+
+    </section>
+
+    <!-- Live gesture feedback -->
+    <div class="feedback-bar" role="status" aria-live="polite">
+      <span class="feedback-dot"></span>
+      <span id="feedback">Left shoe selected</span>
+    </div>
+
+    <!-- Activity presets -->
+    <section class="mode-section">
+      <div class="section-heading">
+        <h2>Mode</h2>
+        <span id="modeTarget">LEFT SHOE</span>
+      </div>
+
+      <div class="mode-buttons" role="group" aria-label="Activity mode">
+        <button data-mode="Walk" aria-pressed="false">
+          <span class="mode-icon" aria-hidden="true">○</span>
+          Walk
+        </button>
+
+        <button data-mode="Run" aria-pressed="false">
+          <span class="mode-icon" aria-hidden="true">▷</span>
+          Run
+        </button>
+
+        <button data-mode="Court" aria-pressed="false">
+          <span class="mode-icon" aria-hidden="true">□</span>
+          Court
+        </button>
+      </div>
+    </section>
+
+    <div class="bottom-note">
+      <span>Carbon plate control</span>
+      <button id="resetButton">Reset</button>
+    </div>
+
+    <!-- Charging popup -->
+    <aside id="chargingPopup" class="charging-popup" role="status" hidden>
+      <div class="large-battery"><span>ϟ</span></div>
+      <h2>82% Charged</h2>
+      <p>Charging</p>
+    </aside>
 
     <div class="home-indicator" aria-hidden="true"></div>
 
