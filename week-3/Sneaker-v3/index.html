@@ -1,132 +1,232 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adaptive Shoe App</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Shoe</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <div class="phone-frame">
-    <div class="app-screen">
+  <div class="phone">
+    <div class="app">
 
-      <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="time">9:41</div>
-        <div class="title-block">
-          <h1>Adaptive<br>Shoe</h1>
-          <p>Support Control</p>
+      <header class="top">
+        <div class="status-bar">
+          <span>9:41</span>
+          <span>●●● ▰</span>
         </div>
-      </div>
 
-      <!-- Carousel -->
-      <div class="carousel" id="carousel">
-
-        <!-- CARD 1: MAIN SUPPORT STATUS -->
-        <section class="card active-card" id="card-support">
-          <div class="card-header">
-            <span class="card-label">Main Status</span>
-            <span class="card-index">01</span>
+        <div class="heading">
+          <div>
+            <h1>ADAPTIVE<br>SHOE.</h1>
+            <p>PERSONAL FIT SYSTEM / 01</p>
           </div>
+          <div class="heading-mark">↗</div>
+        </div>
+      </header>
 
-          <div class="hero-graphic">
-            <div class="ring">
-              <div class="ring-inner" id="supportPercent">68%</div>
+      <nav class="tabs" aria-label="App sections">
+        <button class="tab active" data-page="0">SUPPORT</button>
+        <button class="tab" data-page="1">CUSHION</button>
+        <button class="tab" data-page="2">ARCH</button>
+        <button class="tab" data-page="3">POWER</button>
+      </nav>
+
+      <main class="carousel-window" id="carouselWindow">
+        <div class="carousel-track" id="carouselTrack">
+
+          <!-- 01 MAIN SUPPORT -->
+          <section class="card support-card">
+            <div class="card-head">
+              <span>01 / SUPPORT STATUS</span>
+              <span>● ACTIVE</span>
             </div>
-            <p class="hero-caption">Current Support State</p>
-          </div>
 
-          <div class="status-row">
-            <div class="mini-stat">
-              <span class="mini-label">Cushion</span>
-              <span class="mini-value" id="cushionValueMain">64</span>
+            <div class="dial-area">
+              <div class="dial" id="mainDial">
+                <svg class="dial-svg" viewBox="0 0 300 300">
+                  <circle class="dial-track"
+                    cx="150" cy="150" r="116"/>
+
+                  <circle class="dial-progress"
+                    id="dialProgress"
+                    cx="150" cy="150" r="116"/>
+
+                  <circle class="dial-handle"
+                    id="dialHandle"
+                    cx="150" cy="34" r="16"/>
+                </svg>
+
+                <div class="dial-center">
+                  <span id="dialType">CUSHIONING</span>
+                  <strong id="dialValue">64</strong>
+                  <small id="dialDescription">BALANCED</small>
+                </div>
+              </div>
+
+              <p class="dial-instruction">
+                DRAG THE WHITE DOT TO ADJUST
+              </p>
             </div>
-            <div class="mini-stat">
-              <span class="mini-label">Arch</span>
-              <span class="mini-value" id="archValueMain">72</span>
+
+            <div class="support-bottom">
+              <div class="parameter-switch">
+                <button class="parameter active"
+                        data-mode="cushion">
+                  <span>CUSHION</span>
+                  <strong id="mainCushion">64</strong>
+                </button>
+
+                <button class="parameter"
+                        data-mode="arch">
+                  <span>ARCH HEIGHT</span>
+                  <strong id="mainArch">72</strong>
+                </button>
+              </div>
+
+              <div class="card-footer">
+                <span>PERSONAL SUPPORT</span>
+                <span>SWIPE →</span>
+              </div>
             </div>
-          </div>
+          </section>
 
-          <div class="cta-note">Swipe to adjust →</div>
-        </section>
-
-        <!-- CARD 2: CUSHIONING -->
-        <section class="card" id="card-cushion">
-          <div class="card-header">
-            <span class="card-label">Adjustment</span>
-            <span class="card-index">02</span>
-          </div>
-
-          <div class="big-number" id="cushionBig">64</div>
-          <p class="section-title">Cushioning</p>
-
-          <div class="slider-block">
-            <input type="range" id="cushionSlider" min="0" max="100" value="64" />
-            <div class="range-labels">
-              <span>Soft</span>
-              <span>Firm</span>
+          <!-- 02 CUSHIONING -->
+          <section class="card black-card">
+            <div class="card-head">
+              <span>02 / ADJUSTMENT</span>
+              <span>● LIVE</span>
             </div>
-          </div>
 
-          <p class="feedback" id="cushionFeedback">Balanced comfort setting.</p>
-        </section>
+            <div class="adjust-content">
+              <span class="eyebrow">FEEL THE DIFFERENCE</span>
+              <h2>CUSHION<br>CONTROL.</h2>
 
-        <!-- CARD 3: ARCH SUPPORT -->
-        <section class="card" id="card-arch">
-          <div class="card-header">
-            <span class="card-label">Adjustment</span>
-            <span class="card-index">03</span>
-          </div>
+              <div class="large-value">
+                <strong id="cushionNumber">64</strong>
+                <span>/ 100</span>
+              </div>
 
-          <div class="big-number" id="archBig">72</div>
-          <p class="section-title">Arch Support</p>
-
-          <div class="slider-block">
-            <input type="range" id="archSlider" min="0" max="100" value="72" />
-            <div class="range-labels">
-              <span>Low</span>
-              <span>High</span>
+              <div class="abstract-bars" id="cushionBars">
+                <div></div><div></div><div></div>
+                <div></div><div></div><div></div>
+                <div></div><div></div><div></div>
+              </div>
             </div>
-          </div>
 
-          <p class="feedback" id="archFeedback">Supportive for a higher arch.</p>
-        </section>
+            <div class="adjust-bottom">
+              <label for="cushionSlider">CUSHIONING LEVEL</label>
+              <input id="cushionSlider" type="range"
+                     min="0" max="100" value="64">
 
-        <!-- CARD 4: CHARGING -->
-        <section class="card" id="card-charging">
-          <div class="card-header">
-            <span class="card-label">Power</span>
-            <span class="card-index">04</span>
-          </div>
+              <div class="range-labels">
+                <span>SOFT</span>
+                <span>FIRM</span>
+              </div>
 
-          <div class="charge-circle">
-            <div class="charge-percent" id="batteryText">46%</div>
-          </div>
+              <p class="adjust-feedback" id="cushionFeedback">
+                BALANCED COMFORT
+              </p>
+            </div>
+          </section>
 
-          <div class="charging-status">
-            <p id="chargingStatus">Not Charging</p>
-          </div>
+          <!-- 03 ARCH SUPPORT -->
+          <section class="card cream-card">
+            <div class="card-head">
+              <span>03 / ADJUSTMENT</span>
+              <span>● LIVE</span>
+            </div>
 
-          <div class="charging-buttons">
-            <button id="connectBtn">Connect</button>
-            <button id="disconnectBtn">Stop</button>
-          </div>
+            <div class="adjust-content">
+              <span class="eyebrow">SHAPE YOUR SUPPORT</span>
+              <h2>ARCH<br>HEIGHT.</h2>
 
-          <p class="feedback">Charging screen only shows battery %, no range.</p>
-        </section>
-      </div>
+              <div class="large-value">
+                <strong id="archNumber">72</strong>
+                <span>/ 100</span>
+              </div>
 
-      <!-- Dots -->
-      <div class="dots">
-        <span class="dot active-dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
+              <div class="arch-visual">
+                <svg viewBox="0 0 300 140">
+                  <path id="archShape"
+                        d="M 10 110 Q 150 0 290 110"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="12"
+                        stroke-linecap="round"/>
+                  <line x1="10" y1="125"
+                        x2="290" y2="125"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-dasharray="5 7"/>
+                </svg>
+              </div>
+            </div>
 
-      <!-- Bottom Bar -->
-      <div class="bottom-pill"></div>
+            <div class="adjust-bottom">
+              <label for="archSlider">ARCH SUPPORT LEVEL</label>
+              <input id="archSlider" type="range"
+                     min="0" max="100" value="72">
 
+              <div class="range-labels">
+                <span>LOW</span>
+                <span>HIGH</span>
+              </div>
+
+              <p class="adjust-feedback" id="archFeedback">
+                HIGH ARCH SUPPORT
+              </p>
+            </div>
+          </section>
+
+          <!-- 04 CHARGING -->
+          <section class="card power-card">
+            <div class="card-head">
+              <span>04 / BATTERY STATUS</span>
+              <span id="powerIndicator">● IDLE</span>
+            </div>
+
+            <div class="power-content">
+              <span class="eyebrow">ENERGY MANAGEMENT</span>
+              <h2>POWER<br>STATUS.</h2>
+
+              <div class="battery-circle" id="batteryCircle">
+                <div class="battery-inner">
+                  <strong id="batteryValue">46%</strong>
+                  <span id="batteryStatus">NOT CHARGING</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="power-bottom">
+              <p>SIMULATED CHARGING SYSTEM</p>
+
+              <button id="chargeButton" class="charge-button">
+                CONNECT CHARGER ↗
+              </button>
+
+              <p class="power-note">
+                BATTERY STATUS / NO RANGE ESTIMATION
+              </p>
+            </div>
+          </section>
+
+        </div>
+      </main>
+
+      <footer class="bottom">
+        <div class="page-dots">
+          <button class="dot active" data-page="0"></button>
+          <button class="dot" data-page="1"></button>
+          <button class="dot" data-page="2"></button>
+          <button class="dot" data-page="3"></button>
+        </div>
+        <span id="pageCounter">01 / 04</span>
+      </footer>
+
+      <div class="home-indicator"></div>
     </div>
   </div>
 
