@@ -10,19 +10,26 @@
   --white: #ffffff;
 }
 
-body {
+html, body {
   margin: 0;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
   background: #d7d7d7;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: Arial, Helvetica, sans-serif;
+  color: var(--black);
 }
 
 button {
-  font-family: inherit;
+  font: inherit;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .phone {
@@ -38,13 +45,16 @@ button {
 }
 
 .app {
+  width: 100%;
   height: 100%;
+  background: var(--cream);
   display: flex;
   flex-direction: column;
-  background: var(--cream);
   overflow: hidden;
   border-radius: 34px;
 }
+
+/* HEADER */
 
 .top {
   padding: 17px 23px 0;
@@ -62,7 +72,7 @@ button {
 .heading {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .heading h1 {
@@ -77,26 +87,28 @@ button {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 1.6px;
-  margin-top: 12px;
+  margin: 12px 0 0;
 }
 
 .heading-mark {
   font-size: 35px;
-  font-weight: 300;
 }
+
+/* TOP TABS */
 
 .tabs {
   display: flex;
   gap: 7px;
-  padding: 12px 23px 18px;
+  padding: 12px 23px 15px;
   flex-shrink: 0;
 }
 
 .tab {
   flex: 1;
+  min-width: 0;
+  padding: 10px 2px;
   font-size: 9px;
   font-weight: 800;
-  padding: 10px 2px;
   border-radius: 40px;
   border: 1px solid #222;
   background: transparent;
@@ -114,8 +126,8 @@ button {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  touch-action: pan-y;
   cursor: grab;
+  touch-action: pan-y;
 }
 
 .carousel-window.dragging {
@@ -123,18 +135,20 @@ button {
 }
 
 .carousel-track {
-  display: flex;
   height: 100%;
+  display: flex;
   align-items: center;
   will-change: transform;
-  touch-action: pan-y;
 }
 
 .card {
   flex: 0 0 84%;
+  width: 84%;
   height: 95%;
+  min-width: 0;
+  min-height: 0;
   margin: 0 8%;
-  padding: 22px;
+  padding: 20px;
   border-radius: 26px;
   display: flex;
   flex-direction: column;
@@ -143,8 +157,8 @@ button {
   transform: scale(.84);
   opacity: .65;
   transition:
-    transform .3s ease,
-    opacity .3s ease;
+    transform 350ms ease,
+    opacity 350ms ease;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -158,9 +172,11 @@ button {
 .card-footer {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: .5px;
+  letter-spacing: .4px;
+  flex-shrink: 0;
 }
 
 .support-card {
@@ -184,24 +200,24 @@ button {
   border: 2px solid var(--black);
 }
 
-/* INTERACTIVE DIAL */
+/* SUPPORT CIRCULAR CONTROL */
 
 .dial-area {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .dial {
-  width: 260px;
-  height: 260px;
-  max-width: 100%;
+  width: min(250px, 100%);
   aspect-ratio: 1;
   position: relative;
   touch-action: none;
   cursor: pointer;
+  flex-shrink: 1;
 }
 
 .dial-svg {
@@ -209,11 +225,12 @@ button {
   height: 100%;
   transform: rotate(-90deg);
   overflow: visible;
+  touch-action: none;
 }
 
 .dial-track {
   fill: none;
-  stroke: #111;
+  stroke: var(--black);
   stroke-width: 25;
 }
 
@@ -222,13 +239,11 @@ button {
   stroke: var(--cream);
   stroke-width: 25;
   stroke-linecap: round;
-  stroke-dasharray: 729;
-  stroke-dashoffset: 262;
 }
 
 .dial-handle {
   fill: white;
-  stroke: black;
+  stroke: var(--black);
   stroke-width: 3;
   cursor: grab;
   pointer-events: all;
@@ -251,9 +266,9 @@ button {
 }
 
 .dial-center strong {
-  font-size: 100px;
-  letter-spacing: -7px;
+  font-size: clamp(55px, 12vh, 90px);
   line-height: 1.1;
+  letter-spacing: -6px;
 }
 
 .dial-center small {
@@ -262,23 +277,29 @@ button {
 }
 
 .dial-instruction {
+  margin: 12px 0 0;
+  text-align: center;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 1px;
-  margin-top: 15px;
+}
+
+.support-bottom {
+  flex-shrink: 0;
 }
 
 .parameter-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 25px;
+  margin-bottom: 18px;
 }
 
 .parameter {
+  min-width: 0;
+  padding: 12px;
   border: 1px solid #111;
   border-radius: 18px;
-  padding: 14px;
   background: transparent;
   color: #111;
   text-align: left;
@@ -292,22 +313,24 @@ button {
 .parameter span {
   display: block;
   font-size: 10px;
-  font-weight: bold;
+  font-weight: 800;
 }
 
 .parameter strong {
   display: block;
-  font-size: 32px;
-  margin-top: 8px;
+  font-size: 30px;
+  margin-top: 6px;
 }
 
-/* ADJUSTMENT CARDS */
+/* CUSHION AND ARCH */
 
 .adjust-content {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
 }
 
 .eyebrow {
@@ -318,16 +341,23 @@ button {
 
 .adjust-content h2,
 .power-content h2 {
-  font-size: 44px;
+  font-size: 40px;
   line-height: .9;
   letter-spacing: -2px;
-  margin: 15px 0 30px;
+  margin: 10px 0 14px;
+}
+
+.large-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .large-value strong {
-  font-size: 115px;
+  font-size: 90px;
+  line-height: 1;
+  letter-spacing: -6px;
   font-weight: 900;
-  letter-spacing: -8px;
 }
 
 .large-value span {
@@ -336,28 +366,45 @@ button {
 
 .abstract-bars {
   display: flex;
-  align-items: end;
-  height: 100px;
+  align-items: flex-end;
   gap: 7px;
+  height: 85px;
+  margin-top: 14px;
 }
 
 .abstract-bars div {
   flex: 1;
-  background: var(--red);
-  border-radius: 30px 30px 0 0;
   height: 20%;
-  transition: height .25s;
+  background: var(--red);
+  border-radius: 20px 20px 0 0;
+  transition: height .2s;
 }
 
 .arch-visual {
-  margin-top: 20px;
+  width: 100%;
+  height: 105px;
+  margin-top: 8px;
+  flex-shrink: 1;
 }
 
 .arch-visual svg {
+  display: block;
   width: 100%;
+  height: 100%;
+}
+
+/* IMPORTANT:
+   Keep sliders visible at the bottom
+   rather than hiding behind card content.
+*/
+
+.adjust-bottom {
+  flex-shrink: 0;
+  padding-bottom: 8px;
 }
 
 .adjust-bottom label {
+  display: block;
   font-size: 10px;
   font-weight: 900;
 }
@@ -365,11 +412,13 @@ button {
 input[type="range"] {
   appearance: none;
   -webkit-appearance: none;
+  display: block;
   width: 100%;
-  background: var(--red);
   height: 8px;
+  margin: 20px 0 14px;
   border-radius: 20px;
-  margin: 25px 0 12px;
+  background: var(--red);
+  outline: none;
   cursor: pointer;
   touch-action: none;
 }
@@ -379,17 +428,17 @@ input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 25px;
   height: 25px;
-  background: white;
   border: 3px solid #111;
   border-radius: 50%;
+  background: white;
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: white;
   border: 3px solid #111;
   border-radius: 50%;
+  background: white;
 }
 
 .range-labels {
@@ -400,23 +449,24 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .adjust-feedback {
-  margin-top: 25px;
-  font-size: 12px;
+  margin: 14px 0 0;
+  font-size: 11px;
   font-weight: 800;
 }
 
-/* CHARGING */
+/* POWER */
 
 .power-content {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .battery-circle {
-  width: 225px;
-  height: 225px;
+  width: min(210px, 100%);
+  aspect-ratio: 1;
   border-radius: 50%;
   margin: 0 auto;
   display: flex;
@@ -426,7 +476,6 @@ input[type="range"]::-moz-range-thumb {
     var(--red) 0% 46%,
     #ccc 46% 100%
   );
-  transition: background .2s;
 }
 
 .battery-circle.charging {
@@ -434,8 +483,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .battery-inner {
-  width: 180px;
-  height: 180px;
+  width: 79%;
+  aspect-ratio: 1;
   background: var(--cream);
   border-radius: 50%;
   display: flex;
@@ -445,7 +494,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .battery-inner strong {
-  font-size: 60px;
+  font-size: 55px;
   letter-spacing: -4px;
 }
 
@@ -454,25 +503,35 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 900;
 }
 
+.power-bottom {
+  flex-shrink: 0;
+}
+
 .power-bottom p {
   font-size: 10px;
   font-weight: 800;
 }
 
 .charge-button {
+  display: block;
   width: 100%;
-  padding: 19px;
+  padding: 18px 12px;
   border: 0;
+  border-radius: 40px;
   background: var(--black);
   color: white;
-  border-radius: 40px;
   font-size: 13px;
   font-weight: 900;
 }
 
+.charge-button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
 .power-note {
   opacity: .55;
-  margin-top: 18px;
+  margin-top: 15px;
 }
 
 @keyframes pulse {
@@ -484,11 +543,11 @@ input[type="range"]::-moz-range-thumb {
 /* BOTTOM */
 
 .bottom {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 28px 10px;
-  flex-shrink: 0;
+  padding: 12px 28px 8px;
 }
 
 .page-dots {
@@ -500,15 +559,15 @@ input[type="range"]::-moz-range-thumb {
   width: 8px;
   height: 8px;
   padding: 0;
-  border: none;
+  border: 0;
   border-radius: 50%;
   background: #aaa;
 }
 
 .dot.active {
-  background: #111;
   width: 23px;
   border-radius: 8px;
+  background: #111;
 }
 
 #pageCounter {
@@ -517,13 +576,15 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .home-indicator {
+  flex-shrink: 0;
   width: 120px;
   height: 5px;
-  background: #111;
-  border-radius: 20px;
   margin: 0 auto 9px;
-  flex-shrink: 0;
+  border-radius: 20px;
+  background: #111;
 }
+
+/* MOBILE */
 
 @media (max-width: 420px) {
   body {
@@ -546,13 +607,11 @@ input[type="range"]::-moz-range-thumb {
   .card {
     padding: 18px;
   }
-
-  .dial {
-    width: min(260px, 68vw);
-  }
 }
 
-@media (max-height: 740px) {
+/* SHORT SCREENS */
+
+@media (max-height: 760px) {
   .top {
     padding-top: 10px;
   }
@@ -566,89 +625,19 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .tabs {
+    padding-top: 8px;
     padding-bottom: 8px;
   }
 
+  .card {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
   .dial {
-    width: 190px;
+    width: min(190px, 60vw);
   }
 
-  .adjust-content h2,
-  .power-content h2 {
-    font-size: 35px;
-  }
-
-  .large-value strong {
-    font-size: 85px;
-  }
-
-  .battery-circle {
-    width: 170px;
-    height: 170px;
-  }
-
-  .battery-inner {
-    width: 135px;
-    height: 135px;
-  }
-}
-
-
-/* ===================================
-   FIX 1: ARCH & CUSHION LAYOUT
-   =================================== */
-
-/* Reduce vertical spacing */
-.adjust-content {
-  flex: 1;
-  min-height: 0;
-  justify-content: center;
-}
-
-.adjust-content h2 {
-  font-size: 40px;
-  line-height: 0.88;
-  margin: 10px 0 14px;
-}
-
-.large-value {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.large-value strong {
-  font-size: 90px;
-  line-height: 1;
-}
-
-.arch-visual {
-  margin-top: 8px;
-  max-height: 105px;
-}
-
-.arch-visual svg {
-  display: block;
-  width: 100%;
-  height: 100px;
-}
-
-.adjust-bottom {
-  flex-shrink: 0;
-  padding-bottom: 10px;
-}
-
-.adjust-bottom input[type="range"] {
-  margin: 15px 0 12px;
-}
-
-.adjust-feedback {
-  margin: 14px 0 0;
-  font-size: 11px;
-}
-
-/* Short screens */
-@media (max-height: 760px) {
   .adjust-content h2 {
     font-size: 34px;
   }
@@ -657,38 +646,76 @@ input[type="range"]::-moz-range-thumb {
     font-size: 72px;
   }
 
-  .arch-visual svg {
+  .arch-visual {
     height: 75px;
+  }
+
+  .abstract-bars {
+    height: 60px;
   }
 
   .adjust-bottom {
     padding-bottom: 4px;
   }
+
+  .battery-circle {
+    width: 170px;
+  }
 }
 
+@media (max-height: 620px) {
+  .status-bar,
+  .heading p {
+    display: none;
+  }
 
-/* ===================================
-   FIX 2: SUPPORT DIAL HANDLE
-   =================================== */
+  .heading h1 {
+    font-size: 28px;
+  }
 
-/* Keep white handle centered on progress track */
-.dial-handle {
-  fill: #ffffff;
-  stroke: #111111;
-  stroke-width: 3;
-  cursor: grab;
-  pointer-events: all;
+  .tabs {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .dial {
+    width: min(145px, 45vw);
+  }
+
+  .parameter {
+    padding: 7px;
+  }
+
+  .parameter strong {
+    font-size: 22px;
+  }
+
+  .adjust-content h2 {
+    font-size: 27px;
+  }
+
+  .large-value strong {
+    font-size: 58px;
+  }
+
+  .arch-visual {
+    height: 45px;
+  }
+
+  .abstract-bars {
+    height: 45px;
+  }
+
+  .adjust-feedback {
+    margin-top: 7px;
+  }
+
+  .battery-circle {
+    width: 135px;
+  }
+
+  .battery-inner strong {
+    font-size: 38px;
+  }
 }
 
-.dial-handle:active {
-  cursor: grabbing;
-}
-
-.dial-svg {
-  overflow: visible;
-  touch-action: none;
-}
-
-.dial {
-  touch-action: none;
-}
