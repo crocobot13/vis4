@@ -593,3 +593,102 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
+
+/* ===================================
+   FIX 1: ARCH & CUSHION LAYOUT
+   =================================== */
+
+/* Reduce vertical spacing */
+.adjust-content {
+  flex: 1;
+  min-height: 0;
+  justify-content: center;
+}
+
+.adjust-content h2 {
+  font-size: 40px;
+  line-height: 0.88;
+  margin: 10px 0 14px;
+}
+
+.large-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.large-value strong {
+  font-size: 90px;
+  line-height: 1;
+}
+
+.arch-visual {
+  margin-top: 8px;
+  max-height: 105px;
+}
+
+.arch-visual svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+}
+
+.adjust-bottom {
+  flex-shrink: 0;
+  padding-bottom: 10px;
+}
+
+.adjust-bottom input[type="range"] {
+  margin: 15px 0 12px;
+}
+
+.adjust-feedback {
+  margin: 14px 0 0;
+  font-size: 11px;
+}
+
+/* Short screens */
+@media (max-height: 760px) {
+  .adjust-content h2 {
+    font-size: 34px;
+  }
+
+  .large-value strong {
+    font-size: 72px;
+  }
+
+  .arch-visual svg {
+    height: 75px;
+  }
+
+  .adjust-bottom {
+    padding-bottom: 4px;
+  }
+}
+
+
+/* ===================================
+   FIX 2: SUPPORT DIAL HANDLE
+   =================================== */
+
+/* Keep white handle centered on progress track */
+.dial-handle {
+  fill: #ffffff;
+  stroke: #111111;
+  stroke-width: 3;
+  cursor: grab;
+  pointer-events: all;
+}
+
+.dial-handle:active {
+  cursor: grabbing;
+}
+
+.dial-svg {
+  overflow: visible;
+  touch-action: none;
+}
+
+.dial {
+  touch-action: none;
+}
