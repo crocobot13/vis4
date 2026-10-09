@@ -1,221 +1,287 @@
 "use strict";
 
-// 模式预设：仅用于界面演示
-// cushion 数值越高，代表越硬
 const presets = {
-  Walk: {
-    arch: 40,
-    cushion: 25
-  },
-
-  Run: {
-    arch: 60,
-    cushion: 50
-  },
-
-  Court: {
-    arch: 75,
-    cushion: 80
-  }
+  Walk: { arch: 40, firmness: 25 },
+  Run: { arch: 60, firmness: 50 },
+  Court: { arch: 75, firmness: 80 }
 };
 
-// 左右鞋独立保存数值
-const state = {
-  L: {
-    arch: 50,
-    cushion: 50,
-    mode: null
-  },
-
-  R: {
-    arch: 50,
-    cushion: 50,
-    mode: null
-  }
+const shoeState = {
+  L: { arch: 50, firmness: 50, mode: null },
+  R: { arch: 50, firmness: 50, mode: null }
 };
 
-let selected = "L";
+let selectedSide = "L";
 let charging = false;
-let popupTimer;
+let chargingTimer;
+let feedbackTimer;
 
-const arch = document.getElementById("arch");
-const cushion = document.getElementById("cushion");
+const homeScreen = document.getElementById("homeScreen");
+const controlScreen = document.getElementById("controlScreen");
 
-const shoeButtons = [
-  ...document.querySelectorAll(".shoe")
-];
+const archSlider = document.getElementById("archSlider");
+const firmnessSlider = document.getElementById("firmnessSlider");
+
+const feedback = document.getElementById("feedback");
 
 const modeButtons = [
   ...document.querySelectorAll("[data-mode]")
 ];
 
-// 更新整个界面
-function render() {
-  const current = state[selected];
+function animateScreen(screen) {
+  screen.classList.remove("entering");
 
-  document.getElementById("controlTitle").textContent =
-    selected === "L" ? "Left shoe" : "Right shoe";
+  // Restart the screen transition.
+  void screen.offsetWidth;
 
-  // 更新滑条、数值和进度条
-  for (const input of [arch, cushion]) {
-    input.value = current[input.id];
+  screen.classList.add("entering");
+}
 
-    input.style.setProperty(
-      "--fill",
-      current[input.id] + "%"
-    );
+function updateHome() {
+  document.getElementById("leftArch").textContent =
+    shoeState.L.arch;
 
-    document.getElementById(
-      input.id + "Value"
-    ).textContent = current[input.id] + "%";
-  }
+  document.getElementById("leftFirmness").textContent =
+    shoeState.L.firmness;
 
-  // 更新左右鞋状态
-  shoeButtons.forEach((button) => {
-    const side = button.dataset.side;
-    const active = side === selected;
+  document.getElementById("rightArch").textContent =
+    shoeState.R.arch;
 
-    button.classList.toggle("selected", active);
+  document.getElementById("rightFirmness").textContent =
+    shoeState.R.firmness;
+}
 
-    button.setAttribute(
-      "aria-pressed",
-      String(active)
-    );
+function updateControls() {
+  const state = shoeState[selectedSide];
+  const isLeft = selectedSide === "L";
 
-    const value = state[side];
+  document.getElementById("shoeTitle").textContent =
+    isLeft ? "Left shoe" : "Right shoe";
 
-    document.getElementById(
-      "summary" + side
-    ).textContent =
-      "Arch " + value.arch +
-      " · Firmness " + value.cushion;
-  });
+  document.getElementById("selectedLetter").textContent =
+    selectedSide;
 
-  // 更新模式按钮
+  document.getElementById("currentMode").textContent =
+    state.mode ? state.mode.toUpperCase() : "CUSTOM";
+
+  const switchButton = document.getElementById("switchButton");
+
+  switchButton.textContent = isLeft ? "R ⇄" : "L ⇄";
+
+  switchButton.setAttribute(
+    "aria-label",
+    isLeft ? "Switch to right shoe" : "Switch to left shoe"
+  );
+
+  archSlider.value = state.arch;
+  firmnessSlider.value = state.firmness;
+
+  archSlider.style.setProperty("--fill", state.arch + "%");
+  firmnessSlider.style.setProperty("--fill", state.firmness + "%");
+
+  document.getElementById("archOutput").textContent =
+    state.arch + "%";
+
+  document.getElementById("firmnessOutput").textContent =
+    state.firmness + "%";
+
   modeButtons.forEach((button) => {
     button.setAttribute(
       "aria-pressed",
-      String(button.dataset.mode === current.mode)
+      String(button.dataset.mode === state.mode)
     );
   });
+
+  updateHome();
 }
 
-// 选择某一只鞋
-function selectShoe(side) {
-  selected = side;
+function openShoe(side) {
+  selectedSide = side;
 
-  document.getElementById("status").textContent =
-    state[side].mode || "Ready";
+  clearTimeout(feedbackTimer);
+  feedback.textContent = "Adjust your support";
 
-  render();
-}
+  updateControls();
 
-// 点击或向上滑动选择左右鞋
-shoeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    selectShoe(button.dataset.side);
+  homeScreen.hidden = true;
+  controlScreen.hidden = false;
+
+  animateScreen(controlScreen);
+
+  document.getElementById("backButton").focus({
+    preventScroll: true
   });
+}
 
-  let start = null;
+function goHome() {
+  updateHome();
 
-  button.addEventListener("pointerdown", (event) => {
-    start = {
+  controlScreen.hidden = true;
+  homeScreen.hidden = false;
+
+  animateScreen(homeScreen);
+
+  document.querySelector(
+    '.shoe-card[data-side="' + selectedSide + '"]'
+  ).focus({ preventScroll: true });
+}
+
+// Swipe up or tap a shoe to open its control screen.
+document.querySelectorAll(".shoe-card").forEach((card) => {
+  let startPoint = null;
+  let suppressClick = false;
+
+  card.addEventListener("pointerdown", (event) => {
+    startPoint = {
       x: event.clientX,
       y: event.clientY
     };
 
-    button.setPointerCapture(event.pointerId);
+    suppressClick = false;
+    card.setPointerCapture(event.pointerId);
   });
 
-  button.addEventListener("pointerup", (event) => {
-    if (
-      start &&
-      start.y - event.clientY > 35 &&
-      Math.abs(start.x - event.clientX) < 80
-    ) {
-      selectShoe(button.dataset.side);
+  card.addEventListener("pointermove", (event) => {
+    if (!startPoint) return;
+
+    const distance = Math.max(
+      0,
+      Math.min(45, startPoint.y - event.clientY)
+    );
+
+    card.style.transform =
+      "translateY(" + -distance * 0.35 + "px)";
+  });
+
+  card.addEventListener("pointerup", (event) => {
+    card.style.transform = "";
+
+    if (!startPoint) return;
+
+    const upwardDistance = startPoint.y - event.clientY;
+    const horizontalDistance = Math.abs(
+      startPoint.x - event.clientX
+    );
+
+    if (upwardDistance > 35 && horizontalDistance < 80) {
+      suppressClick = true;
+      openShoe(card.dataset.side);
     }
 
-    start = null;
+    startPoint = null;
   });
 
-  button.addEventListener("pointercancel", () => {
-    start = null;
+  card.addEventListener("pointercancel", () => {
+    startPoint = null;
+    card.style.transform = "";
+  });
+
+  card.addEventListener("click", () => {
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+
+    openShoe(card.dataset.side);
   });
 });
 
-// 足弓和碳板调节
-for (const input of [arch, cushion]) {
-  input.addEventListener("input", () => {
-    state[selected][input.id] = Number(input.value);
+document.getElementById("backButton").addEventListener(
+  "click",
+  goHome
+);
 
-    // 手动调节后进入自定义状态
-    state[selected].mode = null;
+document.getElementById("switchButton").addEventListener(
+  "click",
+  () => {
+    openShoe(selectedSide === "L" ? "R" : "L");
+  }
+);
 
-    document.getElementById("status").textContent =
-      "Custom";
+function showFeedback(message) {
+  clearTimeout(feedbackTimer);
+  feedback.textContent = message;
 
-    render();
-  });
+  feedbackTimer = setTimeout(() => {
+    feedback.textContent = "Adjust your support";
+  }, 1600);
 }
 
-// 模式只作用于当前选中的鞋
+// Arch support adjustment.
+archSlider.addEventListener("input", () => {
+  shoeState[selectedSide].arch = Number(archSlider.value);
+  shoeState[selectedSide].mode = null;
+
+  updateControls();
+  showFeedback("Arch setting updated");
+});
+
+// Carbon plate firmness adjustment.
+firmnessSlider.addEventListener("input", () => {
+  shoeState[selectedSide].firmness =
+    Number(firmnessSlider.value);
+
+  shoeState[selectedSide].mode = null;
+
+  updateControls();
+  showFeedback("Cushioning setting updated");
+});
+
+// Mode presets apply only to the selected shoe.
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const mode = button.dataset.mode;
 
     Object.assign(
-      state[selected],
+      shoeState[selectedSide],
       presets[mode],
-      { mode: mode }
+      { mode }
     );
 
-    document.getElementById("status").textContent =
-      mode;
-
-    render();
+    updateControls();
+    showFeedback(mode + " settings selected");
   });
 });
 
-// 点击电池，模拟连接或断开充电器
-document.getElementById("battery").addEventListener(
+// Simulate charger connection by tapping the battery.
+document.getElementById("batteryButton").addEventListener(
   "click",
   () => {
     charging = !charging;
 
-    const batteryButton =
-      document.getElementById("battery");
+    const button = document.getElementById("batteryButton");
+    const overlay = document.getElementById("chargingOverlay");
 
-    const popup =
-      document.getElementById("chargingPopup");
+    clearTimeout(chargingTimer);
 
-    clearTimeout(popupTimer);
+    button.classList.toggle("is-charging", charging);
 
-    batteryButton.classList.toggle(
-      "charging",
-      charging
-    );
-
-    batteryButton.setAttribute(
+    button.setAttribute(
       "aria-label",
       charging
-        ? "Charging. Click to simulate disconnection"
-        : "82 percent battery. Click to simulate charging"
+        ? "Charging. Tap to simulate disconnection"
+        : "82 percent battery. Tap to simulate charging"
     );
 
-    document.getElementById("bolt").hidden =
+    document.getElementById("chargingBolt").hidden =
       !charging;
 
-    popup.hidden = !charging;
+    overlay.hidden = !charging;
 
-    // 提示显示 2.2 秒，之后只保留小电池状态
     if (charging) {
-      popupTimer = setTimeout(() => {
-        popup.hidden = true;
+      chargingTimer = setTimeout(() => {
+        overlay.hidden = true;
       }, 2200);
     }
   }
 );
 
-// 页面初始化
-render();
+// Escape returns to the shoe selection screen.
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !controlScreen.hidden) {
+    goHome();
+  }
+});
+
+updateHome();
+updateControls();
