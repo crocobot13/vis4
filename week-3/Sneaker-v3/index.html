@@ -1,259 +1,1173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f3ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Adaptive Shoe</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
+<style>
+* {
+  box-sizing: border-box;
+}
 
-  <meta name="theme-color" content="#eeeeea">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
+  background: #d8d8d4;
+}
 
-  <title>Adaptive Shoe — App Prototype</title>
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
 
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+button {
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+.zone:focus-visible {
+  outline: 2px solid #555;
+  outline-offset: -4px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Phone screen */
+.app {
+  width: 390px;
+  height: 844px;
+  max-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #f3f3ef;
+  border-radius: 36px;
+  outline: 7px solid #292929;
+  overflow: hidden;
+}
+
+.statusbar {
+  height: 52px;
+  flex-shrink: 0;
+  padding: 18px 25px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88px;
+  height: 23px;
+  background: #292929;
+  border-radius: 20px;
+}
+
+.battery-button {
+  border: 0;
+  background: none;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: #222;
+  font-size: 10px;
+  padding: 4px;
+}
+
+.battery {
+  width: 23px;
+  height: 12px;
+  border: 1px solid #222;
+  border-radius: 3px;
+  padding: 2px;
+  position: relative;
+}
+
+.battery::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 3px;
+  width: 2px;
+  height: 4px;
+  background: #222;
+}
+
+.battery span {
+  display: block;
+  width: 82%;
+  height: 100%;
+  background: #333;
+}
+
+#bolt {
+  font-size: 18px;
+}
+
+.header {
+  padding: 20px 25px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.header-caption {
+  font-size: 10px;
+  color: #85857d;
+}
+
+.gesture-guide {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  padding: 10px 15px 22px;
+  font-size: 10px;
+  color: #7b7b73;
+}
+
+/* Full-height L / R gesture surface */
+.zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+  margin: 0 14px;
+}
+
+.zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 15px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  border-radius: 18px;
+  transition: background 0.15s;
+}
+
+.zone:first-child::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 22px;
+  bottom: 22px;
+  width: 1px;
+  background: #d4d4cc;
+}
+
+.zone.selected {
+  background: #e9e9e2;
+}
+
+.zone.dragging {
+  cursor: grabbing;
+  background: #ddddd4;
+}
+
+.side-name {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #85857b;
+}
+
+.letter {
+  font-size: 136px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -10px;
+  padding-right: 12px;
+  margin: 25px 0 29px;
+}
+
+.metric {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.metric-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+}
+
+.metric-heading output {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  height: 3px;
+  margin: 14px 6px 10px;
+  background: #c9c9bf;
+  position: relative;
+}
+
+.fill {
+  height: 100%;
+  width: 50%;
+  background: #333;
+}
+
+.marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #f3f3ef;
+  border: 2px solid #333;
+}
+
+.limits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #929287;
+}
+
+.zone-mode {
+  margin: 25px 0 0;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #85857b;
+}
+
+.feedback {
+  height: 43px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 10px;
+  color: #77776d;
+  padding: 0 20px;
+}
+
+.bottom-bar {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  padding: 12px 20px 33px;
+  flex-shrink: 0;
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  color: #66665d;
+  font-size: 9px;
+}
+
+.nav-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #e1e1d9;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  color: #333;
+}
+
+.nav-button.active .nav-icon {
+  background: #333;
+  color: #fff;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 4px;
+  border-radius: 5px;
+  background: #333;
+  z-index: 30;
+}
+
+/* Bottom sheet */
+.sheet-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: #00000030;
+  width: 100%;
+  height: 100%;
+}
+
+.sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85%;
+  overflow-y: auto;
+  background: #f3f3ef;
+  border-radius: 27px 27px 0 0;
+  padding: 12px 25px 42px;
+  animation: sheet-in 0.25s ease;
+}
+
+.handle {
+  width: 38px;
+  height: 4px;
+  background: #c2c2b8;
+  border-radius: 4px;
+  margin: 0 auto 25px;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: #e0e0d8;
+  font-size: 22px;
+  color: #666;
+}
+
+.sheet-caption {
+  font-size: 11px;
+  color: #818178;
+  line-height: 1.6;
+  margin: 13px 0 22px;
+}
+
+.side-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 21px;
+}
+
+.side-tabs button {
+  flex: 1;
+  border: 1px solid #cecec3;
+  background: transparent;
+  border-radius: 20px;
+  padding: 11px;
+  font-size: 11px;
+}
+
+.side-tabs button[aria-pressed="true"] {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.mode-list {
+  display: grid;
+  gap: 11px;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 69px;
+  border: 1px solid #d4d4ca;
+  border-radius: 16px;
+  background: #e9e9e2;
+  padding: 16px;
+  color: #333;
+  text-align: left;
+}
+
+.mode-option[aria-pressed="true"] {
+  border: 2px solid #333;
+  padding: 15px;
+}
+
+.mode-option strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mode-option span {
+  font-size: 10px;
+  color: #818178;
+}
+
+.adjust-row {
+  padding: 18px 0;
+  border-bottom: 1px solid #d8d8ce;
+}
+
+.adjust-row-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 13px;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stepper button {
+  width: 48px;
+  height: 44px;
+  border: 1px solid #c9c9be;
+  border-radius: 12px;
+  background: #e9e9e2;
+  font-size: 24px;
+}
+
+.stepper span {
+  font-size: 10px;
+  color: #85857b;
+}
+
+.reset {
+  width: 100%;
+  padding: 15px;
+  margin-top: 22px;
+  border: 1px solid #c9c9be;
+  border-radius: 12px;
+  background: transparent;
+  font-size: 12px;
+}
+
+.sheet-feedback {
+  min-height: 18px;
+  text-align: center;
+  color: #77776d;
+  font-size: 10px;
+  margin: 18px 0 0;
+}
+
+/* Charging overlay */
+.charging-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: #f3f3eff7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.large-battery {
+  width: 116px;
+  height: 60px;
+  border: 2px solid #333;
+  border-radius: 11px;
+  padding: 5px;
+  position: relative;
+  margin-bottom: 27px;
+}
+
+.large-battery::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 18px;
+  height: 20px;
+  width: 5px;
+  border-radius: 2px;
+  background: #333;
+}
+
+.large-battery span {
+  display: grid;
+  place-items: center;
+  width: 82%;
+  height: 100%;
+  border-radius: 5px;
+  background: #555;
+  color: #fff;
+  font-size: 34px;
+}
+
+.charging-overlay p {
+  font-size: 12px;
+  color: #888;
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@media (max-width: 450px) {
+  body {
+    padding: 0;
+    display: block;
+    background: #f3f3ef;
+  }
+
+  .app {
+    width: 100%;
+    height: 100dvh;
+    border-radius: 0;
+    outline: none;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .notch {
+    display: none;
+  }
+
+  .bottom-bar {
+    padding-bottom: max(33px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-height: 740px) {
+  .letter {
+    font-size: 100px;
+    margin: 12px 0;
+  }
+
+  .metric {
+    margin-top: 13px;
+  }
+
+  .zone-mode {
+    margin-top: 15px;
+  }
+
+  .header {
+    padding-top: 10px;
+  }
+
+  .gesture-guide {
+    padding-bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
 </head>
 
 <body>
-  <main class="phone">
+<main class="app">
 
-    <!-- Phone status bar -->
-    <div class="status-bar">
-      <span id="clock">9:41</span>
-      <span class="camera" aria-hidden="true"></span>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="notch" aria-hidden="true"></span>
 
-      <button
-        id="batteryButton"
-        class="battery-button"
-        aria-label="Simulate charging"
-      >
-        <span id="chargingBolt" hidden>ϟ</span>
-        <span>82%</span>
-        <span class="battery-icon">
-          <span></span>
-        </span>
-      </button>
-    </div>
+    <button id="batteryButton"
+            class="battery-button"
+            aria-label="Simulate charging">
+      <span id="bolt" hidden>ϟ</span>
+      <span>82%</span>
+      <span class="battery"><span></span></span>
+    </button>
+  </div>
 
-    <!-- App header -->
-    <header class="app-header">
-      <div>
-        <p class="eyebrow">ADAPTIVE</p>
-        <h1>Shoe control</h1>
-      </div>
+  <header class="header">
+    <span class="brand">ADAPTIVE</span>
+    <span class="header-caption">Shoe control</span>
+  </header>
 
-      <span class="prototype-label">PROTOTYPE</span>
-    </header>
+  <div class="gesture-guide">
+    <span>↕ Arch height</span>
+    <span>↔ Cushion firmness</span>
+  </div>
 
-    <!-- Gesture instructions -->
-    <div class="gesture-guide">
-      <span><b>↕</b> Arch height</span>
-      <span><b>↔</b> Cushion firmness</span>
-    </div>
+  <section class="zones" aria-label="Independent shoe controls">
 
-    <!-- Independent left and right gesture zones -->
-    <section class="shoe-grid" aria-label="Shoe controls">
+    <article class="zone selected"
+             data-side="L"
+             tabindex="0"
+             aria-label="Left shoe. Up and down adjust arch. Left and right adjust firmness.">
+      <span class="side-name">LEFT SHOE</span>
+      <span class="letter">L</span>
 
-      <article
-        class="shoe-zone selected"
-        data-side="L"
-        tabindex="0"
-        aria-label="Left shoe. Swipe vertically to adjust arch, horizontally to adjust cushioning."
-      >
-        <div class="zone-header">
-          <span class="side-letter">L</span>
-          <span class="side-name">LEFT SHOE</span>
-          <span class="selected-dot" aria-hidden="true"></span>
-        </div>
-
-        <div class="arch-readout">
-          <span class="metric-label">ARCH HEIGHT</span>
-          <div class="large-value">
-            <output id="archL">50</output><span>%</span>
-          </div>
-        </div>
-
-        <div class="arch-diagram" aria-hidden="true">
-          <div class="height-scale">
-            <span>High</span>
-            <span>Low</span>
-          </div>
-
-          <div class="height-track">
-            <div class="height-fill" id="heightFillL"></div>
-            <span class="height-marker" id="heightMarkerL"></span>
-          </div>
-
-          <div class="foot-outline">
-            <span class="heel-pad"></span>
-            <span class="arch-pad" id="archPadL"></span>
-            <span class="toe-pad"></span>
-          </div>
-
-          <span class="vertical-arrow">↕</span>
-        </div>
-
-        <div class="step-buttons" aria-label="Left arch adjustment">
-          <button data-side="L" data-metric="arch" data-step="-5"
-            aria-label="Decrease left arch">−</button>
+      <div class="metric">
+        <div class="metric-heading">
           <span>Arch</span>
-          <button data-side="L" data-metric="arch" data-step="5"
-            aria-label="Increase left arch">+</button>
+          <output id="archL">50%</output>
         </div>
-
-        <div class="cushion-section">
-          <div class="cushion-heading">
-            <span class="metric-label">CUSHIONING</span>
-            <output id="firmnessL">50%</output>
-          </div>
-
-          <div class="firmness-track" aria-hidden="true">
-            <div class="firmness-fill" id="firmnessFillL"></div>
-            <span class="firmness-marker" id="firmnessMarkerL"></span>
-          </div>
-
-          <div class="range-labels">
-            <span>Soft</span>
-            <span>Firm</span>
-          </div>
-
-          <div class="step-buttons" aria-label="Left cushioning adjustment">
-            <button data-side="L" data-metric="firmness" data-step="-5"
-              aria-label="Soften left cushioning">−</button>
-            <span>↔</span>
-            <button data-side="L" data-metric="firmness" data-step="5"
-              aria-label="Firm left cushioning">+</button>
-          </div>
+        <div class="track" aria-hidden="true">
+          <div id="archFillL" class="fill"></div>
+          <span id="archMarkerL" class="marker"></span>
         </div>
+        <div class="limits"><span>Low</span><span>High</span></div>
+      </div>
 
-        <p class="zone-mode" id="modeL">Custom</p>
-      </article>
-
-      <article
-        class="shoe-zone"
-        data-side="R"
-        tabindex="0"
-        aria-label="Right shoe. Swipe vertically to adjust arch, horizontally to adjust cushioning."
-      >
-        <div class="zone-header">
-          <span class="side-letter">R</span>
-          <span class="side-name">RIGHT SHOE</span>
-          <span class="selected-dot" aria-hidden="true"></span>
+      <div class="metric">
+        <div class="metric-heading">
+          <span>Cushion</span>
+          <output id="firmnessL">50%</output>
         </div>
-
-        <div class="arch-readout">
-          <span class="metric-label">ARCH HEIGHT</span>
-          <div class="large-value">
-            <output id="archR">50</output><span>%</span>
-          </div>
+        <div class="track" aria-hidden="true">
+          <div id="firmnessFillL" class="fill"></div>
+          <span id="firmnessMarkerL" class="marker"></span>
         </div>
+        <div class="limits"><span>Soft</span><span>Firm</span></div>
+      </div>
 
-        <div class="arch-diagram" aria-hidden="true">
-          <div class="height-scale">
-            <span>High</span>
-            <span>Low</span>
-          </div>
+      <p id="modeL" class="zone-mode">CUSTOM</p>
+    </article>
 
-          <div class="height-track">
-            <div class="height-fill" id="heightFillR"></div>
-            <span class="height-marker" id="heightMarkerR"></span>
-          </div>
+    <article class="zone"
+             data-side="R"
+             tabindex="0"
+             aria-label="Right shoe. Up and down adjust arch. Left and right adjust firmness.">
+      <span class="side-name">RIGHT SHOE</span>
+      <span class="letter">R</span>
 
-          <div class="foot-outline">
-            <span class="heel-pad"></span>
-            <span class="arch-pad" id="archPadR"></span>
-            <span class="toe-pad"></span>
-          </div>
-
-          <span class="vertical-arrow">↕</span>
-        </div>
-
-        <div class="step-buttons" aria-label="Right arch adjustment">
-          <button data-side="R" data-metric="arch" data-step="-5"
-            aria-label="Decrease right arch">−</button>
+      <div class="metric">
+        <div class="metric-heading">
           <span>Arch</span>
-          <button data-side="R" data-metric="arch" data-step="5"
-            aria-label="Increase right arch">+</button>
+          <output id="archR">50%</output>
         </div>
-
-        <div class="cushion-section">
-          <div class="cushion-heading">
-            <span class="metric-label">CUSHIONING</span>
-            <output id="firmnessR">50%</output>
-          </div>
-
-          <div class="firmness-track" aria-hidden="true">
-            <div class="firmness-fill" id="firmnessFillR"></div>
-            <span class="firmness-marker" id="firmnessMarkerR"></span>
-          </div>
-
-          <div class="range-labels">
-            <span>Soft</span>
-            <span>Firm</span>
-          </div>
-
-          <div class="step-buttons" aria-label="Right cushioning adjustment">
-            <button data-side="R" data-metric="firmness" data-step="-5"
-              aria-label="Soften right cushioning">−</button>
-            <span>↔</span>
-            <button data-side="R" data-metric="firmness" data-step="5"
-              aria-label="Firm right cushioning">+</button>
-          </div>
+        <div class="track" aria-hidden="true">
+          <div id="archFillR" class="fill"></div>
+          <span id="archMarkerR" class="marker"></span>
         </div>
-
-        <p class="zone-mode" id="modeR">Custom</p>
-      </article>
-
-    </section>
-
-    <!-- Live gesture feedback -->
-    <div class="feedback-bar" role="status" aria-live="polite">
-      <span class="feedback-dot"></span>
-      <span id="feedback">Left shoe selected</span>
-    </div>
-
-    <!-- Activity presets -->
-    <section class="mode-section">
-      <div class="section-heading">
-        <h2>Mode</h2>
-        <span id="modeTarget">LEFT SHOE</span>
+        <div class="limits"><span>Low</span><span>High</span></div>
       </div>
 
-      <div class="mode-buttons" role="group" aria-label="Activity mode">
-        <button data-mode="Walk" aria-pressed="false">
-          <span class="mode-icon" aria-hidden="true">○</span>
-          Walk
+      <div class="metric">
+        <div class="metric-heading">
+          <span>Cushion</span>
+          <output id="firmnessR">50%</output>
+        </div>
+        <div class="track" aria-hidden="true">
+          <div id="firmnessFillR" class="fill"></div>
+          <span id="firmnessMarkerR" class="marker"></span>
+        </div>
+        <div class="limits"><span>Soft</span><span>Firm</span></div>
+      </div>
+
+      <p id="modeR" class="zone-mode">CUSTOM</p>
+    </article>
+
+  </section>
+
+  <div id="feedback" class="feedback" role="status">
+    Left shoe selected
+  </div>
+
+  <nav class="bottom-bar" aria-label="Shoe controls">
+    <button class="nav-button active" id="controlButton">
+      <span class="nav-icon" aria-hidden="true">↕</span>
+      <span>Control</span>
+    </button>
+
+    <button class="nav-button" id="modeButton">
+      <span class="nav-icon" aria-hidden="true">≡</span>
+      <span>Mode</span>
+    </button>
+
+    <button class="nav-button" id="adjustButton">
+      <span class="nav-icon" aria-hidden="true">±</span>
+      <span>Fine tune</span>
+    </button>
+  </nav>
+
+  <!-- Mode / Fine tune bottom sheet -->
+  <div id="sheetLayer" class="sheet-layer" hidden>
+    <button id="scrim" class="scrim"
+            aria-label="Close panel" tabindex="-1"></button>
+
+    <section class="sheet"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="sheetTitle">
+      <div class="handle" aria-hidden="true"></div>
+
+      <div class="sheet-header">
+        <h2 id="sheetTitle">Your modes</h2>
+        <button id="closeSheet" class="close"
+                aria-label="Close panel">×</button>
+      </div>
+
+      <p id="sheetCaption" class="sheet-caption">
+        Choose a preset for the selected shoe.
+      </p>
+
+      <div class="side-tabs" role="group" aria-label="Select shoe">
+        <button data-select="L" aria-pressed="true">Left shoe</button>
+        <button data-select="R" aria-pressed="false">Right shoe</button>
+      </div>
+
+      <div id="modePanel" class="mode-list">
+        <button class="mode-option" data-mode="Walk"
+                aria-pressed="false">
+          <strong>Walk</strong>
+          <span>Arch 40 · Firmness 25</span>
         </button>
 
-        <button data-mode="Run" aria-pressed="false">
-          <span class="mode-icon" aria-hidden="true">▷</span>
-          Run
+        <button class="mode-option" data-mode="Run"
+                aria-pressed="false">
+          <strong>Run</strong>
+          <span>Arch 60 · Firmness 50</span>
         </button>
 
-        <button data-mode="Court" aria-pressed="false">
-          <span class="mode-icon" aria-hidden="true">□</span>
-          Court
+        <button class="mode-option" data-mode="Court"
+                aria-pressed="false">
+          <strong>Court</strong>
+          <span>Arch 75 · Firmness 80</span>
         </button>
       </div>
+
+      <div id="adjustPanel" hidden>
+        <div class="adjust-row">
+          <div class="adjust-row-heading">
+            <span>Arch height</span>
+            <output id="fineArch">50%</output>
+          </div>
+          <div class="stepper">
+            <button data-metric="arch" data-step="-5"
+                    aria-label="Lower arch">−</button>
+            <span>Low / High</span>
+            <button data-metric="arch" data-step="5"
+                    aria-label="Raise arch">+</button>
+          </div>
+        </div>
+
+        <div class="adjust-row">
+          <div class="adjust-row-heading">
+            <span>Cushioning</span>
+            <output id="fineFirmness">50%</output>
+          </div>
+          <div class="stepper">
+            <button data-metric="firmness" data-step="-5"
+                    aria-label="Soften cushioning">−</button>
+            <span>Carbon plate firmness</span>
+            <button data-metric="firmness" data-step="5"
+                    aria-label="Firm cushioning">+</button>
+          </div>
+        </div>
+
+        <button id="resetButton" class="reset">
+          Reset selected shoe
+        </button>
+      </div>
+
+      <p id="sheetFeedback" class="sheet-feedback" role="status">
+        Left shoe selected
+      </p>
     </section>
+  </div>
 
-    <div class="bottom-note">
-      <span>Carbon plate control</span>
-      <button id="resetButton">Reset</button>
-    </div>
+  <aside id="chargingOverlay" class="charging-overlay"
+         role="status" hidden>
+    <div class="large-battery"><span>ϟ</span></div>
+    <h2>82% Charged</h2>
+    <p>Charging</p>
+  </aside>
 
-    <!-- Charging popup -->
-    <aside id="chargingPopup" class="charging-popup" role="status" hidden>
-      <div class="large-battery"><span>ϟ</span></div>
-      <h2>82% Charged</h2>
-      <p>Charging</p>
-    </aside>
+  <div class="home-indicator" aria-hidden="true"></div>
+</main>
 
-    <div class="home-indicator" aria-hidden="true"></div>
+<script>
+"use strict";
 
-  </main>
+// Demonstration targets, not measured hardware values.
+const state = {
+  L: { arch: 50, firmness: 50, mode: null },
+  R: { arch: 50, firmness: 50, mode: null }
+};
+
+const presets = {
+  Walk: { arch: 40, firmness: 25 },
+  Run: { arch: 60, firmness: 50 },
+  Court: { arch: 75, firmness: 80 }
+};
+
+let selected = "L";
+let charging = false;
+let chargingTimer;
+let returnFocus = null;
+
+const get = id => document.getElementById(id);
+const zones = [...document.querySelectorAll(".zone")];
+const modeOptions = [...document.querySelectorAll("[data-mode]")];
+const sideTabs = [...document.querySelectorAll("[data-select]")];
+
+function clamp(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function name(side) {
+  return side === "L" ? "Left" : "Right";
+}
+
+function announce(message) {
+  get("feedback").textContent = message;
+  get("sheetFeedback").textContent = message;
+}
+
+function render() {
+  for (const side of ["L", "R"]) {
+    const shoe = state[side];
+
+    for (const metric of ["arch", "firmness"]) {
+      get(metric + side).textContent = shoe[metric] + "%";
+      get(metric + "Fill" + side).style.width =
+        shoe[metric] + "%";
+      get(metric + "Marker" + side).style.left =
+        shoe[metric] + "%";
+    }
+
+    get("mode" + side).textContent =
+      shoe.mode ? shoe.mode.toUpperCase() : "CUSTOM";
+  }
+
+  zones.forEach(zone => {
+    zone.classList.toggle(
+      "selected", zone.dataset.side === selected
+    );
+  });
+
+  sideTabs.forEach(button => {
+    button.setAttribute(
+      "aria-pressed",
+      String(button.dataset.select === selected)
+    );
+  });
+
+  modeOptions.forEach(button => {
+    button.setAttribute(
+      "aria-pressed",
+      String(state[selected].mode === button.dataset.mode)
+    );
+  });
+
+  get("fineArch").textContent = state[selected].arch + "%";
+  get("fineFirmness").textContent =
+    state[selected].firmness + "%";
+}
+
+function select(side) {
+  selected = side;
+  render();
+  announce(name(side) + " shoe selected");
+}
+
+function adjust(side, metric, value) {
+  const next = clamp(value);
+  if (next === state[side][metric]) return;
+
+  state[side][metric] = next;
+  state[side].mode = null;
+
+  render();
+  announce(
+    name(side) + " " +
+    (metric === "arch" ? "arch height" : "cushion firmness") +
+    ": " + next + "%"
+  );
+}
+
+// Independent L / R gestures.
+// Direction locks after an unambiguous movement.
+zones.forEach(zone => {
+  let gesture = null;
+
+  zone.addEventListener("pointerdown", event => {
+    if (!event.isPrimary || gesture) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    select(zone.dataset.side);
+
+    gesture = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      arch: state[selected].arch,
+      firmness: state[selected].firmness,
+      axis: null,
+      width: zone.clientWidth,
+      height: zone.clientHeight
+    };
+
+    zone.setPointerCapture(event.pointerId);
+    zone.classList.add("dragging");
+  });
+
+  zone.addEventListener("pointermove", event => {
+    if (!gesture || gesture.id !== event.pointerId) return;
+
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+
+    if (!gesture.axis) {
+      if (Math.hypot(dx, dy) < 8) return;
+
+      if (Math.abs(dy) > Math.abs(dx) * 1.2) {
+        gesture.axis = "vertical";
+      } else if (Math.abs(dx) > Math.abs(dy) * 1.2) {
+        gesture.axis = "horizontal";
+      } else {
+        return;
+      }
+    }
+
+    const side = zone.dataset.side;
+
+    if (gesture.axis === "vertical") {
+      adjust(
+        side,
+        "arch",
+        gesture.arch - dy / gesture.height * 100
+      );
+    } else {
+      adjust(
+        side,
+        "firmness",
+        gesture.firmness + dx / gesture.width * 100
+      );
+    }
+  });
+
+  function finish(event) {
+    if (!gesture || gesture.id !== event.pointerId) return;
+
+    const moved = gesture.axis;
+    gesture = null;
+    zone.classList.remove("dragging");
+
+    if (zone.hasPointerCapture(event.pointerId)) {
+      zone.releasePointerCapture(event.pointerId);
+    }
+
+    if (moved) {
+      announce(name(zone.dataset.side) + " setting updated");
+    }
+  }
+
+  zone.addEventListener("pointerup", finish);
+  zone.addEventListener("pointercancel", finish);
+
+  zone.addEventListener("lostpointercapture", () => {
+    gesture = null;
+    zone.classList.remove("dragging");
+  });
+
+  // Keyboard equivalent of the same gestures.
+  zone.addEventListener("keydown", event => {
+    const actions = {
+      ArrowUp: ["arch", 5],
+      ArrowDown: ["arch", -5],
+      ArrowRight: ["firmness", 5],
+      ArrowLeft: ["firmness", -5]
+    };
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      select(zone.dataset.side);
+      return;
+    }
+
+    const action = actions[event.key];
+    if (!action) return;
+
+    event.preventDefault();
+    select(zone.dataset.side);
+
+    const [metric, step] = action;
+    adjust(selected, metric, state[selected][metric] + step);
+  });
+});
+
+// Bottom sheet navigation.
+function openSheet(panel) {
+  returnFocus = document.activeElement;
+
+  const isMode = panel === "mode";
+
+  get("sheetTitle").textContent =
+    isMode ? "Your modes" : "Fine tune";
+
+  get("sheetCaption").textContent = isMode
+    ? "Choose a preset for the selected shoe."
+    : "Adjust arch height and carbon plate firmness.";
+
+  get("modePanel").hidden = !isMode;
+  get("adjustPanel").hidden = isMode;
+
+  render();
+  announce(name(selected) + " shoe selected");
+
+  get("sheetLayer").hidden = false;
+
+  document.querySelectorAll(
+    ".statusbar, .header, .zones, .bottom-bar"
+  ).forEach(element => {
+    element.inert = true;
+  });
+
+  get("closeSheet").focus();
+}
+
+function closeSheet() {
+  get("sheetLayer").hidden = true;
+
+  document.querySelectorAll(
+    ".statusbar, .header, .zones, .bottom-bar"
+  ).forEach(element => {
+    element.inert = false;
+  });
+
+  if (returnFocus) returnFocus.focus();
+}
+
+get("modeButton").addEventListener(
+  "click", () => openSheet("mode")
+);
+
+get("adjustButton").addEventListener(
+  "click", () => openSheet("adjust")
+);
+
+get("controlButton").addEventListener("click", () => {
+  announce(name(selected) + " shoe selected");
+});
+
+get("closeSheet").addEventListener("click", closeSheet);
+get("scrim").addEventListener("click", closeSheet);
+
+sideTabs.forEach(button => {
+  button.addEventListener("click", () => {
+    select(button.dataset.select);
+  });
+});
+
+modeOptions.forEach(button => {
+  button.addEventListener("click", () => {
+    const mode = button.dataset.mode;
+    Object.assign(state[selected], presets[mode], { mode });
+
+    render();
+    announce(name(selected) + " shoe: " + mode + " mode");
+  });
+});
+
+document.querySelectorAll("[data-step]").forEach(button => {
+  button.addEventListener("click", () => {
+    const metric = button.dataset.metric;
+    const step = Number(button.dataset.step);
+
+    adjust(selected, metric, state[selected][metric] + step);
+  });
+});
+
+get("resetButton").addEventListener("click", () => {
+  Object.assign(state[selected], {
+    arch: 50,
+    firmness: 50,
+    mode: null
+  });
+
+  render();
+  announce(name(selected) + " shoe reset");
+});
+
+// Escape to close; keep keyboard focus inside an open sheet.
+document.addEventListener("keydown", event => {
+  if (get("sheetLayer").hidden) return;
+
+  if (event.key === "Escape") {
+    closeSheet();
+    return;
+  }
+
+  if (event.key !== "Tab") return;
+
+  const buttons = [...document.querySelectorAll(".sheet button")]
+    .filter(button => button.getClientRects().length > 0);
+
+  const first = buttons[0];
+  const last = buttons[buttons.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+// Charger simulation. Battery percentage stays at 82%.
+get("batteryButton").addEventListener("click", () => {
+  charging = !charging;
+  clearTimeout(chargingTimer);
+
+  get("bolt").hidden = !charging;
+  get("chargingOverlay").hidden = !charging;
+
+  get("batteryButton").setAttribute(
+    "aria-label",
+    charging
+      ? "Charging. Tap to simulate disconnection"
+      : "82 percent battery. Tap to simulate charging"
+  );
+
+  if (charging) {
+    chargingTimer = setTimeout(() => {
+      get("chargingOverlay").hidden = true;
+    }, 2200);
+  }
+});
+
+render();
+</script>
 </body>
 </html>
