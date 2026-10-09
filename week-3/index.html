@@ -1,69 +1,195 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Zhang Number Adder</title>
-
-    <link rel="stylesheet" href="style.css">
+    <title>Enhanced Number Adder</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-
-    <!-- HEADER DIV -->
     <div class="header">
-
-        <h1>Zhang Number Adder</h1>
-
-        <div class="header-info">
-            <h4>VIS 4</h4>
-            <h4>Week 3</h4>
-            <h4>Number Adder</h4>
-        </div>
-
+        <h1>Number Adder</h1>
+        <p>Week 3 Assignment</p>
     </div>
 
+    <div class="container">
 
-    <div class="page-container">
-
-        <!-- SIDEBAR DIV -->
+        <!-- SIDEBAR -->
         <div class="sidebar">
-
-            <h3>RESULT</h3>
-
+            <h2>RESULT</h2>
             <p id="resultId">0</p>
 
+            <h3>Total Status</h3>
+            <p id="totalMessage">The total is zero.</p>
+
+            <h3>Summary</h3>
+            <div id="summary"></div>
+
+            <h3>Operation History</h3>
+            <ul id="historyList"></ul>
         </div>
 
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <h2>Control Center</h2>
+            <p>Click the buttons to change the total.</p>
 
-        <!-- MAIN CONTENT DIV -->
-        <div class="main-content">
-
-            <h3>Control Center</h3>
-
-            <div class="button-container">
-
-                <button id="minusTwo">-2</button>
-
-                <button id="minusOne">-1</button>
-
-                <button id="reset">RESET</button>
-
-                <button id="plusOne">+1</button>
-
-                <button id="plusTwo">+2</button>
-
+            <div class="buttons">
+                <button id="addOne">+1</button>
+                <button id="addTwo">+2</button>
+                <button id="subtractOne">-1</button>
+                <button id="subtractTwo">-2</button>
             </div>
 
+            <button id="resetBtn">Reset</button>
+            <button id="clearBtn">Clear History & Results</button>
         </div>
 
     </div>
 
+    <script>
+        // VARIABLES
+        let total = 0;
 
-    <script src="script.js"></script>
+        // STEP 1: ARRAY
+        let history = [];
+
+        // STEP 2: OBJECT
+        let operationCount = {
+            additions: 0,
+            subtractions: 0
+        };
+
+
+        // UPDATE ALL RESULTS
+        function updateResults() {
+            document.querySelector("#resultId").innerHTML = total;
+
+            updateHistory();
+            updateSummary();
+            checkTotal();
+        }
+
+
+        // STEP 1: DISPLAY HISTORY USING LOOP
+        function updateHistory() {
+            let historyContent = "";
+
+            for (let i = 0; i < history.length; i++) {
+                historyContent +=
+                    "<li onclick='removeHistoryItem(" + i + ")'>" +
+                    history[i] +
+                    "</li>";
+            }
+
+            document.querySelector("#historyList").innerHTML = historyContent;
+        }
+
+
+        // STEP 2: DISPLAY SUMMARY
+        function updateSummary() {
+            document.querySelector("#summary").innerHTML =
+                "Total additions: " + operationCount.additions +
+                "<br>Total subtractions: " + operationCount.subtractions;
+        }
+
+
+        // STEP 3: CONDITIONAL STATEMENTS
+        function checkTotal() {
+            if (total > 0) {
+                document.querySelector("#totalMessage").innerHTML =
+                    "The total is positive.";
+            } else if (total < 0) {
+                document.querySelector("#totalMessage").innerHTML =
+                    "The total is negative.";
+            } else if (total === 0) {
+                document.querySelector("#totalMessage").innerHTML =
+                    "The total is zero.";
+            }
+        }
+
+
+        // ADD 1
+        document.getElementById("addOne")
+            .addEventListener("click", function() {
+                total = total + 1;
+                history.push("+1");
+                operationCount.additions =
+                    operationCount.additions + 1;
+                updateResults();
+            });
+
+
+        // ADD 2
+        document.getElementById("addTwo")
+            .addEventListener("click", function() {
+                total = total + 2;
+                history.push("+2");
+                operationCount.additions =
+                    operationCount.additions + 1;
+                updateResults();
+            });
+
+
+        // SUBTRACT 1
+        document.getElementById("subtractOne")
+            .addEventListener("click", function() {
+                total = total - 1;
+                history.push("-1");
+                operationCount.subtractions =
+                    operationCount.subtractions + 1;
+                updateResults();
+            });
+
+
+        // SUBTRACT 2
+        document.getElementById("subtractTwo")
+            .addEventListener("click", function() {
+                total = total - 2;
+                history.push("-2");
+                operationCount.subtractions =
+                    operationCount.subtractions + 1;
+                updateResults();
+            });
+
+
+        // RESET TOTAL ONLY
+        document.getElementById("resetBtn")
+            .addEventListener("click", function() {
+                total = 0;
+                history.push("Reset");
+                updateResults();
+            });
+
+
+        // STEP 4: CLEAR ALL
+        function ClearAll() {
+            total = 0;
+            history = [];
+
+            operationCount.additions = 0;
+            operationCount.subtractions = 0;
+
+            updateResults();
+        }
+
+        document.getElementById("clearBtn")
+            .addEventListener("click", ClearAll);
+
+
+        // BONUS: REMOVE CLICKED HISTORY ITEM
+        function removeHistoryItem(index) {
+            history.splice(index, 1);
+            updateHistory();
+        }
+
+
+        // INITIAL DISPLAY
+        updateResults();
+
+    </script>
 
 </body>
-
 </html>
