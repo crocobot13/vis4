@@ -1,48 +1,52 @@
 # Part 2 — Software Requirements
 **Project: Adaptive Smart Shoe**
 
-### Must Have
+**Hero Experience: Personalized Cushioning & Arch Support Adjustment**
 
-**1. Charging Status**
+## 01 / Cushioning Control
 
-As a user, when I connect my shoes to a charger, I expect the interface to display the charging status and battery percentage, so that I can confirm the shoes are charging properly.
+**1. Cushioning Adjustment — Must Have**
 
-**2. Charging Feedback**
+As a user, when I adjust the cushioning control, I expect the shoe to become softer or firmer, so that I can customize the cushioning based on my comfort and activity needs.
 
-As a user, when my shoes are charging, I expect the battery percentage and charging indicator to update, so that I can monitor the charging process.
+**2. Real-Time Cushioning Feedback — Must Have**
 
-**3. Cushioning Adjustment**
+As a user, when I change the cushioning level, I expect the interface to immediately display the updated value, so that I can understand the current softness setting.
 
-As a user, when I move the cushioning slider, I expect the shoe to become softer or firmer and the interface to display the current cushioning level, so that I can adjust the comfort to my preference.
+## 02 / Arch Support Control
 
-**4. Arch Support Adjustment**
+**3. Arch Height Adjustment — Must Have**
 
-As a user, when I adjust the arch support slider, I expect the arch height to increase or decrease and the interface to show the current level, so that I can customize the fit of my shoes.
+As a user, when I adjust the arch support control, I expect the arch height to increase or decrease, so that I can find a comfortable level of foot support.
 
-**5. Adjustment Feedback**
+**4. Real-Time Arch Feedback — Must Have**
 
-As a user, when I change the cushioning or arch support, I expect the interface to immediately display the updated setting, so that I know my adjustment has been applied.
+As a user, when I change the arch height, I expect the interface to display the updated level, so that I can understand the current support setting.
 
-**6. Setting Retention**
+## 03 / Energy Management
 
-As a user, when I switch between the adjustment and charging screens, I expect my previous cushioning and arch support settings to remain unchanged, so that I do not need to readjust them.
+**5. Battery Status — Must Have**
 
-### Nice to Have
+As a user, when I open the energy section, I expect to see the current battery percentage, so that I can check the shoe's power level.
 
-**7. Activity Presets**
+**6. Charging Feedback — Must Have**
 
-As a user, when I select an activity mode such as Walking, Running, or Training, I expect the shoe to automatically apply preset cushioning and arch support settings, so that I can quickly switch between activities.
+As a user, when I connect the shoe to a charger, I expect the interface to show the charging status and progress, so that I can confirm the shoe is charging.
 
-### Dropped
+## 04 / Additional Features
 
-**8. Activity Data Tracking**
+**7. Activity Presets — Nice to Have**
+
+As a user, when I select an activity mode such as Walking, Running, or Training, I expect the shoe to automatically adjust the cushioning and arch support to preset levels, so that I can quickly switch between activities.
+
+**8. Activity Data Tracking — Dropped**
 
 As a user, when I finish an activity, I expect the interface to record my movement data.
 
-**Reason for dropping:** Tracking activity data requires additional sensors and is not essential to the main shoe adjustment experience.
+**Reason for dropping:** This requires additional sensors and is not essential to the core cushioning and arch adjustment experience.
 
-**9. Battery Range Estimation**
+**9. Battery Range Estimation — Dropped**
 
-As a user, when I check the battery, I expect the interface to estimate how much longer the shoes can operate.
+As a user, when I check the battery, I expect the interface to estimate the remaining operating time.
 
-**Reason for dropping:** Battery percentage and charging status provide sufficient information for the current prototype. Range estimation would require additional power-consumption data.
+**Reason for dropping:** Battery percentage and charging status already provide the essential information needed for this prototype.ing status provide sufficient information for the current prototype. Range estimation would require additional power-consumption data.
