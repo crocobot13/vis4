@@ -1,262 +1,367 @@
 "use strict";
 
-const presets = {
-  Walk: { arch: 40, firmness: 25 },
-  Run: { arch: 60, firmness: 50 },
-  Court: { arch: 75, firmness: 80 }
+// Interface prototype only.
+// Percentages represent adjustment targets, not measured shoe values.
+
+const state = {
+  L: {
+    arch: 50,
+    firmness: 50,
+    mode: null
+  },
+
+  R: {
+    arch: 50,
+    firmness: 50,
+    mode: null
+  }
 };
 
-const shoeState = {
-  L: { arch: 50, firmness: 50, mode: null },
-  R: { arch: 50, firmness: 50, mode: null }
+const presets = {
+  Walk: {
+    arch: 40,
+    firmness: 25
+  },
+
+  Run: {
+    arch: 60,
+    firmness: 50
+  },
+
+  Court: {
+    arch: 75,
+    firmness: 80
+  }
 };
 
 let selectedSide = "L";
 let charging = false;
 let chargingTimer;
-let feedbackTimer;
 
-const homeScreen = document.getElementById("homeScreen");
-const controlScreen = document.getElementById("controlScreen");
-
-const archSlider = document.getElementById("archSlider");
-const firmnessSlider = document.getElementById("firmnessSlider");
-
-const feedback = document.getElementById("feedback");
+const zones = [
+  ...document.querySelectorAll(".shoe-zone")
+];
 
 const modeButtons = [
   ...document.querySelectorAll("[data-mode]")
 ];
 
-function animateScreen(screen) {
-  screen.classList.remove("entering");
+const feedback = document.getElementById("feedback");
 
-  // Restart the screen transition.
-  void screen.offsetWidth;
-
-  screen.classList.add("entering");
+function clamp(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
 }
 
-function updateHome() {
-  document.getElementById("leftArch").textContent =
-    shoeState.L.arch;
-
-  document.getElementById("leftFirmness").textContent =
-    shoeState.L.firmness;
-
-  document.getElementById("rightArch").textContent =
-    shoeState.R.arch;
-
-  document.getElementById("rightFirmness").textContent =
-    shoeState.R.firmness;
+function sideName(side) {
+  return side === "L" ? "Left" : "Right";
 }
 
-function updateControls() {
-  const state = shoeState[selectedSide];
-  const isLeft = selectedSide === "L";
+function render() {
+  for (const side of ["L", "R"]) {
+    const shoe = state[side];
 
-  document.getElementById("shoeTitle").textContent =
-    isLeft ? "Left shoe" : "Right shoe";
+    document.getElementById("arch" + side).textContent =
+      shoe.arch;
 
-  document.getElementById("selectedLetter").textContent =
-    selectedSide;
+    document.getElementById("firmness" + side).textContent =
+      shoe.firmness + "%";
 
-  document.getElementById("currentMode").textContent =
-    state.mode ? state.mode.toUpperCase() : "CUSTOM";
+    document.getElementById("heightFill" + side).style.height =
+      shoe.arch + "%";
 
-  const switchButton = document.getElementById("switchButton");
+    document.getElementById("heightMarker" + side).style.bottom =
+      shoe.arch + "%";
 
-  switchButton.textContent = isLeft ? "R ⇄" : "L ⇄";
+    document.getElementById("firmnessFill" + side).style.width =
+      shoe.firmness + "%";
 
-  switchButton.setAttribute(
-    "aria-label",
-    isLeft ? "Switch to right shoe" : "Switch to left shoe"
-  );
+    document.getElementById("firmnessMarker" + side).style.left =
+      shoe.firmness + "%";
 
-  archSlider.value = state.arch;
-  firmnessSlider.value = state.firmness;
+    // Wireframe representation of the arch support.
+    const archPad = document.getElementById("archPad" + side);
 
-  archSlider.style.setProperty("--fill", state.arch + "%");
-  firmnessSlider.style.setProperty("--fill", state.firmness + "%");
+    archPad.style.height =
+      12 + shoe.arch * 0.26 + "px";
 
-  document.getElementById("archOutput").textContent =
-    state.arch + "%";
+    archPad.style.backgroundColor =
+      "rgb(" +
+      (170 - shoe.arch) + "," +
+      (170 - shoe.arch) + "," +
+      (160 - shoe.arch) + ")";
 
-  document.getElementById("firmnessOutput").textContent =
-    state.firmness + "%";
+    document.getElementById("mode" + side).textContent =
+      shoe.mode || "Custom";
+  }
+
+  zones.forEach((zone) => {
+    zone.classList.toggle(
+      "selected",
+      zone.dataset.side === selectedSide
+    );
+  });
+
+  document.getElementById("modeTarget").textContent =
+    sideName(selectedSide).toUpperCase() + " SHOE";
 
   modeButtons.forEach((button) => {
     button.setAttribute(
       "aria-pressed",
-      String(button.dataset.mode === state.mode)
+      String(
+        state[selectedSide].mode === button.dataset.mode
+      )
     );
   });
-
-  updateHome();
 }
 
-function openShoe(side) {
+function selectSide(side) {
   selectedSide = side;
-
-  clearTimeout(feedbackTimer);
-  feedback.textContent = "Adjust your support";
-
-  updateControls();
-
-  homeScreen.hidden = true;
-  controlScreen.hidden = false;
-
-  animateScreen(controlScreen);
-
-  document.getElementById("backButton").focus({
-    preventScroll: true
-  });
+  feedback.textContent = sideName(side) + " shoe selected";
+  render();
 }
 
-function goHome() {
-  updateHome();
+function setValue(side, metric, value) {
+  const nextValue = clamp(value);
 
-  controlScreen.hidden = true;
-  homeScreen.hidden = false;
+  if (state[side][metric] === nextValue) {
+    return;
+  }
 
-  animateScreen(homeScreen);
+  state[side][metric] = nextValue;
+  state[side].mode = null;
 
-  document.querySelector(
-    '.shoe-card[data-side="' + selectedSide + '"]'
-  ).focus({ preventScroll: true });
+  render();
+
+  if (metric === "arch") {
+    feedback.textContent =
+      sideName(side) + " arch height: " + nextValue + "%";
+  } else {
+    feedback.textContent =
+      sideName(side) + " cushion firmness: " + nextValue + "%";
+  }
 }
 
-// Swipe up or tap a shoe to open its control screen.
-document.querySelectorAll(".shoe-card").forEach((card) => {
-  let startPoint = null;
-  let suppressClick = false;
+// Gesture handling:
+// Vertical drag adjusts arch height.
+// Horizontal drag adjusts cushioning.
+// The first clear direction locks the gesture to one axis.
 
-  card.addEventListener("pointerdown", (event) => {
-    startPoint = {
-      x: event.clientX,
-      y: event.clientY
+zones.forEach((zone) => {
+  let gesture = null;
+
+  zone.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (gesture) return;
+
+    selectSide(zone.dataset.side);
+
+    gesture = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      initialArch: state[zone.dataset.side].arch,
+      initialFirmness: state[zone.dataset.side].firmness,
+      axis: null,
+
+      // A full vertical zone drag spans approximately 100%.
+      verticalSpan: zone.clientHeight,
+
+      // A full horizontal zone drag spans approximately 100%.
+      horizontalSpan: zone.clientWidth
     };
 
-    suppressClick = false;
-    card.setPointerCapture(event.pointerId);
+    zone.setPointerCapture(event.pointerId);
+    zone.classList.add("dragging");
   });
 
-  card.addEventListener("pointermove", (event) => {
-    if (!startPoint) return;
-
-    const distance = Math.max(
-      0,
-      Math.min(45, startPoint.y - event.clientY)
-    );
-
-    card.style.transform =
-      "translateY(" + -distance * 0.35 + "px)";
-  });
-
-  card.addEventListener("pointerup", (event) => {
-    card.style.transform = "";
-
-    if (!startPoint) return;
-
-    const upwardDistance = startPoint.y - event.clientY;
-    const horizontalDistance = Math.abs(
-      startPoint.x - event.clientX
-    );
-
-    if (upwardDistance > 35 && horizontalDistance < 80) {
-      suppressClick = true;
-      openShoe(card.dataset.side);
-    }
-
-    startPoint = null;
-  });
-
-  card.addEventListener("pointercancel", () => {
-    startPoint = null;
-    card.style.transform = "";
-  });
-
-  card.addEventListener("click", () => {
-    if (suppressClick) {
-      suppressClick = false;
+  zone.addEventListener("pointermove", (event) => {
+    if (!gesture || event.pointerId !== gesture.pointerId) {
       return;
     }
 
-    openShoe(card.dataset.side);
+    const dx = event.clientX - gesture.startX;
+    const dy = event.clientY - gesture.startY;
+
+    if (!gesture.axis) {
+      const distance = Math.hypot(dx, dy);
+
+      if (distance < 8) return;
+
+      // Wait for a clear direction instead of guessing on diagonals.
+      if (Math.abs(dy) > Math.abs(dx) * 1.2) {
+        gesture.axis = "vertical";
+      } else if (Math.abs(dx) > Math.abs(dy) * 1.2) {
+        gesture.axis = "horizontal";
+      } else {
+        return;
+      }
+    }
+
+    const side = zone.dataset.side;
+
+    if (gesture.axis === "vertical") {
+      const change = (-dy / gesture.verticalSpan) * 100;
+
+      setValue(
+        side,
+        "arch",
+        gesture.initialArch + change
+      );
+    } else {
+      const change = (dx / gesture.horizontalSpan) * 100;
+
+      setValue(
+        side,
+        "firmness",
+        gesture.initialFirmness + change
+      );
+    }
+  });
+
+  function finishGesture(event) {
+    if (!gesture || event.pointerId !== gesture.pointerId) {
+      return;
+    }
+
+    const side = zone.dataset.side;
+    const axis = gesture.axis;
+
+    gesture = null;
+    zone.classList.remove("dragging");
+
+    if (zone.hasPointerCapture(event.pointerId)) {
+      zone.releasePointerCapture(event.pointerId);
+    }
+
+    if (axis) {
+      feedback.textContent =
+        sideName(side) +
+        (axis === "vertical"
+          ? " arch setting saved"
+          : " cushioning setting saved");
+    }
+  }
+
+  zone.addEventListener("pointerup", finishGesture);
+  zone.addEventListener("pointercancel", finishGesture);
+
+  zone.addEventListener("lostpointercapture", () => {
+    gesture = null;
+    zone.classList.remove("dragging");
+  });
+
+  // Keyboard alternatives:
+  // Up / Down = arch height.
+  // Left / Right = cushion firmness.
+  zone.addEventListener("keydown", (event) => {
+    if (event.target !== zone) return;
+
+    const side = zone.dataset.side;
+
+    const keyActions = {
+      ArrowUp: ["arch", 5],
+      ArrowDown: ["arch", -5],
+      ArrowRight: ["firmness", 5],
+      ArrowLeft: ["firmness", -5]
+    };
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectSide(side);
+      return;
+    }
+
+    const action = keyActions[event.key];
+
+    if (!action) return;
+
+    event.preventDefault();
+    selectSide(side);
+
+    const [metric, step] = action;
+
+    setValue(
+      side,
+      metric,
+      state[side][metric] + step
+    );
   });
 });
 
-document.getElementById("backButton").addEventListener(
-  "click",
-  goHome
-);
+// Minus / plus controls.
+document.querySelectorAll("[data-step]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const side = button.dataset.side;
+    const metric = button.dataset.metric;
+    const step = Number(button.dataset.step);
 
-document.getElementById("switchButton").addEventListener(
-  "click",
-  () => {
-    openShoe(selectedSide === "L" ? "R" : "L");
-  }
-);
+    selectSide(side);
 
-function showFeedback(message) {
-  clearTimeout(feedbackTimer);
-  feedback.textContent = message;
-
-  feedbackTimer = setTimeout(() => {
-    feedback.textContent = "Adjust your support";
-  }, 1600);
-}
-
-// Arch support adjustment.
-archSlider.addEventListener("input", () => {
-  shoeState[selectedSide].arch = Number(archSlider.value);
-  shoeState[selectedSide].mode = null;
-
-  updateControls();
-  showFeedback("Arch setting updated");
+    setValue(
+      side,
+      metric,
+      state[side][metric] + step
+    );
+  });
 });
 
-// Carbon plate firmness adjustment.
-firmnessSlider.addEventListener("input", () => {
-  shoeState[selectedSide].firmness =
-    Number(firmnessSlider.value);
-
-  shoeState[selectedSide].mode = null;
-
-  updateControls();
-  showFeedback("Cushioning setting updated");
-});
-
-// Mode presets apply only to the selected shoe.
+// Mode presets affect only the selected shoe.
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const mode = button.dataset.mode;
 
     Object.assign(
-      shoeState[selectedSide],
+      state[selectedSide],
       presets[mode],
       { mode }
     );
 
-    updateControls();
-    showFeedback(mode + " settings selected");
+    render();
+
+    feedback.textContent =
+      sideName(selectedSide) + " shoe: " + mode + " mode";
   });
 });
 
-// Simulate charger connection by tapping the battery.
+// Reset only the selected shoe.
+document.getElementById("resetButton").addEventListener(
+  "click",
+  () => {
+    Object.assign(state[selectedSide], {
+      arch: 50,
+      firmness: 50,
+      mode: null
+    });
+
+    render();
+
+    feedback.textContent =
+      sideName(selectedSide) + " shoe reset";
+  }
+);
+
+// Tap the battery to simulate charger connection.
+// The charging popup disappears after 2.2 seconds.
 document.getElementById("batteryButton").addEventListener(
   "click",
   () => {
     charging = !charging;
 
-    const button = document.getElementById("batteryButton");
-    const overlay = document.getElementById("chargingOverlay");
+    const batteryButton =
+      document.getElementById("batteryButton");
+
+    const chargingPopup =
+      document.getElementById("chargingPopup");
 
     clearTimeout(chargingTimer);
 
-    button.classList.toggle("is-charging", charging);
+    batteryButton.classList.toggle(
+      "is-charging",
+      charging
+    );
 
-    button.setAttribute(
+    batteryButton.setAttribute(
       "aria-label",
       charging
         ? "Charging. Tap to simulate disconnection"
@@ -266,22 +371,14 @@ document.getElementById("batteryButton").addEventListener(
     document.getElementById("chargingBolt").hidden =
       !charging;
 
-    overlay.hidden = !charging;
+    chargingPopup.hidden = !charging;
 
     if (charging) {
       chargingTimer = setTimeout(() => {
-        overlay.hidden = true;
+        chargingPopup.hidden = true;
       }, 2200);
     }
   }
 );
 
-// Escape returns to the shoe selection screen.
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !controlScreen.hidden) {
-    goHome();
-  }
-});
-
-updateHome();
-updateControls();
+render();
