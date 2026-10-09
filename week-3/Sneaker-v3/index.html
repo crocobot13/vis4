@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
 <meta name="theme-color" content="#f3f3ef">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Adaptive Shoe</title>
@@ -35,7 +37,7 @@ button {
 
 button:focus-visible,
 .zone:focus-visible {
-  outline: 2px solid #555;
+  outline: 2px solid #777;
   outline-offset: -4px;
 }
 
@@ -43,28 +45,29 @@ button:focus-visible,
   display: none !important;
 }
 
-/* Phone screen */
 .app {
   width: 390px;
   height: 844px;
   max-width: 100%;
-  position: relative;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
   background: #f3f3ef;
   border-radius: 36px;
   outline: 7px solid #292929;
-  overflow: hidden;
 }
 
+/* Phone status bar */
 .statusbar {
-  height: 52px;
+  height: 59px;
   flex-shrink: 0;
-  padding: 18px 25px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 19px 27px 10px;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .notch {
@@ -74,28 +77,180 @@ button:focus-visible,
   transform: translateX(-50%);
   width: 88px;
   height: 23px;
-  background: #292929;
   border-radius: 20px;
+  background: #292929;
+}
+
+.signal {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.signal i {
+  width: 3px;
+  background: #444;
+  border-radius: 1px;
+}
+
+.signal i:nth-child(1) { height: 4px; }
+.signal i:nth-child(2) { height: 6px; }
+.signal i:nth-child(3) { height: 9px; }
+.signal i:nth-child(4) { height: 12px; }
+
+/* Independent gesture areas */
+.zones {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 17px 16px 0;
+}
+
+.zone {
+  position: relative;
+  min-width: 0;
+  border-radius: 22px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  transition: background 0.15s;
+}
+
+.zone.selected {
+  background: #eaeae4;
+}
+
+.zone.dragging {
+  cursor: grabbing;
+  background: #e2e2da;
+}
+
+.zone:first-child::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 28px;
+  bottom: 28px;
+  width: 1px;
+  background: #cecec5;
+}
+
+/* Arch height is represented by letter movement */
+.letter-stage {
+  position: absolute;
+  inset: 30px 0 85px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.letter {
+  display: block;
+  font-size: 142px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -10px;
+  padding-right: 12px;
+  transform: translateY(var(--offset, 0px));
+  transition: transform 0.16s ease;
+}
+
+.dragging .letter {
+  transition: none;
+}
+
+/* Cushion firmness is represented by filled dots */
+.dots {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 39px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: #cecec4;
+  transition: background 0.12s;
+}
+
+.dot.on {
+  background: #343434;
+}
+
+/* Bottom controls */
+.bottom-bar {
+  display: flex;
+  justify-content: center;
+  gap: 33px;
+  padding: 26px 20px 16px;
+  flex-shrink: 0;
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  color: #75756b;
+  font-size: 9px;
+}
+
+.nav-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e1e1d8;
+  color: #333;
+  font-size: 22px;
+}
+
+.nav-button.active .nav-icon {
+  background: #333;
+  color: white;
+}
+
+/* Battery and charging at the bottom */
+.battery-row {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 20px 33px;
 }
 
 .battery-button {
-  border: 0;
-  background: none;
   display: flex;
-  gap: 5px;
   align-items: center;
-  color: #222;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 0;
+  background: transparent;
+  color: #77776d;
   font-size: 10px;
-  padding: 4px;
 }
 
 .battery {
-  width: 23px;
+  width: 24px;
   height: 12px;
-  border: 1px solid #222;
-  border-radius: 3px;
-  padding: 2px;
   position: relative;
+  padding: 2px;
+  border: 1px solid #666;
+  border-radius: 3px;
 }
 
 .battery::after {
@@ -105,221 +260,39 @@ button:focus-visible,
   top: 3px;
   width: 2px;
   height: 4px;
-  background: #222;
+  background: #666;
 }
 
 .battery span {
   display: block;
   width: 82%;
   height: 100%;
-  background: #333;
+  background: #666;
 }
 
 #bolt {
   font-size: 18px;
-}
-
-.header {
-  padding: 20px 25px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.header-caption {
-  font-size: 10px;
-  color: #85857d;
-}
-
-.gesture-guide {
-  display: flex;
-  justify-content: center;
-  gap: 22px;
-  padding: 10px 15px 22px;
-  font-size: 10px;
-  color: #7b7b73;
-}
-
-/* Full-height L / R gesture surface */
-.zones {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  flex: 1;
-  min-height: 0;
-  margin: 0 14px;
-}
-
-.zone {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 18px 15px;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: grab;
-  border-radius: 18px;
-  transition: background 0.15s;
-}
-
-.zone:first-child::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 22px;
-  bottom: 22px;
-  width: 1px;
-  background: #d4d4cc;
-}
-
-.zone.selected {
-  background: #e9e9e2;
-}
-
-.zone.dragging {
-  cursor: grabbing;
-  background: #ddddd4;
-}
-
-.side-name {
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  color: #85857b;
-}
-
-.letter {
-  font-size: 136px;
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1;
-  letter-spacing: -10px;
-  padding-right: 12px;
-  margin: 25px 0 29px;
-}
-
-.metric {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.metric-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 11px;
-}
-
-.metric-heading output {
-  font-size: 15px;
-  font-variant-numeric: tabular-nums;
-}
-
-.track {
-  height: 3px;
-  margin: 14px 6px 10px;
-  background: #c9c9bf;
-  position: relative;
-}
-
-.fill {
-  height: 100%;
-  width: 50%;
-  background: #333;
-}
-
-.marker {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #f3f3ef;
-  border: 2px solid #333;
-}
-
-.limits {
-  display: flex;
-  justify-content: space-between;
-  font-size: 8px;
-  color: #929287;
-}
-
-.zone-mode {
-  margin: 25px 0 0;
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: #85857b;
-}
-
-.feedback {
-  height: 43px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-size: 10px;
-  color: #77776d;
-  padding: 0 20px;
-}
-
-.bottom-bar {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  padding: 12px 20px 33px;
-  flex-shrink: 0;
-}
-
-.nav-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  background: none;
-  color: #66665d;
-  font-size: 9px;
-}
-
-.nav-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: #e1e1d9;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
   color: #333;
 }
 
-.nav-button.active .nav-icon {
-  background: #333;
-  color: #fff;
-}
-
-.home-indicator {
+/* Brief gesture feedback */
+.toast {
   position: absolute;
-  bottom: 10px;
+  bottom: 170px;
   left: 50%;
   transform: translateX(-50%);
-  width: 110px;
-  height: 4px;
-  border-radius: 5px;
+  max-width: 90%;
+  white-space: nowrap;
+  padding: 9px 15px;
+  border-radius: 20px;
   background: #333;
-  z-index: 30;
+  color: white;
+  font-size: 10px;
+  pointer-events: none;
+  z-index: 5;
 }
 
-/* Bottom sheet */
+/* Bottom sheets */
 .sheet-layer {
   position: absolute;
   inset: 0;
@@ -329,10 +302,10 @@ button:focus-visible,
 .scrim {
   position: absolute;
   inset: 0;
-  border: 0;
-  background: #00000030;
   width: 100%;
   height: 100%;
+  border: 0;
+  background: #00000030;
 }
 
 .sheet {
@@ -342,18 +315,18 @@ button:focus-visible,
   right: 0;
   max-height: 85%;
   overflow-y: auto;
+  padding: 12px 25px 42px;
   background: #f3f3ef;
   border-radius: 27px 27px 0 0;
-  padding: 12px 25px 42px;
   animation: sheet-in 0.25s ease;
 }
 
 .handle {
   width: 38px;
   height: 4px;
-  background: #c2c2b8;
-  border-radius: 4px;
   margin: 0 auto 25px;
+  border-radius: 4px;
+  background: #c2c2b8;
 }
 
 .sheet-header {
@@ -363,26 +336,26 @@ button:focus-visible,
 }
 
 h2 {
+  margin: 0;
   font-size: 24px;
   font-weight: 500;
-  margin: 0;
 }
 
 .close {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   border: 0;
+  border-radius: 50%;
   background: #e0e0d8;
-  font-size: 22px;
   color: #666;
+  font-size: 23px;
 }
 
 .sheet-caption {
-  font-size: 11px;
-  color: #818178;
-  line-height: 1.6;
   margin: 13px 0 22px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #818178;
 }
 
 .side-tabs {
@@ -393,16 +366,16 @@ h2 {
 
 .side-tabs button {
   flex: 1;
+  padding: 12px;
   border: 1px solid #cecec3;
+  border-radius: 22px;
   background: transparent;
-  border-radius: 20px;
-  padding: 11px;
   font-size: 11px;
 }
 
 .side-tabs button[aria-pressed="true"] {
   background: #333;
-  color: #fff;
+  color: white;
   border-color: #333;
 }
 
@@ -412,14 +385,14 @@ h2 {
 }
 
 .mode-option {
+  min-height: 69px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 69px;
+  padding: 16px;
   border: 1px solid #d4d4ca;
   border-radius: 16px;
   background: #e9e9e2;
-  padding: 16px;
   color: #333;
   text-align: left;
 }
@@ -444,11 +417,11 @@ h2 {
   border-bottom: 1px solid #d8d8ce;
 }
 
-.adjust-row-heading {
+.adjust-heading {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
   margin-bottom: 13px;
+  font-size: 13px;
 }
 
 .stepper {
@@ -473,8 +446,8 @@ h2 {
 
 .reset {
   width: 100%;
-  padding: 15px;
   margin-top: 22px;
+  padding: 15px;
   border: 1px solid #c9c9be;
   border-radius: 12px;
   background: transparent;
@@ -483,33 +456,33 @@ h2 {
 
 .sheet-feedback {
   min-height: 18px;
-  text-align: center;
-  color: #77776d;
-  font-size: 10px;
   margin: 18px 0 0;
+  text-align: center;
+  font-size: 10px;
+  color: #77776d;
 }
 
-/* Charging overlay */
+/* Charging animation */
 .charging-overlay {
   position: absolute;
   inset: 0;
   z-index: 25;
-  background: #f3f3eff7;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: #f3f3eff7;
   pointer-events: none;
 }
 
 .large-battery {
   width: 116px;
   height: 60px;
+  position: relative;
+  padding: 5px;
+  margin-bottom: 27px;
   border: 2px solid #333;
   border-radius: 11px;
-  padding: 5px;
-  position: relative;
-  margin-bottom: 27px;
 }
 
 .large-battery::after {
@@ -517,8 +490,8 @@ h2 {
   position: absolute;
   right: -8px;
   top: 18px;
-  height: 20px;
   width: 5px;
+  height: 20px;
   border-radius: 2px;
   background: #333;
 }
@@ -530,13 +503,25 @@ h2 {
   height: 100%;
   border-radius: 5px;
   background: #555;
-  color: #fff;
+  color: white;
   font-size: 34px;
 }
 
 .charging-overlay p {
   font-size: 12px;
   color: #888;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 4px;
+  border-radius: 5px;
+  background: #333;
+  z-index: 30;
 }
 
 @keyframes sheet-in {
@@ -546,48 +531,41 @@ h2 {
 
 @media (max-width: 450px) {
   body {
-    padding: 0;
     display: block;
+    padding: 0;
     background: #f3f3ef;
   }
 
   .app {
     width: 100%;
     height: 100dvh;
+    padding-top: env(safe-area-inset-top);
     border-radius: 0;
     outline: none;
-    padding-top: env(safe-area-inset-top);
   }
 
   .notch {
     display: none;
   }
 
-  .bottom-bar {
+  .battery-row {
     padding-bottom: max(33px, env(safe-area-inset-bottom));
   }
 }
 
-@media (max-height: 740px) {
+@media (max-width: 350px) {
   .letter {
-    font-size: 100px;
-    margin: 12px 0;
+    font-size: 118px;
   }
 
-  .metric {
-    margin-top: 13px;
+  .dots {
+    gap: 4px;
   }
 
-  .zone-mode {
-    margin-top: 15px;
-  }
-
-  .header {
-    padding-top: 10px;
-  }
-
-  .gesture-guide {
-    padding-bottom: 10px;
+  .dot {
+    width: 6px;
+    height: 6px;
+    flex-basis: 6px;
   }
 }
 
@@ -606,134 +584,91 @@ h2 {
   <div class="statusbar">
     <span>9:41</span>
     <span class="notch" aria-hidden="true"></span>
-
-    <button id="batteryButton"
-            class="battery-button"
-            aria-label="Simulate charging">
-      <span id="bolt" hidden>ϟ</span>
-      <span>82%</span>
-      <span class="battery"><span></span></span>
-    </button>
-  </div>
-
-  <header class="header">
-    <span class="brand">ADAPTIVE</span>
-    <span class="header-caption">Shoe control</span>
-  </header>
-
-  <div class="gesture-guide">
-    <span>↕ Arch height</span>
-    <span>↔ Cushion firmness</span>
+    <span class="signal" aria-hidden="true">
+      <i></i><i></i><i></i><i></i>
+    </span>
   </div>
 
   <section class="zones" aria-label="Independent shoe controls">
 
-    <article class="zone selected"
-             data-side="L"
-             tabindex="0"
-             aria-label="Left shoe. Up and down adjust arch. Left and right adjust firmness.">
-      <span class="side-name">LEFT SHOE</span>
-      <span class="letter">L</span>
-
-      <div class="metric">
-        <div class="metric-heading">
-          <span>Arch</span>
-          <output id="archL">50%</output>
-        </div>
-        <div class="track" aria-hidden="true">
-          <div id="archFillL" class="fill"></div>
-          <span id="archMarkerL" class="marker"></span>
-        </div>
-        <div class="limits"><span>Low</span><span>High</span></div>
+    <article
+      class="zone selected"
+      data-side="L"
+      tabindex="0"
+      aria-label="Left shoe. Swipe up or down to adjust arch height. Swipe left or right to adjust cushion firmness."
+    >
+      <div class="letter-stage" aria-hidden="true">
+        <span id="letterL" class="letter">L</span>
       </div>
 
-      <div class="metric">
-        <div class="metric-heading">
-          <span>Cushion</span>
-          <output id="firmnessL">50%</output>
-        </div>
-        <div class="track" aria-hidden="true">
-          <div id="firmnessFillL" class="fill"></div>
-          <span id="firmnessMarkerL" class="marker"></span>
-        </div>
-        <div class="limits"><span>Soft</span><span>Firm</span></div>
-      </div>
-
-      <p id="modeL" class="zone-mode">CUSTOM</p>
+      <div id="dotsL" class="dots" aria-hidden="true"></div>
     </article>
 
-    <article class="zone"
-             data-side="R"
-             tabindex="0"
-             aria-label="Right shoe. Up and down adjust arch. Left and right adjust firmness.">
-      <span class="side-name">RIGHT SHOE</span>
-      <span class="letter">R</span>
-
-      <div class="metric">
-        <div class="metric-heading">
-          <span>Arch</span>
-          <output id="archR">50%</output>
-        </div>
-        <div class="track" aria-hidden="true">
-          <div id="archFillR" class="fill"></div>
-          <span id="archMarkerR" class="marker"></span>
-        </div>
-        <div class="limits"><span>Low</span><span>High</span></div>
+    <article
+      class="zone"
+      data-side="R"
+      tabindex="0"
+      aria-label="Right shoe. Swipe up or down to adjust arch height. Swipe left or right to adjust cushion firmness."
+    >
+      <div class="letter-stage" aria-hidden="true">
+        <span id="letterR" class="letter">R</span>
       </div>
 
-      <div class="metric">
-        <div class="metric-heading">
-          <span>Cushion</span>
-          <output id="firmnessR">50%</output>
-        </div>
-        <div class="track" aria-hidden="true">
-          <div id="firmnessFillR" class="fill"></div>
-          <span id="firmnessMarkerR" class="marker"></span>
-        </div>
-        <div class="limits"><span>Soft</span><span>Firm</span></div>
-      </div>
-
-      <p id="modeR" class="zone-mode">CUSTOM</p>
+      <div id="dotsR" class="dots" aria-hidden="true"></div>
     </article>
 
   </section>
 
-  <div id="feedback" class="feedback" role="status">
-    Left shoe selected
-  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
 
   <nav class="bottom-bar" aria-label="Shoe controls">
-    <button class="nav-button active" id="controlButton">
+    <button id="controlButton" class="nav-button active">
       <span class="nav-icon" aria-hidden="true">↕</span>
       <span>Control</span>
     </button>
 
-    <button class="nav-button" id="modeButton">
+    <button id="modeButton" class="nav-button">
       <span class="nav-icon" aria-hidden="true">≡</span>
       <span>Mode</span>
     </button>
 
-    <button class="nav-button" id="adjustButton">
+    <button id="adjustButton" class="nav-button">
       <span class="nav-icon" aria-hidden="true">±</span>
       <span>Fine tune</span>
     </button>
   </nav>
 
-  <!-- Mode / Fine tune bottom sheet -->
-  <div id="sheetLayer" class="sheet-layer" hidden>
-    <button id="scrim" class="scrim"
-            aria-label="Close panel" tabindex="-1"></button>
+  <div class="battery-row">
+    <button
+      id="batteryButton"
+      class="battery-button"
+      aria-label="82 percent battery. Tap to simulate charging."
+    >
+      <span class="battery" aria-hidden="true"><span></span></span>
+      <span>82%</span>
+      <span id="bolt" hidden>ϟ</span>
+    </button>
+  </div>
 
-    <section class="sheet"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="sheetTitle">
+  <div id="sheetLayer" class="sheet-layer" hidden>
+    <button
+      id="scrim"
+      class="scrim"
+      aria-label="Close panel"
+      tabindex="-1"
+    ></button>
+
+    <section
+      class="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sheetTitle"
+    >
       <div class="handle" aria-hidden="true"></div>
 
       <div class="sheet-header">
         <h2 id="sheetTitle">Your modes</h2>
-        <button id="closeSheet" class="close"
-                aria-label="Close panel">×</button>
+        <button id="closeSheet" class="close" aria-label="Close">×</button>
       </div>
 
       <p id="sheetCaption" class="sheet-caption">
@@ -746,20 +681,17 @@ h2 {
       </div>
 
       <div id="modePanel" class="mode-list">
-        <button class="mode-option" data-mode="Walk"
-                aria-pressed="false">
+        <button class="mode-option" data-mode="Walk" aria-pressed="false">
           <strong>Walk</strong>
           <span>Arch 40 · Firmness 25</span>
         </button>
 
-        <button class="mode-option" data-mode="Run"
-                aria-pressed="false">
+        <button class="mode-option" data-mode="Run" aria-pressed="false">
           <strong>Run</strong>
           <span>Arch 60 · Firmness 50</span>
         </button>
 
-        <button class="mode-option" data-mode="Court"
-                aria-pressed="false">
+        <button class="mode-option" data-mode="Court" aria-pressed="false">
           <strong>Court</strong>
           <span>Arch 75 · Firmness 80</span>
         </button>
@@ -767,10 +699,11 @@ h2 {
 
       <div id="adjustPanel" hidden>
         <div class="adjust-row">
-          <div class="adjust-row-heading">
+          <div class="adjust-heading">
             <span>Arch height</span>
             <output id="fineArch">50%</output>
           </div>
+
           <div class="stepper">
             <button data-metric="arch" data-step="-5"
                     aria-label="Lower arch">−</button>
@@ -781,10 +714,11 @@ h2 {
         </div>
 
         <div class="adjust-row">
-          <div class="adjust-row-heading">
+          <div class="adjust-heading">
             <span>Cushioning</span>
             <output id="fineFirmness">50%</output>
           </div>
+
           <div class="stepper">
             <button data-metric="firmness" data-step="-5"
                     aria-label="Soften cushioning">−</button>
@@ -805,20 +739,20 @@ h2 {
     </section>
   </div>
 
-  <aside id="chargingOverlay" class="charging-overlay"
-         role="status" hidden>
+  <aside id="chargingOverlay" class="charging-overlay" role="status" hidden>
     <div class="large-battery"><span>ϟ</span></div>
     <h2>82% Charged</h2>
     <p>Charging</p>
   </aside>
 
   <div class="home-indicator" aria-hidden="true"></div>
+
 </main>
 
 <script>
 "use strict";
 
-// Demonstration targets, not measured hardware values.
+// Interface demonstration targets, not hardware measurements.
 const state = {
   L: { arch: 50, firmness: 50, mode: null },
   R: { arch: 50, firmness: 50, mode: null }
@@ -830,48 +764,82 @@ const presets = {
   Court: { arch: 75, firmness: 80 }
 };
 
-let selected = "L";
-let charging = false;
-let chargingTimer;
-let returnFocus = null;
-
 const get = id => document.getElementById(id);
 const zones = [...document.querySelectorAll(".zone")];
 const modeOptions = [...document.querySelectorAll("[data-mode]")];
 const sideTabs = [...document.querySelectorAll("[data-select]")];
 
+let selected = "L";
+let charging = false;
+let chargingTimer;
+let toastTimer;
+let returnFocus = null;
+
+// Create 10 dots for each shoe.
+for (const side of ["L", "R"]) {
+  for (let index = 0; index < 10; index++) {
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    get("dots" + side).appendChild(dot);
+  }
+}
+
 function clamp(value) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
-function name(side) {
+function sideName(side) {
   return side === "L" ? "Left" : "Right";
 }
 
-function announce(message) {
-  get("feedback").textContent = message;
+function announce(message, showToast = true) {
   get("sheetFeedback").textContent = message;
+
+  if (!showToast || !get("sheetLayer").hidden) return;
+
+  clearTimeout(toastTimer);
+  get("toast").textContent = message;
+  get("toast").hidden = false;
+
+  toastTimer = setTimeout(() => {
+    get("toast").hidden = true;
+  }, 1100);
 }
 
 function render() {
   for (const side of ["L", "R"]) {
     const shoe = state[side];
 
-    for (const metric of ["arch", "firmness"]) {
-      get(metric + side).textContent = shoe[metric] + "%";
-      get(metric + "Fill" + side).style.width =
-        shoe[metric] + "%";
-      get(metric + "Marker" + side).style.left =
-        shoe[metric] + "%";
-    }
+    // Low arch = letter moves down.
+    // High arch = letter moves up.
+    // Movement is limited to -18px / +18px.
+    const offset = (50 - shoe.arch) * 0.36;
+    get("letter" + side).style.setProperty(
+      "--offset",
+      offset + "px"
+    );
 
-    get("mode" + side).textContent =
-      shoe.mode ? shoe.mode.toUpperCase() : "CUSTOM";
+    // Each filled dot represents approximately 10% firmness.
+    const activeDots = Math.round(shoe.firmness / 10);
+
+    [...get("dots" + side).children].forEach((dot, index) => {
+      dot.classList.toggle("on", index < activeDots);
+    });
+
+    const zone = zones.find(item => item.dataset.side === side);
+
+    zone.setAttribute(
+      "aria-label",
+      sideName(side) + " shoe. Arch height " + shoe.arch +
+      " percent. Cushion firmness " + shoe.firmness +
+      " percent. Swipe vertically for arch and horizontally for firmness."
+    );
   }
 
   zones.forEach(zone => {
     zone.classList.toggle(
-      "selected", zone.dataset.side === selected
+      "selected",
+      zone.dataset.side === selected
     );
   });
 
@@ -890,33 +858,33 @@ function render() {
   });
 
   get("fineArch").textContent = state[selected].arch + "%";
-  get("fineFirmness").textContent =
-    state[selected].firmness + "%";
+  get("fineFirmness").textContent = state[selected].firmness + "%";
 }
 
 function select(side) {
   selected = side;
   render();
-  announce(name(side) + " shoe selected");
+  announce(sideName(side) + " shoe selected", false);
 }
 
 function adjust(side, metric, value) {
   const next = clamp(value);
-  if (next === state[side][metric]) return;
+
+  if (state[side][metric] === next) return;
 
   state[side][metric] = next;
   state[side].mode = null;
 
   render();
+
   announce(
-    name(side) + " " +
-    (metric === "arch" ? "arch height" : "cushion firmness") +
-    ": " + next + "%"
+    sideName(side) + " " +
+    (metric === "arch" ? "arch" : "firmness") +
+    " · " + next + "%"
   );
 }
 
-// Independent L / R gestures.
-// Direction locks after an unambiguous movement.
+// Gesture direction locks after a clear initial movement.
 zones.forEach(zone => {
   let gesture = null;
 
@@ -932,9 +900,9 @@ zones.forEach(zone => {
       y: event.clientY,
       arch: state[selected].arch,
       firmness: state[selected].firmness,
-      axis: null,
       width: zone.clientWidth,
-      height: zone.clientHeight
+      height: zone.clientHeight,
+      axis: null
     };
 
     zone.setPointerCapture(event.pointerId);
@@ -942,7 +910,7 @@ zones.forEach(zone => {
   });
 
   zone.addEventListener("pointermove", event => {
-    if (!gesture || gesture.id !== event.pointerId) return;
+    if (!gesture || event.pointerId !== gesture.id) return;
 
     const dx = event.clientX - gesture.x;
     const dy = event.clientY - gesture.y;
@@ -977,18 +945,13 @@ zones.forEach(zone => {
   });
 
   function finish(event) {
-    if (!gesture || gesture.id !== event.pointerId) return;
+    if (!gesture || event.pointerId !== gesture.id) return;
 
-    const moved = gesture.axis;
     gesture = null;
     zone.classList.remove("dragging");
 
     if (zone.hasPointerCapture(event.pointerId)) {
       zone.releasePointerCapture(event.pointerId);
-    }
-
-    if (moved) {
-      announce(name(zone.dataset.side) + " setting updated");
     }
   }
 
@@ -1000,7 +963,7 @@ zones.forEach(zone => {
     zone.classList.remove("dragging");
   });
 
-  // Keyboard equivalent of the same gestures.
+  // Keyboard alternatives.
   zone.addEventListener("keydown", event => {
     const actions = {
       ArrowUp: ["arch", 5],
@@ -1026,11 +989,21 @@ zones.forEach(zone => {
   });
 });
 
-// Bottom sheet navigation.
+// Bottom-sheet controls.
+function setBackgroundInert(value) {
+  document.querySelectorAll(
+    ".statusbar, .zones, .bottom-bar, .battery-row"
+  ).forEach(element => {
+    element.inert = value;
+  });
+}
+
 function openSheet(panel) {
   returnFocus = document.activeElement;
-
   const isMode = panel === "mode";
+
+  clearTimeout(toastTimer);
+  get("toast").hidden = true;
 
   get("sheetTitle").textContent =
     isMode ? "Your modes" : "Fine tune";
@@ -1043,41 +1016,32 @@ function openSheet(panel) {
   get("adjustPanel").hidden = isMode;
 
   render();
-  announce(name(selected) + " shoe selected");
+  announce(sideName(selected) + " shoe selected", false);
 
   get("sheetLayer").hidden = false;
-
-  document.querySelectorAll(
-    ".statusbar, .header, .zones, .bottom-bar"
-  ).forEach(element => {
-    element.inert = true;
-  });
-
+  setBackgroundInert(true);
   get("closeSheet").focus();
 }
 
 function closeSheet() {
   get("sheetLayer").hidden = true;
-
-  document.querySelectorAll(
-    ".statusbar, .header, .zones, .bottom-bar"
-  ).forEach(element => {
-    element.inert = false;
-  });
+  setBackgroundInert(false);
 
   if (returnFocus) returnFocus.focus();
 }
 
 get("modeButton").addEventListener(
-  "click", () => openSheet("mode")
+  "click",
+  () => openSheet("mode")
 );
 
 get("adjustButton").addEventListener(
-  "click", () => openSheet("adjust")
+  "click",
+  () => openSheet("adjust")
 );
 
 get("controlButton").addEventListener("click", () => {
-  announce(name(selected) + " shoe selected");
+  announce(sideName(selected) + " shoe selected");
 });
 
 get("closeSheet").addEventListener("click", closeSheet);
@@ -1092,10 +1056,11 @@ sideTabs.forEach(button => {
 modeOptions.forEach(button => {
   button.addEventListener("click", () => {
     const mode = button.dataset.mode;
+
     Object.assign(state[selected], presets[mode], { mode });
 
     render();
-    announce(name(selected) + " shoe: " + mode + " mode");
+    announce(sideName(selected) + " shoe · " + mode);
   });
 });
 
@@ -1116,10 +1081,10 @@ get("resetButton").addEventListener("click", () => {
   });
 
   render();
-  announce(name(selected) + " shoe reset");
+  announce(sideName(selected) + " shoe reset");
 });
 
-// Escape to close; keep keyboard focus inside an open sheet.
+// Keyboard focus stays inside the open panel.
 document.addEventListener("keydown", event => {
   if (get("sheetLayer").hidden) return;
 
@@ -1130,8 +1095,9 @@ document.addEventListener("keydown", event => {
 
   if (event.key !== "Tab") return;
 
-  const buttons = [...document.querySelectorAll(".sheet button")]
-    .filter(button => button.getClientRects().length > 0);
+  const buttons = [
+    ...document.querySelectorAll(".sheet button")
+  ].filter(button => button.getClientRects().length > 0);
 
   const first = buttons[0];
   const last = buttons[buttons.length - 1];
@@ -1145,9 +1111,11 @@ document.addEventListener("keydown", event => {
   }
 });
 
-// Charger simulation. Battery percentage stays at 82%.
+// Tap the bottom battery to simulate charging.
+// Popup disappears after 2.2 seconds; the small bolt remains.
 get("batteryButton").addEventListener("click", () => {
   charging = !charging;
+
   clearTimeout(chargingTimer);
 
   get("bolt").hidden = !charging;
@@ -1156,8 +1124,8 @@ get("batteryButton").addEventListener("click", () => {
   get("batteryButton").setAttribute(
     "aria-label",
     charging
-      ? "Charging. Tap to simulate disconnection"
-      : "82 percent battery. Tap to simulate charging"
+      ? "Charging. Tap to simulate disconnection."
+      : "82 percent battery. Tap to simulate charging."
   );
 
   if (charging) {
