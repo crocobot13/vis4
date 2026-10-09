@@ -2,159 +2,164 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
+  <meta name="theme-color" content="#f6f6f3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <meta name="theme-color" content="#f7f7f5">
-
-  <title>Adaptive — Shoe Control</title>
-
+  <title>Adaptive</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 
 <body>
-  <main class="phone">
+  <main class="app">
 
-    <header>
+    <header class="topbar">
       <span class="brand">ADAPTIVE</span>
 
       <button
-        id="battery"
+        id="batteryButton"
         class="battery-button"
-        aria-label="Simulate charging"
+        aria-label="Simulate charger connection"
       >
         <span>82%</span>
-
-        <span class="battery">
-          <span></span>
+        <span class="battery-icon">
+          <span class="battery-fill"></span>
         </span>
-
-        <span id="bolt" hidden>ϟ</span>
+        <span id="chargingBolt" hidden>ϟ</span>
       </button>
     </header>
 
-    <section class="intro">
-      <p class="eyebrow">YOUR SUPPORT, YOUR WAY</p>
-      <h1>Make your<br>next move.</h1>
-    </section>
-
-    <section class="selection" aria-label="Select shoe">
-      <button
-        class="shoe selected"
-        data-side="L"
-        aria-pressed="true"
-      >
-        <span class="arrow">↑</span>
-        <strong>L</strong>
-        <span class="shoe-name">LEFT SHOE</span>
-        <span class="shoe-summary" id="summaryL"></span>
-      </button>
-
-      <button
-        class="shoe"
-        data-side="R"
-        aria-pressed="false"
-      >
-        <span class="arrow">↑</span>
-        <strong>R</strong>
-        <span class="shoe-name">RIGHT SHOE</span>
-        <span class="shoe-summary" id="summaryR"></span>
-      </button>
-    </section>
-
-    <p class="hint">Swipe up or tap to select a shoe</p>
-
-    <section class="controls" aria-labelledby="controlTitle">
-
-      <div class="section-heading">
-        <h2 id="controlTitle">Left shoe</h2>
-        <span id="status" role="status">Ready</span>
+    <!-- Home screen -->
+    <section id="homeScreen" class="screen">
+      <div class="home-title">
+        <p class="eyebrow">SHOE CONTROL</p>
+        <h1>Your next<br>move.</h1>
       </div>
 
-      <label class="slider-label" for="arch">
-        <span>Arch support</span>
-        <output id="archValue" for="arch">50%</output>
-      </label>
+      <div class="shoe-selector">
+        <button class="shoe-card" data-side="L">
+          <span class="shoe-letter">L</span>
+          <span class="shoe-caption">LEFT SHOE</span>
 
-      <input
-        id="arch"
-        type="range"
-        min="0"
-        max="100"
-        value="50"
-      >
+          <span class="shoe-values">
+            <span>Arch <b id="leftArch">50</b></span>
+            <span>Firmness <b id="leftFirmness">50</b></span>
+          </span>
 
-      <div class="endpoints">
-        <span>Low</span>
-        <span>High</span>
-      </div>
-
-      <label class="slider-label second" for="cushion">
-        <span>Cushioning</span>
-        <output id="cushionValue" for="cushion">50%</output>
-      </label>
-
-      <p class="detail">Carbon plate adjustment</p>
-
-      <input
-        id="cushion"
-        type="range"
-        min="0"
-        max="100"
-        value="50"
-      >
-
-      <div class="endpoints">
-        <span>Soft</span>
-        <span>Firm</span>
-      </div>
-
-      <div class="mode-heading">
-        <h2>Mode</h2>
-        <span>Selected shoe</span>
-      </div>
-
-      <div
-        class="modes"
-        role="group"
-        aria-label="Activity mode"
-      >
-        <button data-mode="Walk" aria-pressed="false">
-          Walk
+          <span class="swipe-arrow">↑</span>
         </button>
 
-        <button data-mode="Run" aria-pressed="false">
-          Run
-        </button>
+        <button class="shoe-card" data-side="R">
+          <span class="shoe-letter">R</span>
+          <span class="shoe-caption">RIGHT SHOE</span>
 
-        <button data-mode="Court" aria-pressed="false">
-          Court
+          <span class="shoe-values">
+            <span>Arch <b id="rightArch">50</b></span>
+            <span>Firmness <b id="rightFirmness">50</b></span>
+          </span>
+
+          <span class="swipe-arrow">↑</span>
         </button>
       </div>
+
+      <p class="swipe-hint">Swipe up to adjust</p>
     </section>
 
-    <footer>
-      <span class="dot"></span>
-      Interface demo
-      <span class="footer-right">L / R independent</span>
-    </footer>
+    <!-- Shoe control screen -->
+    <section id="controlScreen" class="screen" hidden>
+      <div class="navigation">
+        <button id="backButton" class="back-button" aria-label="Back">
+          ←
+        </button>
+
+        <span id="shoeTitle">Left shoe</span>
+
+        <button
+          id="switchButton"
+          class="switch-button"
+          aria-label="Switch to right shoe"
+        >
+          R ⇄
+        </button>
+      </div>
+
+      <div class="support-display">
+        <span id="selectedLetter" class="selected-letter">L</span>
+        <p id="currentMode" class="current-mode">CUSTOM</p>
+      </div>
+
+      <div class="adjustments">
+        <div class="control-heading">
+          <label for="archSlider">Arch support</label>
+          <output id="archOutput" for="archSlider">50%</output>
+        </div>
+
+        <input
+          id="archSlider"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+        >
+
+        <div class="range-labels">
+          <span>Low</span>
+          <span>High</span>
+        </div>
+
+        <div class="control-heading firmness-heading">
+          <label for="firmnessSlider">Cushioning</label>
+          <output id="firmnessOutput" for="firmnessSlider">50%</output>
+        </div>
+
+        <p class="control-description">Carbon plate adjustment</p>
+
+        <input
+          id="firmnessSlider"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+        >
+
+        <div class="range-labels">
+          <span>Soft</span>
+          <span>Firm</span>
+        </div>
+
+        <div class="mode-heading">
+          <span>Mode</span>
+        </div>
+
+        <div class="mode-options" role="group" aria-label="Mode">
+          <button data-mode="Walk" aria-pressed="false">Walk</button>
+          <button data-mode="Run" aria-pressed="false">Run</button>
+          <button data-mode="Court" aria-pressed="false">Court</button>
+        </div>
+      </div>
+
+      <p class="feedback" id="feedback" role="status">
+        Adjust your support
+      </p>
+    </section>
+
+    <!-- Brief charging overlay -->
+    <div id="chargingOverlay" class="charging-overlay" hidden>
+      <div class="charging-card" role="status">
+        <div class="large-battery">
+          <span>ϟ</span>
+        </div>
+        <h2>82% Charged</h2>
+        <p>Charging</p>
+      </div>
+    </div>
 
     <div class="home-indicator" aria-hidden="true"></div>
-
-    <aside
-      id="chargingPopup"
-      class="charging-popup"
-      role="status"
-      hidden
-    >
-      <span class="large-battery">ϟ</span>
-      <h2>82% Charged</h2>
-      <p>Charging connected</p>
-    </aside>
 
   </main>
 </body>
