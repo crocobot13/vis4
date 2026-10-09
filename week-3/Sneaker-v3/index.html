@@ -2,24 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover"
->
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4f4f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Adaptive Shoe</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 :root {
   font-family: Arial, Helvetica, sans-serif;
   color: #222;
   background: #d9d9d5;
-  font-synthesis: none;
 }
 
 body {
@@ -42,9 +37,7 @@ button:focus-visible,
   outline-offset: -4px;
 }
 
-[hidden] {
-  display: none !important;
-}
+[hidden] { display: none !important; }
 
 .app {
   width: 390px;
@@ -57,17 +50,11 @@ button:focus-visible,
   outline: 7px solid #292929;
 }
 
-/* Typography inspired by the reference */
-button,
-.caption,
-.nav-label,
-.battery-button,
-.side-tabs,
-.mode-option,
-.sheet-caption {
+button, .caption {
   letter-spacing: 1px;
 }
 
+/* Status bar */
 .statusbar {
   position: absolute;
   inset: 0 0 auto;
@@ -78,7 +65,6 @@ button,
   justify-content: space-between;
   padding: 19px 27px 10px;
   font-size: 11px;
-  letter-spacing: 0.5px;
   pointer-events: none;
 }
 
@@ -97,12 +83,10 @@ button,
   display: flex;
   align-items: flex-end;
   gap: 2px;
-  height: 12px;
 }
 
 .signal i {
   width: 3px;
-  border-radius: 1px;
   background: #444;
 }
 
@@ -111,7 +95,7 @@ button,
 .signal i:nth-child(3) { height: 9px; }
 .signal i:nth-child(4) { height: 12px; }
 
-/* Home screen */
+/* Home */
 .home {
   position: absolute;
   inset: 58px 0 0;
@@ -134,18 +118,12 @@ button,
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
   cursor: grab;
-  transition: background 0.15s;
 }
 
-.zone.selected {
-  background: #ebebe5;
-}
-
-.zone.dragging {
-  cursor: grabbing;
-  background: #e3e3dc;
-}
+.zone.selected { background: #ebebe5; }
+.zone.dragging { cursor: grabbing; }
 
 .zone:first-child::after {
   content: "";
@@ -155,23 +133,31 @@ button,
   bottom: 28px;
   width: 1px;
   background: #cecec5;
-}
-
-/* Moving and morphing L / R */
-.letter-stage {
-  position: absolute;
-  inset: 20px 0 82px;
-  display: grid;
-  place-items: center;
   pointer-events: none;
 }
 
-.glyph {
-  width: 100px;
-  height: 154px;
-  overflow: visible;
+/* The letter and circles move together with arch height */
+.letter-stage {
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  width: 0;
+  height: 0;
   transform: translateY(var(--offset, 0px));
-  transition: transform 0.16s ease;
+  transition: transform .16s ease;
+  pointer-events: none;
+}
+
+.dragging .letter-stage { transition: none; }
+
+.glyph {
+  position: absolute;
+  width: 88px;
+  height: 140px;
+  left: -44px;
+  top: -70px;
+  overflow: visible;
+  z-index: 2;
 }
 
 .glyph path {
@@ -179,51 +165,110 @@ button,
   stroke: #292929;
 }
 
-.zone.dragging .glyph {
-  transition: none;
-}
-
-/* Cushion dots */
-.dots {
+/* Softness visualization */
+.softness-visual {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 36px;
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  pointer-events: none;
+  width: 240px;
+  height: 240px;
+  left: -120px;
+  top: -120px;
+  opacity: 0;
+  transition: opacity .2s;
 }
 
-.dot {
-  width: 7px;
-  height: 7px;
-  flex: 0 0 7px;
+.zone.show-softness .softness-visual { opacity: 1; }
+
+.rings {
+  width: 240px;
+  height: 240px;
+  overflow: visible;
+}
+
+.reference-ring {
+  fill: none;
+  stroke: #555;
+  stroke-opacity: .09;
+  stroke-width: 1;
+}
+
+.active-ring {
+  fill: none;
+  stroke: #444;
+  stroke-opacity: .55;
+  stroke-width: 1.6;
+}
+
+.softness-number {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  padding: 4px 6px;
+  background: #f4f4f1;
+  border-radius: 5px;
+  color: #444;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.softness-number small {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+/* Hold this button to decrease softness */
+.harden {
+  position: absolute;
+  left: 50%;
+  bottom: 39px;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border: 1px solid #c6c6ba;
   border-radius: 50%;
-  background: #cecec4;
+  background: #f4f4f1;
+  color: #777;
+  font-size: 24px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  z-index: 5;
 }
 
-.dot.on {
-  background: #343434;
+.zone.show-softness .harden,
+.harden:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Arch ruler, visible during vertical adjustment */
+.harden:active {
+  background: #dcdcd2;
+  color: #222;
+}
+
+/* Arch ruler */
 .ruler {
   position: absolute;
-  top: 50%;
-  left: 9px;
+  top: 43%;
+  left: 8px;
   transform: translateY(-50%);
   width: 32px;
   height: 204px;
   opacity: 0;
-  transition: opacity 0.15s;
   pointer-events: none;
-  z-index: 3;
+  z-index: 6;
 }
 
-.zone.show-ruler .ruler {
-  opacity: 1;
-}
+.zone.show-ruler .ruler { opacity: 1; }
 
 .ruler-line {
   position: absolute;
@@ -242,17 +287,14 @@ button,
   background: #aaa99f;
 }
 
-.tick.major {
-  width: 11px;
-}
+.tick.major { width: 11px; }
 
 .tick span {
   position: absolute;
   left: 14px;
   top: -4px;
   font-size: 7px;
-  color: #9a998e;
-  letter-spacing: 0;
+  color: #99998e;
 }
 
 .ruler-marker {
@@ -267,16 +309,15 @@ button,
 .ruler-value {
   position: absolute;
   left: 13px;
+  transform: translateY(50%);
   padding: 3px 4px;
+  border-radius: 3px;
   background: #333;
   color: white;
-  border-radius: 3px;
   font-size: 10px;
-  font-variant-numeric: tabular-nums;
-  transform: translateY(50%);
 }
 
-/* Bottom navigation */
+/* Bottom controls */
 .bottom-bar {
   display: flex;
   justify-content: center;
@@ -357,13 +398,11 @@ button,
   background: #666;
 }
 
-#bolt {
-  font-size: 18px;
-}
+#bolt { font-size: 18px; }
 
 .toast {
   position: absolute;
-  bottom: 171px;
+  bottom: 168px;
   left: 50%;
   transform: translateX(-50%);
   padding: 9px 14px;
@@ -373,10 +412,10 @@ button,
   font-size: 10px;
   white-space: nowrap;
   pointer-events: none;
-  z-index: 5;
+  z-index: 8;
 }
 
-/* Battery screen */
+/* Battery page */
 .battery-screen {
   position: absolute;
   inset: 58px 0 0;
@@ -385,19 +424,15 @@ button,
   display: flex;
   flex-direction: column;
   background: #f4f4f1;
-  animation: enter 0.25s ease;
 }
 
-h1,
-h2 {
+h1, h2 {
   margin: 0;
   font-weight: 500;
-  letter-spacing: 0.6px;
+  letter-spacing: .6px;
 }
 
-.battery-screen h1 {
-  font-size: 23px;
-}
+.battery-screen h1 { font-size: 23px; }
 
 .caption {
   margin: 13px 0 0;
@@ -455,7 +490,6 @@ h2 {
 .battery-percent {
   margin-top: 22px;
   font-size: 15px;
-  letter-spacing: 1px;
 }
 
 .battery-state {
@@ -465,7 +499,8 @@ h2 {
   color: #85857b;
 }
 
-.charge-button {
+.charge-button,
+.reset {
   padding: 15px;
   border: 1px solid #c9c9be;
   border-radius: 13px;
@@ -492,11 +527,7 @@ h2 {
   font-size: 25px;
 }
 
-.charging .battery-fill {
-  animation: pulse 1.3s ease-in-out infinite alternate;
-}
-
-/* Mode / fine tune sheet */
+/* Bottom sheet */
 .sheet-layer {
   position: absolute;
   inset: 0;
@@ -522,7 +553,7 @@ h2 {
   padding: 12px 25px 42px;
   border-radius: 27px 27px 0 0;
   background: #f4f4f1;
-  animation: sheet-in 0.25s ease;
+  animation: sheet-in .25s ease;
 }
 
 .handle {
@@ -539,9 +570,7 @@ h2 {
   justify-content: space-between;
 }
 
-.sheet h2 {
-  font-size: 23px;
-}
+.sheet h2 { font-size: 23px; }
 
 .close {
   width: 36px;
@@ -558,6 +587,7 @@ h2 {
   color: #818178;
   font-size: 10px;
   line-height: 1.6;
+  letter-spacing: .6px;
 }
 
 .side-tabs {
@@ -610,7 +640,7 @@ h2 {
 
 .mode-option span {
   font-size: 8px;
-  letter-spacing: 0.4px;
+  letter-spacing: .4px;
   color: #818178;
 }
 
@@ -624,7 +654,6 @@ h2 {
   justify-content: space-between;
   margin-bottom: 13px;
   font-size: 12px;
-  letter-spacing: 0.5px;
 }
 
 .stepper {
@@ -650,11 +679,6 @@ h2 {
 .reset {
   width: 100%;
   margin-top: 22px;
-  padding: 15px;
-  border: 1px solid #c9c9be;
-  border-radius: 12px;
-  background: transparent;
-  font-size: 10px;
 }
 
 .sheet-feedback {
@@ -665,7 +689,7 @@ h2 {
   color: #77776d;
 }
 
-/* Brief charger connection overlay */
+/* Charging popup */
 .charging-popup {
   position: absolute;
   inset: 0;
@@ -686,7 +710,6 @@ h2 {
 .charging-popup p {
   font-size: 11px;
   color: #888;
-  letter-spacing: 1px;
 }
 
 .home-indicator {
@@ -701,19 +724,9 @@ h2 {
   z-index: 40;
 }
 
-@keyframes enter {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes sheet-in {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
-}
-
-@keyframes pulse {
-  from { opacity: 0.65; }
-  to { opacity: 1; }
 }
 
 @media (max-width: 450px) {
@@ -730,13 +743,7 @@ h2 {
     outline: none;
   }
 
-  .notch {
-    display: none;
-  }
-
-  .statusbar {
-    padding-top: max(19px, env(safe-area-inset-top));
-  }
+  .notch { display: none; }
 
   .battery-row {
     padding-bottom: max(33px, env(safe-area-inset-bottom));
@@ -745,21 +752,15 @@ h2 {
 
 @media (max-height: 650px) {
   .glyph {
-    height: 120px;
-    width: 78px;
+    width: 70px;
+    height: 110px;
+    left: -35px;
+    top: -55px;
   }
 
-  .bottom-bar {
-    padding-top: 12px;
-  }
-
-  .battery-screen {
-    padding-top: 20px;
-  }
-
-  .large-battery {
-    height: 115px;
-  }
+  .bottom-bar { padding-top: 12px; }
+  .large-battery { height: 115px; }
+  .battery-screen { padding-top: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -783,17 +784,27 @@ h2 {
   </div>
 
   <section id="home" class="home" aria-label="Shoe control">
-
     <div class="zones">
 
-      <article
-        class="zone selected"
-        data-side="L"
-        tabindex="0"
-        aria-label="Left shoe"
-      >
-        <div class="letter-stage" aria-hidden="true">
-          <svg id="letterL" class="glyph" viewBox="0 0 100 150">
+      <article class="zone selected" data-side="L"
+               tabindex="0" aria-label="Left shoe">
+        <div id="stageL" class="letter-stage">
+          <div class="softness-visual" aria-hidden="true">
+            <svg class="rings" viewBox="0 0 240 240">
+              <circle class="reference-ring" cx="120" cy="120" r="52"/>
+              <circle class="reference-ring" cx="120" cy="120" r="72"/>
+              <circle class="reference-ring" cx="120" cy="120" r="92"/>
+              <circle class="reference-ring" cx="120" cy="120" r="112"/>
+              <circle id="ringL" class="active-ring"
+                      cx="120" cy="120" r="82"/>
+            </svg>
+            <div id="softLabelL" class="softness-number">
+              <small>SOFTNESS</small>
+              <output id="softValueL">50</output>
+            </div>
+          </div>
+
+          <svg class="glyph" viewBox="0 0 100 150" aria-hidden="true">
             <path id="pathL"></path>
           </svg>
         </div>
@@ -804,17 +815,29 @@ h2 {
           <span id="rulerValueL" class="ruler-value">50</span>
         </div>
 
-        <div id="dotsL" class="dots" aria-hidden="true"></div>
+        <button class="harden" data-harden="L"
+                aria-label="Hold to decrease left shoe softness">×</button>
       </article>
 
-      <article
-        class="zone"
-        data-side="R"
-        tabindex="0"
-        aria-label="Right shoe"
-      >
-        <div class="letter-stage" aria-hidden="true">
-          <svg id="letterR" class="glyph" viewBox="0 0 100 150">
+      <article class="zone" data-side="R"
+               tabindex="0" aria-label="Right shoe">
+        <div id="stageR" class="letter-stage">
+          <div class="softness-visual" aria-hidden="true">
+            <svg class="rings" viewBox="0 0 240 240">
+              <circle class="reference-ring" cx="120" cy="120" r="52"/>
+              <circle class="reference-ring" cx="120" cy="120" r="72"/>
+              <circle class="reference-ring" cx="120" cy="120" r="92"/>
+              <circle class="reference-ring" cx="120" cy="120" r="112"/>
+              <circle id="ringR" class="active-ring"
+                      cx="120" cy="120" r="82"/>
+            </svg>
+            <div id="softLabelR" class="softness-number">
+              <small>SOFTNESS</small>
+              <output id="softValueR">50</output>
+            </div>
+          </div>
+
+          <svg class="glyph" viewBox="0 0 100 150" aria-hidden="true">
             <path id="pathR"></path>
           </svg>
         </div>
@@ -825,7 +848,8 @@ h2 {
           <span id="rulerValueR" class="ruler-value">50</span>
         </div>
 
-        <div id="dotsR" class="dots" aria-hidden="true"></div>
+        <button class="harden" data-harden="R"
+                aria-label="Hold to decrease right shoe softness">×</button>
       </article>
 
     </div>
@@ -835,79 +859,66 @@ h2 {
     <nav class="bottom-bar" aria-label="Shoe controls">
       <button id="controlButton" class="nav-button active">
         <span class="nav-icon" aria-hidden="true">↕</span>
-        <span class="nav-label">CONTROL</span>
+        <span>CONTROL</span>
       </button>
 
       <button id="modeButton" class="nav-button">
         <span class="nav-icon" aria-hidden="true">≡</span>
-        <span class="nav-label">MODE</span>
+        <span>MODE</span>
       </button>
 
       <button id="adjustButton" class="nav-button">
         <span class="nav-icon" aria-hidden="true">±</span>
-        <span class="nav-label">FINE TUNE</span>
+        <span>FINE TUNE</span>
       </button>
     </nav>
 
     <div class="battery-row">
       <button id="batteryButton" class="battery-button"
-              aria-label="Open shoe battery screen">
-        <span class="small-battery" aria-hidden="true">
-          <span></span>
-        </span>
-        <span id="batterySummary">80%</span>
+              aria-label="Open battery screen">
+        <span class="small-battery" aria-hidden="true"><span></span></span>
+        <span>80%</span>
         <span id="bolt" hidden>ϟ</span>
       </button>
     </div>
-
   </section>
 
-  <!-- Independent left and right battery display -->
   <section id="batteryScreen" class="battery-screen"
            aria-labelledby="batteryTitle" hidden>
     <h1 id="batteryTitle">Battery status</h1>
-    <p id="batteryCaption" class="caption">
-      Your shoes are ready to move.
-    </p>
+    <p id="batteryCaption" class="caption">Your shoes are ready to move.</p>
 
     <div class="battery-pair">
       <div class="battery-column">
         <span class="shoe-label">L</span>
         <div class="large-battery" aria-hidden="true">
-          <div id="batteryFillL" class="battery-fill"></div>
+          <div class="battery-fill" style="height:82%"></div>
         </div>
-        <output id="batteryPercentL" class="battery-percent">82%</output>
-        <span id="batteryStateL" class="battery-state">READY</span>
+        <output class="battery-percent">82%</output>
+        <span class="battery-state">READY</span>
       </div>
 
       <div class="battery-column">
         <span class="shoe-label">R</span>
         <div class="large-battery" aria-hidden="true">
-          <div id="batteryFillR" class="battery-fill"></div>
+          <div class="battery-fill" style="height:78%"></div>
         </div>
-        <output id="batteryPercentR" class="battery-percent">78%</output>
-        <span id="batteryStateR" class="battery-state">READY</span>
+        <output class="battery-percent">78%</output>
+        <span class="battery-state">READY</span>
       </div>
     </div>
 
-    <button id="chargeButton" class="charge-button">
-      SIMULATE CHARGING
-    </button>
-
+    <button id="chargeButton" class="charge-button">SIMULATE CHARGING</button>
     <p class="demo-note">DEMO BATTERY VALUES</p>
-
     <button id="closeBattery" class="close-battery"
             aria-label="Close battery screen">×</button>
   </section>
 
-  <!-- Mode and fine tune bottom sheet -->
   <div id="sheetLayer" class="sheet-layer" hidden>
-    <button id="scrim" class="scrim"
-            aria-label="Close panel" tabindex="-1"></button>
+    <button id="scrim" class="scrim" tabindex="-1"
+            aria-label="Close panel"></button>
 
-    <section class="sheet"
-             role="dialog"
-             aria-modal="true"
+    <section class="sheet" role="dialog" aria-modal="true"
              aria-labelledby="sheetTitle">
       <div class="handle" aria-hidden="true"></div>
 
@@ -925,24 +936,20 @@ h2 {
 
       <div id="modePanel" class="mode-list">
         <button class="mode-option" data-mode="Walk" aria-pressed="false">
-          <strong>WALK</strong>
-          <span>ARCH 40 · FIRMNESS 25</span>
+          <strong>WALK</strong><span>ARCH 40 · SOFTNESS 75</span>
         </button>
         <button class="mode-option" data-mode="Run" aria-pressed="false">
-          <strong>RUN</strong>
-          <span>ARCH 60 · FIRMNESS 50</span>
+          <strong>RUN</strong><span>ARCH 60 · SOFTNESS 50</span>
         </button>
         <button class="mode-option" data-mode="Court" aria-pressed="false">
-          <strong>COURT</strong>
-          <span>ARCH 75 · FIRMNESS 80</span>
+          <strong>COURT</strong><span>ARCH 75 · SOFTNESS 20</span>
         </button>
       </div>
 
       <div id="adjustPanel" hidden>
         <div class="adjust-row">
           <div class="adjust-heading">
-            <span>Arch height</span>
-            <output id="fineArch">50%</output>
+            <span>Arch height</span><output id="fineArch">50%</output>
           </div>
           <div class="stepper">
             <button data-metric="arch" data-step="-5"
@@ -955,15 +962,14 @@ h2 {
 
         <div class="adjust-row">
           <div class="adjust-heading">
-            <span>Cushioning</span>
-            <output id="fineFirmness">50%</output>
+            <span>Softness</span><output id="fineSoftness">50%</output>
           </div>
           <div class="stepper">
-            <button data-metric="firmness" data-step="-5"
-                    aria-label="Soften cushioning">−</button>
-            <span>SOFT / FIRM</span>
-            <button data-metric="firmness" data-step="5"
-                    aria-label="Firm cushioning">+</button>
+            <button data-metric="softness" data-step="-5"
+                    aria-label="Decrease softness">−</button>
+            <span>LESS / MORE SOFT</span>
+            <button data-metric="softness" data-step="5"
+                    aria-label="Increase softness">+</button>
           </div>
         </div>
 
@@ -981,31 +987,24 @@ h2 {
   </aside>
 
   <div class="home-indicator" aria-hidden="true"></div>
-
 </main>
 
 <script>
 "use strict";
 
 const get = id => document.getElementById(id);
+const zones = [...document.querySelectorAll(".zone")];
 
 const state = {
-  L: { arch: 50, firmness: 50, mode: null },
-  R: { arch: 50, firmness: 50, mode: null }
+  L: { arch: 50, softness: 50, mode: null },
+  R: { arch: 50, softness: 50, mode: null }
 };
 
 const presets = {
-  Walk: { arch: 40, firmness: 25 },
-  Run: { arch: 60, firmness: 50 },
-  Court: { arch: 75, firmness: 80 }
+  Walk: { arch: 40, softness: 75 },
+  Run: { arch: 60, softness: 50 },
+  Court: { arch: 75, softness: 20 }
 };
-
-// Demonstration values, not hardware readings.
-const batteryValues = { L: 82, R: 78 };
-
-const zones = [...document.querySelectorAll(".zone")];
-const modeButtons = [...document.querySelectorAll("[data-mode]")];
-const sideButtons = [...document.querySelectorAll("[data-select]")];
 
 let selected = "L";
 let charging = false;
@@ -1013,16 +1012,28 @@ let toastTimer;
 let popupTimer;
 let returnFocus;
 
+// Only one gesture / hold runs at a time.
+let interaction = null;
+let holdTimer = null;
+let holdFrame = null;
+
+const softTimers = { L: null, R: null };
 const rulerTimers = { L: null, R: null };
 
-// Build cushion dots and ruler ticks.
-for (const side of ["L", "R"]) {
-  for (let i = 0; i < 10; i++) {
-    const dot = document.createElement("span");
-    dot.className = "dot";
-    get("dots" + side).appendChild(dot);
-  }
+function zoneFor(side) {
+  return zones.find(zone => zone.dataset.side === side);
+}
 
+function clamp(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function sideName(side) {
+  return side === "L" ? "Left" : "Right";
+}
+
+// Create ruler ticks.
+for (const side of ["L", "R"]) {
   for (let value = 0; value <= 100; value += 5) {
     const tick = document.createElement("span");
     tick.className = "tick" + (value % 25 === 0 ? " major" : "");
@@ -1038,14 +1049,6 @@ for (const side of ["L", "R"]) {
   }
 }
 
-function clamp(value) {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-function sideName(side) {
-  return side === "L" ? "Left" : "Right";
-}
-
 function announce(message, showToast = true) {
   get("sheetFeedback").textContent = message;
 
@@ -1057,53 +1060,59 @@ function announce(message, showToast = true) {
 
   toastTimer = setTimeout(() => {
     get("toast").hidden = true;
-  }, 1100);
+  }, 1000);
+}
+
+function showSoftness(side, keepVisible = false) {
+  clearTimeout(softTimers[side]);
+  zoneFor(side).classList.add("show-softness");
+
+  if (!keepVisible) {
+    softTimers[side] = setTimeout(() => {
+      const button = zoneFor(side).querySelector(".harden");
+
+      // Keep the control visible while it has keyboard focus.
+      if (document.activeElement !== button) {
+        zoneFor(side).classList.remove("show-softness");
+      }
+    }, 2800);
+  }
 }
 
 function showRuler(side, keepVisible = false) {
   clearTimeout(rulerTimers[side]);
-
-  const zone = zones.find(item => item.dataset.side === side);
-  zone.classList.add("show-ruler");
+  zoneFor(side).classList.add("show-ruler");
 
   if (!keepVisible) {
     rulerTimers[side] = setTimeout(() => {
-      zone.classList.remove("show-ruler");
-    }, 950);
+      zoneFor(side).classList.remove("show-ruler");
+    }, 900);
   }
 }
 
-// SVG letter shapes allow smooth corner rounding without font downloads.
-function renderGlyph(side, firmness) {
-  const softness = 1 - firmness / 100;
+function renderGlyph(side) {
+  const softness = state[side].softness / 100;
   const radius = 2 + softness * 25;
   const path = get("path" + side);
 
-  // Softer settings have thicker strokes and rounder ends.
   path.setAttribute("stroke-width", 8 + softness * 4);
-  path.setAttribute("stroke-linecap", firmness < 70 ? "round" : "butt");
-  path.setAttribute("stroke-linejoin", firmness < 70 ? "round" : "miter");
+  path.setAttribute("stroke-linecap", softness > .3 ? "round" : "butt");
+  path.setAttribute("stroke-linejoin", softness > .3 ? "round" : "miter");
 
   if (side === "L") {
     path.setAttribute(
       "d",
-      `M 24 18
-       V ${130 - radius}
-       Q 24 130 ${24 + radius} 130
-       H 82`
+      `M24 18 V${130 - radius} Q24 130 ${24 + radius} 130 H82`
     );
   } else {
     const corner = 3 + softness * 17;
-
     path.setAttribute(
       "d",
-      `M 23 132 V 18
-       H 57
-       Q 82 18 82 ${18 + corner}
-       V ${76 - corner}
-       Q 82 76 57 76
-       H 23
-       M 53 76 L 84 132`
+      `M23 132 V18 H57
+       Q82 18 82 ${18 + corner}
+       V${76 - corner}
+       Q82 76 57 76 H23
+       M53 76 L84 132`
     );
   }
 }
@@ -1111,42 +1120,48 @@ function renderGlyph(side, firmness) {
 function render() {
   for (const side of ["L", "R"]) {
     const shoe = state[side];
+    const zone = zoneFor(side);
 
-    // Four times the previous ±18px range: now ±72px.
-    const offset = (50 - shoe.arch) * 1.44;
-    get("letter" + side).style.setProperty("--offset", offset + "px");
+    get("stage" + side).style.setProperty(
+      "--offset",
+      (50 - shoe.arch) * 1.44 + "px"
+    );
 
-    renderGlyph(side, shoe.firmness);
+    renderGlyph(side);
 
-    const activeDots = Math.round(shoe.firmness / 10);
-    [...get("dots" + side).children].forEach((dot, index) => {
-      dot.classList.toggle("on", index < activeDots);
-    });
+    // Higher softness produces a larger ring.
+    const radius = 52 + shoe.softness * .6;
+    get("ring" + side).setAttribute("r", radius);
+
+    get("softLabel" + side).style.top =
+      (120 - radius - 5) + "px";
+
+    get("softValue" + side).textContent = shoe.softness;
 
     const position = 2 + shoe.arch * 2;
     get("marker" + side).style.bottom = position + "px";
     get("rulerValue" + side).style.bottom = position + "px";
     get("rulerValue" + side).textContent = shoe.arch;
 
-    const zone = zones.find(item => item.dataset.side === side);
     zone.classList.toggle("selected", side === selected);
 
     zone.setAttribute(
       "aria-label",
       `${sideName(side)} shoe. Arch ${shoe.arch} percent.
-       Firmness ${shoe.firmness} percent.
-       Swipe vertically for arch and horizontally for firmness.`
+       Softness ${shoe.softness} percent.
+       Hold to increase softness. Swipe vertically to adjust arch.
+       Arrow keys also adjust settings.`
     );
   }
 
-  sideButtons.forEach(button => {
+  document.querySelectorAll("[data-select]").forEach(button => {
     button.setAttribute(
       "aria-pressed",
       String(button.dataset.select === selected)
     );
   });
 
-  modeButtons.forEach(button => {
+  document.querySelectorAll("[data-mode]").forEach(button => {
     button.setAttribute(
       "aria-pressed",
       String(state[selected].mode === button.dataset.mode)
@@ -1154,7 +1169,7 @@ function render() {
   });
 
   get("fineArch").textContent = state[selected].arch + "%";
-  get("fineFirmness").textContent = state[selected].firmness + "%";
+  get("fineSoftness").textContent = state[selected].softness + "%";
 }
 
 function select(side) {
@@ -1163,116 +1178,172 @@ function select(side) {
   announce(sideName(side) + " shoe selected", false);
 }
 
-function adjust(side, metric, value) {
+function adjust(side, metric, value, quiet = false) {
   const next = clamp(value);
   if (state[side][metric] === next) return;
 
   state[side][metric] = next;
   state[side].mode = null;
-
   render();
 
-  announce(
-    sideName(side) + " " +
-    (metric === "arch" ? "arch" : "firmness") +
-    " · " + next + "%"
-  );
+  if (!quiet) {
+    announce(
+      sideName(side) + " " +
+      (metric === "arch" ? "arch" : "softness") +
+      " · " + next + "%"
+    );
+  }
 }
 
-// Independent gestures with direction locking.
+// Start continuous softness adjustment after a hold threshold.
+function startHold(direction) {
+  if (!interaction) return;
+
+  interaction.kind = "hold";
+  interaction.direction = direction;
+
+  const side = interaction.side;
+  const initial = state[side].softness;
+  const started = performance.now();
+
+  showSoftness(side, true);
+  zoneFor(side).classList.remove("show-ruler");
+
+  function frame(now) {
+    if (!interaction || interaction.kind !== "hold") return;
+
+    // Approximately 15 percentage points per second.
+    const elapsed = (now - started) / 1000;
+    adjust(side, "softness", initial + direction * elapsed * 15, true);
+
+    holdFrame = requestAnimationFrame(frame);
+  }
+
+  holdFrame = requestAnimationFrame(frame);
+}
+
+function stopInteraction() {
+  clearTimeout(holdTimer);
+  cancelAnimationFrame(holdFrame);
+  holdTimer = null;
+  holdFrame = null;
+
+  if (!interaction) return;
+
+  const previous = interaction;
+  interaction = null;
+
+  zoneFor(previous.side).classList.remove("dragging");
+
+  if (previous.element.hasPointerCapture(previous.id)) {
+    previous.element.releasePointerCapture(previous.id);
+  }
+
+  if (previous.kind === "hold") {
+    showSoftness(previous.side);
+    announce(
+      sideName(previous.side) + " softness · " +
+      state[previous.side].softness + "%",
+      false
+    );
+  }
+
+  if (previous.kind === "arch") {
+    showRuler(previous.side);
+  }
+}
+
+// Pointer gestures on L / R.
 zones.forEach(zone => {
-  let gesture = null;
+  zone.addEventListener("contextmenu", event => event.preventDefault());
 
   zone.addEventListener("pointerdown", event => {
-    if (!event.isPrimary || gesture) return;
+    if (event.target.closest("button")) return;
+    if (interaction || !event.isPrimary) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
-    select(zone.dataset.side);
+    const side = zone.dataset.side;
+    select(side);
 
-    gesture = {
+    interaction = {
       id: event.pointerId,
+      side,
+      element: zone,
       x: event.clientX,
       y: event.clientY,
-      arch: state[selected].arch,
-      firmness: state[selected].firmness,
-      width: zone.clientWidth,
+      initialArch: state[side].arch,
       height: zone.clientHeight,
-      axis: null
+      kind: "pending"
     };
 
     zone.setPointerCapture(event.pointerId);
-    zone.classList.add("dragging");
+
+    // Movement before this threshold cancels the long press.
+    holdTimer = setTimeout(() => startHold(1), 420);
   });
 
   zone.addEventListener("pointermove", event => {
-    if (!gesture || event.pointerId !== gesture.id) return;
+    if (!interaction || interaction.element !== zone) return;
+    if (interaction.id !== event.pointerId) return;
+    if (interaction.kind === "hold") return;
 
-    const dx = event.clientX - gesture.x;
-    const dy = event.clientY - gesture.y;
+    const dx = event.clientX - interaction.x;
+    const dy = event.clientY - interaction.y;
 
-    if (!gesture.axis) {
-      if (Math.hypot(dx, dy) < 8) return;
+    if (interaction.kind === "pending" && Math.hypot(dx, dy) > 8) {
+      clearTimeout(holdTimer);
 
       if (Math.abs(dy) > Math.abs(dx) * 1.2) {
-        gesture.axis = "vertical";
+        interaction.kind = "arch";
+        zone.classList.add("dragging");
+        zone.classList.remove("show-softness");
       } else if (Math.abs(dx) > Math.abs(dy) * 1.2) {
-        gesture.axis = "horizontal";
-      } else {
-        return;
+        // Horizontal movement does not change cushion settings.
+        interaction.kind = "cancelled";
       }
     }
 
-    const side = zone.dataset.side;
-
-    if (gesture.axis === "vertical") {
-      showRuler(side, true);
-      adjust(side, "arch", gesture.arch - dy / gesture.height * 100);
-    } else {
+    if (interaction.kind === "arch") {
+      showRuler(interaction.side, true);
       adjust(
-        side,
-        "firmness",
-        gesture.firmness + dx / gesture.width * 100
+        interaction.side,
+        "arch",
+        interaction.initialArch - dy / interaction.height * 100
       );
     }
   });
 
-  function finish(event) {
-    if (!gesture || event.pointerId !== gesture.id) return;
-
-    const wasVertical = gesture.axis === "vertical";
-    gesture = null;
-    zone.classList.remove("dragging");
-
-    if (zone.hasPointerCapture(event.pointerId)) {
-      zone.releasePointerCapture(event.pointerId);
-    }
-
-    if (wasVertical) showRuler(zone.dataset.side);
-  }
-
-  zone.addEventListener("pointerup", finish);
-  zone.addEventListener("pointercancel", finish);
-
-  zone.addEventListener("lostpointercapture", () => {
-    gesture = null;
-    zone.classList.remove("dragging");
-
-    if (zone.classList.contains("show-ruler")) {
-      showRuler(zone.dataset.side);
+  zone.addEventListener("pointerup", event => {
+    if (interaction?.element === zone && interaction.id === event.pointerId) {
+      stopInteraction();
     }
   });
 
+  zone.addEventListener("pointercancel", event => {
+    if (interaction?.element === zone && interaction.id === event.pointerId) {
+      stopInteraction();
+    }
+  });
+
+  zone.addEventListener("lostpointercapture", () => {
+    if (interaction?.element === zone) stopInteraction();
+  });
+
+  // Keyboard alternative.
   zone.addEventListener("keydown", event => {
+    if (event.target !== zone) return;
+
     const actions = {
       ArrowUp: ["arch", 5],
       ArrowDown: ["arch", -5],
-      ArrowRight: ["firmness", 5],
-      ArrowLeft: ["firmness", -5]
+      ArrowRight: ["softness", 5],
+      ArrowLeft: ["softness", -5]
     };
 
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       select(zone.dataset.side);
+      showSoftness(zone.dataset.side);
       return;
     }
 
@@ -1286,21 +1357,76 @@ zones.forEach(zone => {
     adjust(selected, metric, state[selected][metric] + step);
 
     if (metric === "arch") showRuler(selected);
+    else showSoftness(selected);
   });
 });
 
-// Mode / fine tune panels.
-function openSheet(panel) {
-  returnFocus = document.activeElement;
-  const isMode = panel === "mode";
+// Hold × to continuously decrease softness.
+document.querySelectorAll("[data-harden]").forEach(button => {
+  button.addEventListener("contextmenu", event => event.preventDefault());
 
-  clearTimeout(toastTimer);
+  button.addEventListener("pointerdown", event => {
+    if (interaction || !event.isPrimary) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    const side = button.dataset.harden;
+    select(side);
+    showSoftness(side, true);
+
+    interaction = {
+      id: event.pointerId,
+      side,
+      element: button,
+      kind: "pending"
+    };
+
+    button.setPointerCapture(event.pointerId);
+    holdTimer = setTimeout(() => startHold(-1), 300);
+  });
+
+  for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) {
+    button.addEventListener(type, () => {
+      if (interaction?.element === button) {
+        const side = interaction.side;
+        stopInteraction();
+        showSoftness(side);
+      }
+    });
+  }
+
+  // Keyboard / assistive activation decreases softness by 5.
+  button.addEventListener("click", event => {
+    if (event.detail !== 0) return;
+
+    const side = button.dataset.harden;
+    select(side);
+    adjust(side, "softness", state[side].softness - 5);
+    showSoftness(side);
+  });
+
+  button.addEventListener("blur", () => {
+    showSoftness(button.dataset.harden);
+  });
+});
+
+// Stop all continuous changes when focus is lost.
+window.addEventListener("blur", stopInteraction);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) stopInteraction();
+});
+
+// Mode / fine tune sheet.
+function openSheet(panel) {
+  stopInteraction();
+  returnFocus = document.activeElement;
+
+  const isMode = panel === "mode";
   get("toast").hidden = true;
 
   get("sheetTitle").textContent = isMode ? "Your modes" : "Fine tune";
   get("sheetCaption").textContent = isMode
     ? "Choose a preset for the selected shoe."
-    : "Adjust arch height and carbon plate firmness.";
+    : "Adjust arch height and cushion softness.";
 
   get("modePanel").hidden = !isMode;
   get("adjustPanel").hidden = isMode;
@@ -1325,14 +1451,14 @@ get("closeSheet").addEventListener("click", closeSheet);
 get("scrim").addEventListener("click", closeSheet);
 
 get("controlButton").addEventListener("click", () => {
-  announce(sideName(selected) + " shoe selected");
+  showSoftness(selected);
 });
 
-sideButtons.forEach(button => {
+document.querySelectorAll("[data-select]").forEach(button => {
   button.addEventListener("click", () => select(button.dataset.select));
 });
 
-modeButtons.forEach(button => {
+document.querySelectorAll("[data-mode]").forEach(button => {
   button.addEventListener("click", () => {
     const mode = button.dataset.mode;
     Object.assign(state[selected], presets[mode], { mode });
@@ -1344,57 +1470,35 @@ modeButtons.forEach(button => {
 document.querySelectorAll("[data-step]").forEach(button => {
   button.addEventListener("click", () => {
     const metric = button.dataset.metric;
-    const step = Number(button.dataset.step);
-    adjust(selected, metric, state[selected][metric] + step);
+    adjust(selected, metric,
+      state[selected][metric] + Number(button.dataset.step));
   });
 });
 
 get("resetButton").addEventListener("click", () => {
   Object.assign(state[selected], {
     arch: 50,
-    firmness: 50,
+    softness: 50,
     mode: null
   });
-
   render();
   announce(sideName(selected) + " shoe reset");
 });
 
-// Battery screen.
+// Battery page. Values remain fixed for this demonstration.
 function renderBattery() {
-  for (const side of ["L", "R"]) {
-    const value = batteryValues[side];
-
-    get("batteryFill" + side).style.height = value + "%";
-    get("batteryPercent" + side).textContent = value + "%";
-    get("batteryState" + side).textContent =
-      charging ? "CHARGING" : "READY";
-  }
-
-  get("batterySummary").textContent =
-    Math.round((batteryValues.L + batteryValues.R) / 2) + "%";
-
   get("bolt").hidden = !charging;
-  get("batteryScreen").classList.toggle("charging", charging);
-
   get("batteryTitle").textContent =
     charging ? "Battery charging" : "Battery status";
-
   get("batteryCaption").textContent = charging
     ? "Your shoes are connected to power."
     : "Your shoes are ready to move.";
-
   get("chargeButton").textContent =
     charging ? "DISCONNECT CHARGER" : "SIMULATE CHARGING";
-}
 
-function openBattery() {
-  clearTimeout(toastTimer);
-  get("toast").hidden = true;
-  get("home").hidden = true;
-  get("batteryScreen").hidden = false;
-  renderBattery();
-  get("closeBattery").focus();
+  document.querySelectorAll(".battery-state").forEach(label => {
+    label.textContent = charging ? "CHARGING" : "READY";
+  });
 }
 
 function closeBattery() {
@@ -1403,14 +1507,22 @@ function closeBattery() {
   get("batteryButton").focus();
 }
 
-get("batteryButton").addEventListener("click", openBattery);
+get("batteryButton").addEventListener("click", () => {
+  stopInteraction();
+  get("toast").hidden = true;
+  get("home").hidden = true;
+  get("batteryScreen").hidden = false;
+  renderBattery();
+  get("closeBattery").focus();
+});
+
 get("closeBattery").addEventListener("click", closeBattery);
 
 get("chargeButton").addEventListener("click", () => {
   charging = !charging;
   clearTimeout(popupTimer);
-
   renderBattery();
+
   get("chargingPopup").hidden = !charging;
 
   if (charging) {
@@ -1420,7 +1532,7 @@ get("chargeButton").addEventListener("click", () => {
   }
 });
 
-// Escape and modal keyboard focus.
+// Modal keyboard focus.
 document.addEventListener("keydown", event => {
   if (!get("sheetLayer").hidden) {
     if (event.key === "Escape") {
@@ -1443,11 +1555,7 @@ document.addEventListener("keydown", event => {
         first.focus();
       }
     }
-
-    return;
-  }
-
-  if (event.key === "Escape" && !get("batteryScreen").hidden) {
+  } else if (event.key === "Escape" && !get("batteryScreen").hidden) {
     closeBattery();
   }
 });
