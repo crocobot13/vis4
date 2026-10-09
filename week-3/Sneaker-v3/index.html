@@ -3,15 +3,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
   <title>Adaptive Shoe</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 
 <body>
   <div class="phone">
     <div class="app">
 
+      <!-- HEADER -->
       <header class="top">
         <div class="status-bar">
           <span>9:41</span>
@@ -27,18 +30,28 @@
         </div>
       </header>
 
-      <nav class="tabs" aria-label="App sections">
-        <button class="tab active" data-page="0">SUPPORT</button>
-        <button class="tab" data-page="1">CUSHION</button>
-        <button class="tab" data-page="2">ARCH</button>
-        <button class="tab" data-page="3">POWER</button>
+      <!-- NAVIGATION -->
+      <nav class="tabs">
+        <button class="tab active" data-page="0">
+          SUPPORT
+        </button>
+        <button class="tab" data-page="1">
+          CUSHION
+        </button>
+        <button class="tab" data-page="2">
+          ARCH
+        </button>
+        <button class="tab" data-page="3">
+          POWER
+        </button>
       </nav>
 
+      <!-- CAROUSEL -->
       <main class="carousel-window" id="carouselWindow">
         <div class="carousel-track" id="carouselTrack">
 
-          <!-- 01 MAIN SUPPORT -->
-          <section class="card support-card">
+          <!-- 01: SUPPORT -->
+          <section class="card support-card active">
             <div class="card-head">
               <span>01 / SUPPORT STATUS</span>
               <span>● ACTIVE</span>
@@ -47,16 +60,22 @@
             <div class="dial-area">
               <div class="dial" id="mainDial">
                 <svg class="dial-svg" viewBox="0 0 300 300">
-                  <circle class="dial-track"
-                    cx="150" cy="150" r="116"/>
+                  <circle
+                    class="dial-track"
+                    cx="150" cy="150" r="116"
+                  />
 
-                  <circle class="dial-progress"
+                  <circle
+                    class="dial-progress"
                     id="dialProgress"
-                    cx="150" cy="150" r="116"/>
+                    cx="150" cy="150" r="116"
+                  />
 
-                  <circle class="dial-handle"
+                  <circle
+                    class="dial-handle"
                     id="dialHandle"
-                    cx="150" cy="34" r="16"/>
+                    cx="266" cy="150" r="16"
+                  />
                 </svg>
 
                 <div class="dial-center">
@@ -93,7 +112,7 @@
             </div>
           </section>
 
-          <!-- 02 CUSHIONING -->
+          <!-- 02: CUSHION -->
           <section class="card black-card">
             <div class="card-head">
               <span>02 / ADJUSTMENT</span>
@@ -101,7 +120,10 @@
             </div>
 
             <div class="adjust-content">
-              <span class="eyebrow">FEEL THE DIFFERENCE</span>
+              <span class="eyebrow">
+                FEEL THE DIFFERENCE
+              </span>
+
               <h2>CUSHION<br>CONTROL.</h2>
 
               <div class="large-value">
@@ -110,16 +132,30 @@
               </div>
 
               <div class="abstract-bars" id="cushionBars">
-                <div></div><div></div><div></div>
-                <div></div><div></div><div></div>
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
               </div>
             </div>
 
             <div class="adjust-bottom">
-              <label for="cushionSlider">CUSHIONING LEVEL</label>
-              <input id="cushionSlider" type="range"
-                     min="0" max="100" value="64">
+              <label for="cushionSlider">
+                CUSHIONING LEVEL
+              </label>
+
+              <input
+                id="cushionSlider"
+                type="range"
+                min="0"
+                max="100"
+                value="64"
+              >
 
               <div class="range-labels">
                 <span>SOFT</span>
@@ -132,7 +168,7 @@
             </div>
           </section>
 
-          <!-- 03 ARCH SUPPORT -->
+          <!-- 03: ARCH -->
           <section class="card cream-card">
             <div class="card-head">
               <span>03 / ADJUSTMENT</span>
@@ -140,7 +176,10 @@
             </div>
 
             <div class="adjust-content">
-              <span class="eyebrow">SHAPE YOUR SUPPORT</span>
+              <span class="eyebrow">
+                SHAPE YOUR SUPPORT
+              </span>
+
               <h2>ARCH<br>HEIGHT.</h2>
 
               <div class="large-value">
@@ -150,25 +189,38 @@
 
               <div class="arch-visual">
                 <svg viewBox="0 0 300 140">
-                  <path id="archShape"
-                        d="M 10 110 Q 150 0 290 110"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="12"
-                        stroke-linecap="round"/>
-                  <line x1="10" y1="125"
-                        x2="290" y2="125"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-dasharray="5 7"/>
+                  <path
+                    id="archShape"
+                    d="M 10 110 Q 150 30 290 110"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="12"
+                    stroke-linecap="round"
+                  />
+
+                  <line
+                    x1="10" y1="125"
+                    x2="290" y2="125"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-dasharray="5 7"
+                  />
                 </svg>
               </div>
             </div>
 
             <div class="adjust-bottom">
-              <label for="archSlider">ARCH SUPPORT LEVEL</label>
-              <input id="archSlider" type="range"
-                     min="0" max="100" value="72">
+              <label for="archSlider">
+                ARCH SUPPORT LEVEL
+              </label>
+
+              <input
+                id="archSlider"
+                type="range"
+                min="0"
+                max="100"
+                value="72"
+              >
 
               <div class="range-labels">
                 <span>LOW</span>
@@ -181,7 +233,7 @@
             </div>
           </section>
 
-          <!-- 04 CHARGING -->
+          <!-- 04: POWER -->
           <section class="card power-card">
             <div class="card-head">
               <span>04 / BATTERY STATUS</span>
@@ -189,13 +241,18 @@
             </div>
 
             <div class="power-content">
-              <span class="eyebrow">ENERGY MANAGEMENT</span>
+              <span class="eyebrow">
+                ENERGY MANAGEMENT
+              </span>
+
               <h2>POWER<br>STATUS.</h2>
 
               <div class="battery-circle" id="batteryCircle">
                 <div class="battery-inner">
                   <strong id="batteryValue">46%</strong>
-                  <span id="batteryStatus">NOT CHARGING</span>
+                  <span id="batteryStatus">
+                    NOT CHARGING
+                  </span>
                 </div>
               </div>
             </div>
@@ -203,7 +260,7 @@
             <div class="power-bottom">
               <p>SIMULATED CHARGING SYSTEM</p>
 
-              <button id="chargeButton" class="charge-button">
+              <button class="charge-button" id="chargeButton">
                 CONNECT CHARGER ↗
               </button>
 
@@ -216,20 +273,30 @@
         </div>
       </main>
 
+      <!-- BOTTOM NAVIGATION -->
       <footer class="bottom">
         <div class="page-dots">
-          <button class="dot active" data-page="0"></button>
-          <button class="dot" data-page="1"></button>
-          <button class="dot" data-page="2"></button>
-          <button class="dot" data-page="3"></button>
+          <button class="dot active"
+                  data-page="0"
+                  aria-label="Support"></button>
+          <button class="dot"
+                  data-page="1"
+                  aria-label="Cushion"></button>
+          <button class="dot"
+                  data-page="2"
+                  aria-label="Arch"></button>
+          <button class="dot"
+                  data-page="3"
+                  aria-label="Power"></button>
         </div>
+
         <span id="pageCounter">01 / 04</span>
       </footer>
 
       <div class="home-indicator"></div>
     </div>
   </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
+
+
