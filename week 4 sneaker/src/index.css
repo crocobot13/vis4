@@ -1170,3 +1170,475 @@ button:focus-visible,
 .small-battery {
   display: none;
 }
+
+/* Smaller, lighter home battery so L/R remains visually primary. */
+.battery-row {
+  bottom: 42px;
+}
+
+.battery-button {
+  gap: 8px;
+}
+
+.battery-button .battery-topline {
+  gap: 5px;
+  color: #5f6064;
+}
+
+.battery-row .battery-bolt {
+  color: #8f9095;
+  font-size: 15px;
+}
+
+.battery-row .battery-percent-inline {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.battery-row .segment-battery {
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(32, 32, 36, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(32, 32, 36, 0.055);
+}
+
+.battery-row .segment-cell {
+  width: 18px;
+  height: 30px;
+  border-radius: 7px;
+  background: rgba(32, 32, 36, 0.10);
+}
+
+.battery-row .segment-fill {
+  background: #9b9ca1;
+}
+
+.battery-button.is-charging .segment-fill {
+  animation: segment-breathe-light 1.6s ease-in-out infinite;
+}
+
+@keyframes segment-breathe-light {
+  0%, 100% { background: #9b9ca1; }
+  50% { background: #b7b8bc; }
+}
+
+/* Battery screen updated to same segmented language. */
+.battery-pair {
+  gap: 28px;
+  margin-top: 46px;
+}
+
+.battery-column {
+  min-width: 0;
+}
+
+.battery-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px;
+  border-radius: 28px;
+  background: rgba(32, 32, 36, 0.04);
+}
+
+.battery-module .battery-topline {
+  gap: 7px;
+}
+
+.battery-module .battery-bolt {
+  color: #77787d;
+  font-size: 24px;
+}
+
+.battery-module .battery-percent-inline {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.segment-battery-large {
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(32, 32, 36, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(32, 32, 36, 0.06);
+}
+
+.segment-cell-large {
+  width: 34px;
+  height: 64px;
+  border-radius: 12px;
+  background: rgba(32, 32, 36, 0.12);
+}
+
+.segment-battery-large .segment-fill {
+  background: #83848a;
+}
+
+.segment-battery-large.is-charging .segment-fill {
+  animation: segment-breathe-screen 1.6s ease-in-out infinite;
+}
+
+@keyframes segment-breathe-screen {
+  0%, 100% { background: #83848a; }
+  50% { background: #a3a4aa; }
+}
+
+.battery-screen .shoe-label {
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+.battery-screen .battery-state {
+  margin-top: 16px;
+  font-size: 9px;
+  letter-spacing: 1.1px;
+  color: #8a8b90;
+}
+
+/* Older tall battery visuals are no longer used. */
+.large-battery,
+.battery-percent,
+.fill-bolt {
+  display: none;
+}
+
+/* ---------- Battery sizing correction ---------- */
+/* Home screen: battery should be secondary to LR and close to icon scale. */
+.battery-row {
+  bottom: 34px;
+}
+
+.battery-button {
+  gap: 5px;
+}
+
+.battery-row .battery-topline {
+  gap: 4px;
+}
+
+.battery-row .battery-bolt {
+  font-size: 9px;
+  color: #a2a3a8;
+}
+
+.battery-row .battery-percent-inline {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #7d7e83;
+}
+
+.battery-row .segment-battery {
+  gap: 3px;
+  padding: 5px 6px;
+  border-radius: 10px;
+  background: rgba(32, 32, 36, 0.035);
+  box-shadow: inset 0 0 0 1px rgba(32, 32, 36, 0.045);
+}
+
+.battery-row .segment-cell {
+  width: 16px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(32, 32, 36, 0.095);
+}
+
+.battery-row .segment-fill {
+  background: #a7a8ad;
+}
+
+/* Battery screen: remove oversized modules and use compact side-by-side batteries. */
+.battery-screen {
+  padding: 42px 25px 0;
+}
+
+.battery-screen h1 {
+  font-size: 24px;
+}
+
+.compact-battery-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 48px;
+  align-items: start;
+}
+
+.compact-battery-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.compact-battery-column .shoe-label {
+  margin-bottom: 14px;
+  font-size: 22px;
+}
+
+.compact-battery-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.compact-battery-topline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #5f6064;
+}
+
+.compact-battery-topline .battery-bolt {
+  font-size: 14px;
+  color: #8a8b90;
+}
+
+.compact-battery-percent {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.compact-segment-battery {
+  gap: 4px;
+  padding: 6px 7px;
+  border-radius: 12px;
+  background: rgba(32, 32, 36, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(32, 32, 36, 0.045);
+}
+
+.compact-segment-cell {
+  width: 16px;
+  height: 30px;
+  border-radius: 6px;
+  background: rgba(32, 32, 36, 0.11);
+}
+
+.compact-segment-battery .segment-fill {
+  background: #8d8f95;
+}
+
+.compact-segment-battery.is-charging .segment-fill {
+  animation: segment-breathe-screen-soft 1.6s ease-in-out infinite;
+}
+
+@keyframes segment-breathe-screen-soft {
+  0%, 100% { background: #8d8f95; }
+  50% { background: #adaeb3; }
+}
+
+.battery-screen .battery-state {
+  margin-top: 12px;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.charge-button {
+  margin-top: 34px;
+}
+
+.demo-note {
+  margin-top: 11px;
+}
+
+/* Cancel previous oversized battery screen styling. */
+.battery-module,
+.segment-battery-large,
+.segment-cell-large,
+.battery-module .battery-percent-inline {
+  all: unset;
+}
+
+/* VIS4 refinement: home battery is a quiet secondary status indicator. */
+.battery-row { bottom: 26px; }
+.battery-row .battery-button {
+  transform: scale(.57);
+  transform-origin: center bottom;
+}
+/* Keep the letter stroke at least as strong as the original at 0% softness. */
+.glyph { overflow: visible; }
+
+/* Fine Tune: clean monochrome rotary controls, independent L/R. */
+.tune-sheet.translucent-sheet {
+  padding: 12px 19px 32px;
+  max-height: min(86%, 645px);
+  background: rgba(249,248,245,.58);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.tune-sheet .handle { margin-bottom: 14px; }
+.tune-sheet .sheet-header h2 { font-size: 23px; }
+.tune-sheet .sheet-caption { margin-top: 6px; font-size: 10px; }
+.tune-controls { margin-top: 15px; }
+.tune-switch { display: flex; gap: 5px; margin-bottom: 15px; }
+.tune-switch button {
+  border: 1px solid transparent;
+  border-radius: 99px;
+  padding: 8px 14px;
+  background: transparent;
+  color: #77787a;
+  letter-spacing: .7px;
+  font-size: 10px;
+}
+.tune-switch button[aria-pressed="true"] {
+  color: #202024;
+  background: rgba(42,42,45,.12);
+  border-color: rgba(42,42,45,.08);
+}
+.dial-pair {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 10px;
+}
+.dial-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 13px 7px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(30,30,33,.12);
+  background: rgba(235,235,235,.42);
+}
+.dial-side {
+  color: #5b5c60;
+  letter-spacing: 1px;
+  font-size: 9px;
+}
+.rotary-dial {
+  width: min(100%, 150px);
+  aspect-ratio: 1;
+  margin: 13px auto 5px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  outline-offset: 1px;
+  border-radius: 50%;
+}
+.rotary-dial:active { cursor: grabbing; }
+.rotary-dial svg { display: block; width: 100%; height: 100%; }
+.dial-track { fill: rgba(180,182,186,.08); stroke: #b3b4b6; stroke-width: 3; }
+.dial-progress { fill: none; stroke: #444549; stroke-width: 4; stroke-linecap: round; }
+.dial-tick { stroke: #68696d; stroke-width: 1.4; stroke-linecap: round; }
+.dial-indicator { stroke: #45464a; stroke-width: 10; stroke-linecap: round; }
+.dial-hub { fill: #e1e1e2; stroke: #65666a; stroke-width: 3; }
+.dial-center { fill: #a0a1a5; }
+.dial-reading {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  color: #27282b;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.dial-reading small { color: #818286; font-weight: 400; font-size: 10px; }
+.dial-fine-buttons { display: flex; width: 100%; justify-content: space-between; margin-top: 11px; }
+.dial-fine-buttons button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(30,30,33,.16);
+  border-radius: 9px;
+  color: #343539;
+  background: rgba(255,255,255,.25);
+  font-size: 19px;
+  line-height: 1;
+}
+.dial-fine-buttons button:active { background: #bebfc2; }
+.tune-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  color: #77787a;
+  font-size: 10px;
+}
+.tune-hint { margin-top: 13px; text-align: center; color: #949599; font-size: 8px; letter-spacing: .7px; }
+@media (max-width: 360px) {
+  .tune-sheet.translucent-sheet { padding-inline: 13px; }
+  .dial-pair { gap: 7px; }
+  .dial-card { padding-inline: 5px; }
+  .rotary-dial { margin-top: 9px; }
+}
+@media (max-height: 690px) {
+  .tune-sheet.translucent-sheet { max-height: 87%; padding-bottom: 22px; }
+  .rotary-dial { width: min(100%, 120px); margin-top: 6px; }
+  .dial-card { padding-block: 8px; }
+  .tune-switch { margin-bottom: 8px; }
+}
+
+
+/* ---- refined fixes: no rotary offset, larger min softness ring, new mode bar ---- */
+.rotary-dial { overflow: visible; }
+.dial-track { stroke: #8f9095; stroke-width: 1.8; stroke-linecap: round; opacity: .75; }
+.dial-progress { stroke: #4f5055; stroke-width: 2.2; stroke-linecap: round; }
+.dial-tick { stroke: #a7a8ac; stroke-width: 1.1; stroke-linecap: round; }
+.dial-inner-ring { fill: none; stroke: #b6b7bc; stroke-width: 1.8; }
+.dial-indicator { stroke: #8f9196; stroke-width: 2.8; stroke-linecap: round; }
+.dial-hub { fill: #eeeeef; stroke: #9ea0a6; stroke-width: 1.4; }
+.dial-center { fill: #8d8f95; }
+.rotary-dial svg { overflow: visible; }
+
+/* Make home softness number sit farther from the letters by enlarging the minimum ring. */
+.reference-ring { opacity: 0.08; }
+.active-ring { opacity: 0.55; }
+
+/* Home battery label slightly larger without changing icon size. */
+.battery-row .battery-percent-inline { font-size: 10px; color: #7b7c82; }
+
+/* Mode visualization inspired by the sketch: one bar with shaded ends. */
+.mode-sheet .mode-option { gap: 10px; }
+.mode-sheet .mode-balance {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(70,70,74,.06);
+  box-shadow: inset 0 0 0 1px rgba(70,70,74,.12);
+}
+.mode-sheet .mode-balance-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(88,89,95,.18);
+}
+.mode-sheet .mode-balance-left {
+  left: 0;
+  border-radius: 12px 0 0 12px;
+}
+.mode-sheet .mode-balance-right {
+  right: 0;
+  border-radius: 0 12px 12px 0;
+}
+.mode-sheet .mode-balance-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  color: #7a7b80;
+  font-size: 9px;
+  letter-spacing: .4px;
+  font-variant-numeric: tabular-nums;
+}
+.mode-sheet .mode-balance-labels span:last-child { text-align: right; }
+
+/* De-emphasize old multi-row metric styling if still present. */
+.mode-sheet .mode-metrics, .mode-sheet .mode-metric { display: none; }
+
+/* Home battery percentage: visually match 9px navigation labels.
+   The battery button is scaled to 57%, so 16px renders at about 9px.
+   This changes text only; battery segments retain their existing dimensions. */
+.battery-row .battery-percent-inline {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #75767b;
+}

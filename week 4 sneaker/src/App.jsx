@@ -14,8 +14,8 @@ const sideName = (side) => (side === "L" ? "Left" : "Right");
 
 function Letter({ side, softness }) {
   const soft = softness / 100;
-  const radius = 2 + soft * 25;
-  const corner = 3 + soft * 17;
+  const radius = 3 + soft * 40;
+  const corner = 4 + soft * 26;
 
   const path =
     side === "L"
@@ -33,7 +33,7 @@ function Letter({ side, softness }) {
         d={path}
         fill="none"
         stroke="currentColor"
-        strokeWidth={8 + soft * 4}
+        strokeWidth={12 + soft * 9}
         strokeLinecap={soft > 0.3 ? "round" : "butt"}
         strokeLinejoin={soft > 0.3 ? "round" : "miter"}
       />
@@ -117,6 +117,133 @@ function NavIcon({ type }) {
   );
 }
 
+// Two independent, keyboard-accessible rotary controls. The arc covers 270°.
+function RotaryDial({ side, metric, value, onAdjust }) {
+  const dialRef = useRef(null);
+  const gestureRef = useRef(null);
+  const angle = -135 + value * 2.7;
+  const radius = 56;
+  const circumference = 2 * Math.PI * radius;
+  const visibleArc = circumference * 0.75;
+  const progressArc = visibleArc * (value / 100);
+
+  const polar = (degrees, radius) => {
+    const r = (degrees - 90) * Math.PI / 180;
+    return { x: 70 + radius * Math.cos(r), y: 70 + radius * Math.sin(r) };
+  };
+
+  function angleAt(event) {
+    const box = dialRef.current.getBoundingClientRect();
+    const dx = event.clientX - (box.left + box.width / 2);
+    const dy = event.clientY - (box.top + box.height / 2);
+    return Math.atan2(dx, -dy) * 180 / Math.PI;
+  }
+
+  function start(event) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    const a = angleAt(event);
+    gestureRef.current = { id: event.pointerId, last: a, value };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function move(event) {
+    const g = gestureRef.current;
+    if (!g || g.id !== event.pointerId) return;
+    const current = angleAt(event);
+    let delta = current - g.last;
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    g.last = current;
+    g.value = Math.max(0, Math.min(100, g.value + delta / 2.7));
+    onAdjust(side, metric, Math.round(g.value));
+  }
+
+  function stop(event) {
+    if (gestureRef.current?.id !== event.pointerId) return;
+    gestureRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  function keyDown(event) {
+    const step = event.shiftKey ? 10 : 1;
+    if (["ArrowUp", "ArrowRight", "PageUp"].includes(event.key)) {
+      event.preventDefault();
+      onAdjust(side, metric, value + (event.key === "PageUp" ? 10 : step));
+    } else if (["ArrowDown", "ArrowLeft", "PageDown"].includes(event.key)) {
+      event.preventDefault();
+      onAdjust(side, metric, value - (event.key === "PageDown" ? 10 : step));
+    } else if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      onAdjust(side, metric, event.key === "Home" ? 0 : 100);
+    }
+  }
+
+  return (
+    <div className="dial-card">
+      <div className="dial-side">{side} SIDE</div>
+      <div
+        ref={dialRef}
+        className="rotary-dial"
+        role="slider"
+        tabIndex={0}
+        aria-label={`${sideName(side)} shoe ${metric === "arch" ? "arch" : "cushion softness"}`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={value}
+        aria-valuetext={`${value} percent`}
+        onPointerDown={start}
+        onPointerMove={move}
+        onPointerUp={stop}
+        onPointerCancel={stop}
+        onLostPointerCapture={() => { gestureRef.current = null; }}
+        onKeyDown={keyDown}
+      >
+        <svg viewBox="0 0 140 140" aria-hidden="true">
+          <g transform="rotate(135 70 70)">
+            <circle
+              cx="70"
+              cy="70"
+              r={radius}
+              className="dial-track"
+              fill="none"
+              strokeDasharray={`${visibleArc} ${circumference}`}
+            />
+            {value > 0 && (
+              <circle
+                cx="70"
+                cy="70"
+                r={radius}
+                className="dial-progress"
+                fill="none"
+                strokeDasharray={`${progressArc} ${circumference}`}
+              />
+            )}
+          </g>
+          {Array.from({ length: 21 }, (_, i) => {
+            const a = -135 + i * 13.5;
+            const start = polar(a, i % 5 === 0 ? 45 : 49);
+            const end = polar(a, 54);
+            return <line key={i} x1={start.x} y1={start.y} x2={end.x} y2={end.y} className="dial-tick" />;
+          })}
+          <circle cx="70" cy="70" r="41" className="dial-inner-ring" />
+          <g transform={`rotate(${angle} 70 70)`}>
+            <line x1="70" y1="70" x2="70" y2="37" className="dial-indicator" />
+          </g>
+          <circle cx="70" cy="70" r="15" className="dial-hub" />
+          <circle cx="70" cy="70" r="2.6" className="dial-center" />
+        </svg>
+      </div>
+      <output className="dial-reading">{value}<small>%</small></output>
+      <div className="dial-fine-buttons">
+        <button type="button" aria-label={`Decrease ${side} ${metric} by 1 percent`} onClick={() => onAdjust(side, metric, value - 1)}>−</button>
+        <button type="button" aria-label={`Increase ${side} ${metric} by 1 percent`} onClick={() => onAdjust(side, metric, value + 1)}>+</button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [shoes, setShoes] = useState({
     L: { arch: 50, softness: 50, mode: null },
@@ -125,6 +252,7 @@ export default function App() {
 
   const [selected, setSelected] = useState("L");
   const [panel, setPanel] = useState(null);
+  const [tuneMetric, setTuneMetric] = useState("softness");
   const [batteryOpen, setBatteryOpen] = useState(false);
   const [charging, setCharging] = useState(false);
   const [chargingPopup, setChargingPopup] = useState(false);
@@ -656,7 +784,7 @@ export default function App() {
         <div className="zones">
           {["L", "R"].map((side) => {
             const shoe = shoes[side];
-            const radius = 52 + shoe.softness * 0.6;
+            const radius = 70 + shoe.softness * 0.42;
 
             const className = [
               "zone",
@@ -709,7 +837,7 @@ export default function App() {
                       viewBox="0 0 240 240"
                       fill="none"
                     >
-                      {[52, 72, 92, 112].map((value) => (
+                      {[70, 84, 98, 112].map((value) => (
                         <circle
                           key={value}
                           className="reference-ring"
@@ -873,37 +1001,39 @@ export default function App() {
                 : "Your shoes are ready to move."}
           </p>
 
-          <div className="battery-pair">
+          <div className="battery-pair compact-battery-pair">
             {["L", "R"].map((side) => {
               const value = battery[side];
               const isCharging = charging && value < 100;
 
               return (
-                <div className="battery-column" key={side}>
+                <div className="battery-column compact-battery-column" key={side}>
                   <span className="shoe-label">{side}</span>
 
-                  <div
-                    className="large-battery"
-                    aria-hidden="true"
-                  >
-                    <div
-                      className={`battery-fill ${
-                        isCharging ? "is-charging" : ""
-                      }`}
-                      style={{ height: `${value}%` }}
-                    >
-                      {isCharging && (
-                        <span className="fill-bolt">ϟ</span>
-                      )}
+                  <div className="compact-battery-module">
+                    <div className="compact-battery-topline">
+                      <span className="battery-bolt" aria-hidden="true">ϟ</span>
+                      <span className="compact-battery-percent">{value}%</span>
                     </div>
-                  </div>
 
-                  <output
-                    className="battery-percent"
-                    aria-label={`${sideName(side)} shoe battery ${value} percent`}
-                  >
-                    {value}%
-                  </output>
+                    <span className={`segment-battery compact-segment-battery ${isCharging ? "is-charging" : ""}`} aria-hidden="true">
+                      {Array.from({ length: 5 }, (_, index) => {
+                        const fill = Math.max(
+                          0,
+                          Math.min(1, (value - index * 20) / 20)
+                        );
+
+                        return (
+                          <span className="segment-cell compact-segment-cell" key={index}>
+                            <span
+                              className="segment-fill"
+                              style={{ transform: `scaleX(${fill})` }}
+                            />
+                          </span>
+                        );
+                      })}
+                    </span>
+                  </div>
 
                   <span className="battery-state">
                     {value === 100
@@ -979,7 +1109,7 @@ export default function App() {
                 : "Adjust arch height and cushion softness."}
             </p>
 
-            <div
+            {panel === "mode" && <div
               className="side-tabs"
               role="group"
               aria-label="Select shoe"
@@ -993,7 +1123,7 @@ export default function App() {
                   {sideName(side).toUpperCase()} SHOE
                 </button>
               ))}
-            </div>
+            </div>}
 
             {panel === "mode" ? (
               <div className="mode-list">
@@ -1005,76 +1135,49 @@ export default function App() {
                     onClick={() => applyMode(mode)}
                   >
                     <strong>{mode.toUpperCase()}</strong>
-                    <span className="mode-metrics">
-                      {[["ARCH", "arch"], ["SOFT", "softness"]].map(([label, metric]) => (
-                        <span className="mode-metric" key={metric}>
-                          <span className="mode-metric-label">{label}</span>
-                          <span className="mode-track" aria-hidden="true">
-                            <span className={`mode-fill mode-fill-${metric}`} style={{ width: `${values[metric]}%` }} />
-                          </span>
-                          <span className="mode-metric-value">{values[metric]}%</span>
-                        </span>
-                      ))}
+                    <span className="mode-balance" aria-hidden="true">
+                      <span
+                        className="mode-balance-fill mode-balance-left"
+                        style={{ width: `${12 + values.softness * 0.38}%` }}
+                      />
+                      <span
+                        className="mode-balance-fill mode-balance-right"
+                        style={{ width: `${12 + values.arch * 0.38}%` }}
+                      />
+                    </span>
+                    <span className="mode-balance-labels">
+                      <span>CUSHION {values.softness}%</span>
+                      <span>ARCH {values.arch}%</span>
                     </span>
                   </button>
                 ))}
               </div>
             ) : (
-              <div>
-                {[
-                  ["arch", "Arch height", "LOW / HIGH"],
-                  ["softness", "Softness", "LESS / MORE SOFT"],
-                ].map(([metric, label, hint]) => (
-                  <div className="adjust-row" key={metric}>
-                    <div className="adjust-heading">
-                      <span>{label}</span>
-                      <output>{shoes[selected][metric]}%</output>
-                    </div>
-
-                    <div className="stepper">
-                      <button
-                        aria-label={`Decrease ${label.toLowerCase()}`}
-                        onClick={() =>
-                          adjust(
-                            selected,
-                            metric,
-                            shoesRef.current[selected][metric] - 5
-                          )
-                        }
-                      >
-                        −
-                      </button>
-
-                      <span>{hint}</span>
-
-                      <button
-                        aria-label={`Increase ${label.toLowerCase()}`}
-                        onClick={() =>
-                          adjust(
-                            selected,
-                            metric,
-                            shoesRef.current[selected][metric] + 5
-                          )
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                <button
-                  className="reset"
-                  onClick={resetSelected}
-                >
-                  RESET SELECTED SHOE
-                </button>
+              <div className="tune-controls">
+                <div className="tune-switch" role="group" aria-label="Select adjustment">
+                  <button type="button" aria-pressed={tuneMetric === "softness"} onClick={() => setTuneMetric("softness")}>CUSHION</button>
+                  <button type="button" aria-pressed={tuneMetric === "arch"} onClick={() => setTuneMetric("arch")}>ARCH</button>
+                </div>
+                <div className="dial-pair">
+                  {["L", "R"].map((side) => (
+                    <RotaryDial
+                      key={`${side}-${tuneMetric}`}
+                      side={side}
+                      metric={tuneMetric}
+                      value={shoes[side][tuneMetric]}
+                      onAdjust={(target, metric, next) => adjust(target, metric, next, true)}
+                    />
+                  ))}
+                </div>
+                <div className="tune-footer">
+                  <span>{tuneMetric === "softness" ? "Cushion softness" : "Arch support"}</span>
+                  <span>L / R INDEPENDENT</span>
+                </div>
+                <p className="tune-hint">ROTATE TO ADJUST · ± FOR 1% STEPS</p>
               </div>
             )}
 
-            <p className="sheet-feedback" role="status">
-              {feedback}
-            </p>
+            {panel === "mode" && <p className="sheet-feedback" role="status">{feedback}</p>}
           </section>
         </div>
       )}
