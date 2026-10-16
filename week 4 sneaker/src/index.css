@@ -1,0 +1,1172 @@
+/* 页面基础 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #202024;
+  background: #eae9e7;
+  font-synthesis: none;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  display: block;
+  padding: 24px 12px;
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+button:focus-visible,
+.zone:focus-visible {
+  outline: 2px solid #bb497b;
+  outline-offset: 4px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* 手机容器 */
+.app {
+  position: relative;
+  width: min(100%, 390px);
+  height: 780px;
+  margin: 0 auto;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #d8d5d3;
+  border-radius: 36px;
+  background: #f9f8f5;
+  box-shadow: 0 18px 55px #00000012;
+}
+
+/* 顶部状态栏 */
+.statusbar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 10;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 86px;
+  height: 23px;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  background: #202024;
+}
+
+.signal {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 13px;
+}
+
+.signal i {
+  width: 3px;
+  border-radius: 1px;
+  background: #202024;
+}
+
+.signal i:nth-child(1) { height: 4px; }
+.signal i:nth-child(2) { height: 7px; }
+.signal i:nth-child(3) { height: 10px; }
+.signal i:nth-child(4) { height: 13px; }
+
+/* 左右鞋控制区 */
+.home {
+  position: absolute;
+  inset: 48px 0 0;
+}
+
+.zones {
+  position: absolute;
+  inset: 40px 10px 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.zone {
+  position: relative;
+  min-width: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.zone.dragging {
+  cursor: grabbing;
+}
+
+.letter-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110px;
+  height: 165px;
+  transform:
+    translate(-50%, -50%)
+    translateY(var(--offset, 0px));
+  transition: transform 180ms ease-out;
+  pointer-events: none;
+}
+
+.dragging .letter-stage {
+  transition: none;
+}
+
+.glyph {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 110px;
+  height: 165px;
+  overflow: visible;
+  color: #202024;
+}
+
+.glyph path {
+  fill: none;
+  stroke: currentColor;
+}
+
+/* 柔软程度圆环 */
+.softness-visual {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.show-softness .softness-visual {
+  opacity: 1;
+}
+
+.rings {
+  display: block;
+  width: 240px;
+  height: 240px;
+  overflow: visible;
+  fill: none;
+}
+
+.reference-ring {
+  fill: none;
+  stroke: #202024;
+  stroke-width: 1;
+  opacity: 0.09;
+}
+
+.active-ring {
+  fill: none;
+  stroke: #c65b88;
+  stroke-width: 1.5;
+  opacity: 0.75;
+}
+
+.softness-number {
+  position: absolute;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  transform: translate(-50%, -100%);
+  border-radius: 6px;
+  background: #f9f8f5;
+}
+
+.softness-number small {
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.softness-number output {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 长按 × 变硬 */
+.harden {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 28px;
+  font-weight: 300;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.show-softness .harden {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 足弓刻度 */
+.ruler {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  z-index: 5;
+  width: 28px;
+  height: 204px;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.show-ruler .ruler {
+  opacity: 1;
+}
+
+.ruler-line {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  bottom: 2px;
+  width: 1px;
+  background: #20202430;
+}
+
+.tick {
+  position: absolute;
+  right: 0;
+  width: 6px;
+  height: 1px;
+  background: #20202440;
+}
+
+.tick.major {
+  width: 10px;
+  background: #20202470;
+}
+
+.tick > span {
+  position: absolute;
+  top: 0;
+  right: 13px;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 8px;
+}
+
+.ruler-marker {
+  position: absolute;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  transform: translateY(50%);
+  border-radius: 50%;
+  background: #c65b88;
+}
+
+.ruler-value {
+  position: absolute;
+  right: 12px;
+  z-index: 2;
+  padding: 2px 4px;
+  transform: translateY(50%);
+  border-radius: 3px;
+  background: #f9f8f5;
+  color: #ad3f6b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* L 刻度在左侧 */
+.zone-left .ruler {
+  left: 3px;
+  right: auto;
+}
+
+.zone-left .ruler-line {
+  left: 0;
+  right: auto;
+}
+
+.zone-left .tick {
+  left: 0;
+  right: auto;
+}
+
+.zone-left .tick > span {
+  left: 13px;
+  right: auto;
+}
+
+.zone-left .ruler-marker {
+  left: -3px;
+  right: auto;
+}
+
+.zone-left .ruler-value {
+  left: 12px;
+  right: auto;
+}
+
+/* R 刻度在右侧 */
+.zone-right .ruler {
+  left: auto;
+  right: 3px;
+}
+
+/* 导航按钮 */
+.bottom-bar {
+  position: absolute;
+  right: 25px;
+  bottom: 113px;
+  left: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 2px;
+  border: 0;
+  background: transparent;
+  color: #858380;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.nav-button.active {
+  color: #202024;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #a9a5a0;
+  border-radius: 50%;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.nav-icon svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+}
+
+.nav-button.active .nav-icon {
+  border-color: #202024;
+}
+
+.nav-button:hover .nav-icon {
+  border-color: #c65b88;
+  background: #c65b8810;
+}
+
+.nav-button:active .nav-icon {
+  transform: scale(0.92);
+  background: #c65b8820;
+}
+
+/* 主页电量按钮 */
+.battery-row {
+  position: absolute;
+  right: 0;
+  bottom: 57px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.battery-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 15px;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.small-battery {
+  position: relative;
+  width: 23px;
+  height: 12px;
+  padding: 2px;
+  border: 1px solid #202024;
+  border-radius: 3px;
+}
+
+.small-battery::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: -3px;
+  width: 2px;
+  height: 4px;
+  border-radius: 1px;
+  background: #202024;
+}
+
+.small-battery > span {
+  display: block;
+  height: 100%;
+  border-radius: 1px;
+  background: #202024;
+  transition: width 800ms ease;
+}
+
+.battery-bolt {
+  color: #ad3f6b;
+  font-size: 18px;
+}
+
+/* 反馈提示 */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 215px;
+  z-index: 8;
+  width: max-content;
+  max-width: 90%;
+  padding: 9px 13px;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  background: #202024;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  z-index: 40;
+  width: 115px;
+  height: 4px;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  background: #202024;
+}
+
+/* 电量页面 */
+.battery-screen {
+  position: absolute;
+  inset: 48px 0 30px;
+  padding: 43px 25px 0;
+  text-align: center;
+}
+
+.battery-screen h1 {
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+
+.caption {
+  margin-top: 12px;
+  color: #858380;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.battery-pair {
+  display: flex;
+  justify-content: center;
+  gap: 47px;
+  margin-top: 55px;
+}
+
+.battery-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shoe-label {
+  margin-bottom: 22px;
+  font-size: 28px;
+}
+
+.large-battery {
+  position: relative;
+  width: 82px;
+  height: 220px;
+  overflow: hidden;
+  border: 2px solid #202024;
+  border-radius: 17px;
+  background: #eceae6;
+}
+
+.battery-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: #d681a3;
+  transition: height 800ms ease;
+}
+
+.battery-fill.is-charging {
+  animation: battery-breathe 1.6s ease-in-out infinite;
+}
+
+.fill-bolt {
+  color: #ffffffcc;
+  font-size: 40px;
+}
+
+.battery-percent {
+  margin-top: 20px;
+  font-size: 27px;
+  font-variant-numeric: tabular-nums;
+}
+
+.battery-state {
+  margin-top: 7px;
+  color: #858380;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.charge-button {
+  margin-top: 38px;
+  padding: 13px 20px;
+  border: 1px solid #202024;
+  border-radius: 25px;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.charge-button:hover {
+  border-color: #c65b88;
+  background: #c65b8810;
+}
+
+.demo-note {
+  margin-top: 13px;
+  color: #999;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.close-battery {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translateX(-50%);
+  border: 0;
+  background: transparent;
+  font-size: 30px;
+}
+
+/* Mode / Tune 面板 */
+.sheet-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #00000035;
+}
+
+.sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-height: 90%;
+  overflow-y: auto;
+  padding: 12px 25px 38px;
+  border-radius: 28px 28px 0 0;
+  background: #f9f8f5;
+}
+
+.handle {
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 22px;
+  border-radius: 4px;
+  background: #d0ceca;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sheet-header h2 {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.close {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+}
+
+.sheet-caption {
+  margin-top: 10px;
+  color: #858380;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.side-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 23px 0;
+}
+
+.side-tabs button {
+  padding: 12px 4px;
+  border: 1px solid #dedbd6;
+  border-radius: 20px;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.side-tabs button[aria-pressed="true"] {
+  border-color: #202024;
+  background: #202024;
+  color: white;
+}
+
+.mode-list {
+  display: grid;
+  gap: 10px;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 20px 14px;
+  border: 1px solid #dedbd6;
+  border-radius: 14px;
+  background: transparent;
+  text-align: left;
+}
+
+.mode-option strong {
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.mode-option span {
+  color: #858380;
+  font-size: 9px;
+}
+
+.mode-option[aria-pressed="true"] {
+  border-color: #c65b88;
+  background: #c65b8810;
+}
+
+.adjust-row {
+  padding: 13px 0 20px;
+  border-bottom: 1px solid #e6e3de;
+}
+
+.adjust-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.adjust-heading output {
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 17px;
+}
+
+.stepper button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #dedbd6;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 22px;
+}
+
+.stepper button:active {
+  background: #c65b8820;
+}
+
+.stepper span {
+  color: #858380;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.reset {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px;
+  border: 1px solid #dedbd6;
+  border-radius: 22px;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.sheet-feedback {
+  min-height: 18px;
+  margin-top: 18px;
+  color: #ad3f6b;
+  font-size: 11px;
+}
+
+/* 充电连接提示 */
+.charging-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 30;
+  width: 240px;
+  padding: 25px 15px;
+  transform: translate(-50%, -50%);
+  border: 1px solid #e5e1dc;
+  border-radius: 22px;
+  background: #f9f8f5;
+  box-shadow: 0 15px 50px #00000018;
+  text-align: center;
+  pointer-events: none;
+}
+
+.charging-popup .symbol {
+  color: #c65b88;
+  font-size: 40px;
+}
+
+.charging-popup h2 {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.charging-popup p {
+  margin-top: 10px;
+  color: #858380;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+@keyframes battery-breathe {
+  0%, 100% {
+    background-color: #d681a3;
+  }
+
+  50% {
+    background-color: #ecacc7;
+  }
+}
+
+/* 手机浏览器 */
+@media (max-width: 430px) {
+  body {
+    padding: 0;
+    background: #f9f8f5;
+  }
+
+  .app {
+    width: 100%;
+    height: 100svh;
+    min-height: 680px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* 较矮的手机屏幕 */
+@media (max-width: 430px) and (max-height: 730px) {
+  .battery-screen {
+    padding-top: 25px;
+  }
+
+  .battery-pair {
+    margin-top: 30px;
+  }
+
+  .large-battery {
+    height: 180px;
+  }
+
+  .charge-button {
+    margin-top: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+/* 三个导航按钮统一颜色 */
+.nav-button,
+.nav-button.active {
+  color: #202024;
+}
+
+.nav-button .nav-icon,
+.nav-button.active .nav-icon,
+.nav-button:hover .nav-icon {
+  border-color: #202024;
+}
+
+.nav-button:hover .nav-icon {
+  background: #20202406;
+}
+
+.nav-button:active .nav-icon {
+  background: #20202410;
+}
+
+/* 竖直电池 */
+.small-battery {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 23px;
+  padding: 0;
+  overflow: visible;
+  border: 1.2px solid #202024;
+  border-radius: 3px;
+  background: transparent;
+}
+
+/* 电池顶部凸起 */
+.small-battery::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: auto;
+  left: 50%;
+  width: 6px;
+  height: 3px;
+  transform: translateX(-50%);
+  border-radius: 1px 1px 0 0;
+  background: #202024;
+}
+
+/*
+  App.jsx 原本用 width 表示电量百分比。
+  将内部电量条旋转，使它从底部向上填充。
+*/
+.small-battery > span {
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: 2px;
+  left: 2px;
+  display: block;
+  max-width: none;
+  height: 8px;
+  transform: rotate(-90deg) scaleX(1.25);
+  transform-origin: 4px 4px;
+  border-radius: 1px;
+  background: #202024;
+  transition: width 800ms ease;
+}
+
+.battery-button {
+  gap: 10px;
+  min-height: 44px;
+}
+
+/* Updated Mode experience */
+.home.mode-open .zones {
+  transform: translateY(-115px);
+  transition: transform 320ms cubic-bezier(.2,.75,.25,1);
+}
+.zones { transition: transform 320ms cubic-bezier(.2,.75,.25,1); }
+/* Keep the harden control close to the letter rather than at the zone bottom. */
+.harden {
+  bottom: auto;
+  top: calc(50% - 125px);
+  width: 58px;
+  height: 58px;
+  font-size: 43px;
+  line-height: 1;
+  color: #343438;
+  transition: opacity 180ms ease;
+}
+.mode-layer .scrim { background: rgba(30,30,30,.12); }
+.mode-sheet {
+  background: rgba(248,247,245,.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(100,100,100,.13);
+  box-shadow: 0 -12px 35px rgba(0,0,0,.05);
+}
+.mode-sheet .mode-option {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 11px;
+  padding: 13px 15px;
+  background: rgba(255,255,255,.35);
+  border-color: rgba(90,90,90,.19);
+  color: #626267;
+  backdrop-filter: blur(6px);
+}
+.mode-sheet .mode-option[aria-pressed="true"] {
+  background: rgba(85,85,85,.12);
+  border-color: #66666a;
+  color: #37373b;
+}
+.mode-sheet .mode-option strong { font-size: 12px; color: inherit; }
+.mode-sheet .mode-metrics { display: grid; gap: 8px; width: 100%; }
+.mode-sheet .mode-metric {
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) 36px;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+.mode-sheet .mode-metric-label, .mode-sheet .mode-metric-value {
+  font-size: 9px;
+  color: #77777b;
+  font-variant-numeric: tabular-nums;
+}
+.mode-sheet .mode-metric-value { text-align: right; }
+.mode-sheet .mode-track {
+  height: 7px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(70,70,70,.12);
+}
+.mode-sheet .mode-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 200ms ease;
+}
+.mode-sheet .mode-fill-arch { background: #68696d; }
+.mode-sheet .mode-fill-softness { background: #a1a2a5; }
+.mode-sheet .sheet-feedback { color: #77777b; }
+
+
+/* Shared translucent treatment for MODE and FINE TUNE */
+.home.panel-open .zones {
+  transform: translateY(-115px);
+}
+.translucent-layer .scrim {
+  background: rgba(32, 32, 36, 0.035);
+}
+.translucent-sheet {
+  background: rgba(249, 248, 245, 0.53);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(100, 100, 100, 0.18);
+  box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.04);
+  color: #55565a;
+}
+/* Override older mode-only translucent settings */
+.mode-sheet.translucent-sheet { background: rgba(249, 248, 245, 0.53); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+.translucent-sheet .sheet-feedback { color: #77777b; }
+.translucent-sheet .adjust-heading,
+.translucent-sheet .adjust-heading output,
+.translucent-sheet .stepper span { color: #68696d; }
+.translucent-sheet .stepper button,
+.translucent-sheet .reset { border-color: rgba(90, 90, 90, 0.3); background: rgba(255, 255, 255, 0.19); color: #55565a; }
+.translucent-sheet .stepper button:active { background: rgba(90, 90, 90, 0.14); }
+.translucent-sheet .side-tabs button:not([aria-pressed="true"]) { background: rgba(255, 255, 255, 0.12); }
+/* Cross follows each individual L/R arch position and stays off the number's center line. */
+.zone .harden {
+  top: calc(50% + var(--letter-offset, 0px) - 48px);
+  bottom: auto;
+  left: calc(50% + 56px);
+  width: 50px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  transition: top 180ms ease-out, opacity 180ms ease;
+}
+.zone-right .harden { left: calc(50% - 56px); }
+.zone.dragging .harden { transition: opacity 180ms ease; }
+/* No notch or dark Dynamic Island block on either view. */
+.notch { display: none !important; }
+
+/* Remove top status spacing because the app no longer shows time/signal. */
+.home {
+  inset: 0;
+}
+
+.battery-screen {
+  inset: 0 0 30px;
+  padding-top: 58px;
+}
+
+/* New bottom battery module inspired by the provided segmented battery visual. */
+.battery-row {
+  bottom: 52px;
+}
+
+.battery-button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.battery-topline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #202024;
+}
+
+.battery-bolt {
+  color: #67686c;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.battery-percent-inline {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.segment-battery {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  background: rgba(32, 32, 36, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(32, 32, 36, 0.08);
+}
+
+.segment-cell {
+  position: relative;
+  width: 25px;
+  height: 42px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(32, 32, 36, 0.14);
+}
+
+.segment-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  border-radius: inherit;
+  background: #6a6b70;
+  transition: transform 600ms ease;
+}
+
+.battery-button.is-charging .segment-fill {
+  animation: segment-breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes segment-breathe {
+  0%, 100% { background: #6a6b70; }
+  50% { background: #8c8d92; }
+}
+
+/* Old phone-style battery is no longer used on the home screen. */
+.small-battery {
+  display: none;
+}

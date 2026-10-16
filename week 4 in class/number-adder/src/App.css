@@ -1,0 +1,432 @@
+
+/* =========================
+   01 GLOBAL LAYOUT
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  background: #f4f4f4;
+  font-family: Arial, sans-serif;
+  color: #171717;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+
+/* =========================
+   02 HEADER
+========================= */
+
+.header {
+  background: linear-gradient(
+    110deg,
+    #ff6b9c 0%,
+    #9b5cff 38%,
+    #579eff 70%,
+    #ffb36b 100%
+  );
+
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+
+  padding: 40px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.header h1 {
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  letter-spacing: -1px;
+}
+
+.header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* =========================
+   03 SIDEBAR
+========================= */
+
+.sidebar {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.sidebar h3 {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #888;
+  margin: 0;
+}
+
+#resultId {
+  font-size: clamp(48px, 7vw, 100px);
+  font-weight: 700;
+  margin: 36px 0;
+  overflow-wrap: anywhere;
+
+  animation: numberPop 0.3s ease;
+}
+
+#resultId.positive {
+  color: #18a36b;
+}
+
+#resultId.negative {
+  color: #ef5675;
+}
+
+#resultId.zero {
+  color: #171717;
+}
+
+.sidebar p {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+@keyframes numberPop {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.88);
+  }
+
+  65% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+/* =========================
+   04 MAIN CONTROLS
+========================= */
+
+.main {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.main h2 {
+  color: #171717;
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+.main p {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.number-btn {
+  padding: 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
+}
+
+/* +1 GREEN */
+
+.plus-one {
+  background: #dcfce9;
+  color: #158a57;
+}
+
+.plus-one:hover {
+  background: #20bc79;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* +2 BLUE */
+
+.plus-two {
+  background: #dceeff;
+  color: #247cd2;
+}
+
+.plus-two:hover {
+  background: #398eea;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* -1 YELLOW */
+
+.minus-one {
+  background: #fff0c8;
+  color: #aa7413;
+}
+
+.minus-one:hover {
+  background: #ffbf47;
+  color: #171717;
+  transform: translateY(-3px);
+}
+
+/* -2 PINK */
+
+.minus-two {
+  background: #ffe0e7;
+  color: #d84d70;
+}
+
+.minus-two:hover {
+  background: #ef6086;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* CLICK FEEDBACK */
+
+.number-btn:active {
+  transform: scale(0.94);
+}
+
+/* RESET */
+
+.reset {
+  width: 100%;
+  margin-top: 15px;
+  padding: 24px;
+  border: none;
+  border-radius: 8px;
+  background: #171717;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.reset:hover {
+  background: #9b5cff;
+}
+
+
+/* =========================
+   05 HISTORY
+========================= */
+
+.history-section {
+  background: white;
+  border-radius: 12px;
+  margin-top: 20px;
+  padding: 30px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.history-header h2 {
+  font-size: 24px;
+  color: #171717;
+  margin: 0 0 8px;
+}
+
+.history-header p {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* CLEAR HISTORY BUTTON */
+
+.clear-history {
+  background: #f2f2f2;
+  color: #777;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.clear-history:hover:not(:disabled) {
+  background: #ffe0e5;
+  color: #d94d66;
+}
+
+.clear-history:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* EMPTY STATE */
+
+.history-empty {
+  text-align: center;
+  padding: 40px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* HISTORY LIST */
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.history-action {
+  min-width: 65px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #eae6ff;
+  color: #7954d8;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.history-calculation {
+  color: #171717;
+  font-size: 16px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.history-time {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #999;
+}
+
+
+/* =========================
+   06 RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+  .app {
+    padding: 16px;
+  }
+
+  .header {
+    padding: 28px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar,
+  .main,
+  .history-section {
+    padding: 22px;
+  }
+
+  #resultId {
+    margin: 20px 0;
+  }
+
+  .button-grid {
+    margin-top: 24px;
+  }
+
+  .number-btn {
+    padding: 20px;
+  }
+
+  .history-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .history-time {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  #resultId {
+    animation: none;
+  }
+
+  .number-btn {
+    transition: none;
+  }
+}
