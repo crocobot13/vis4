@@ -41,17 +41,17 @@ function Letter({ side, softness }) {
   );
 }
 
-function Ruler({ value }) {
-  const position = 2 + value * 2;
+function Ruler({ value, markerValue, animating = false }) {
+  const targetPosition = 2 + value * 2;
+  const markerPosition = 2 + markerValue * 2;
 
   return (
-    <div className="ruler" aria-hidden="true">
+    <div className={`ruler ${animating ? "ruler-settling" : ""}`} aria-hidden="true">
       <span className="ruler-line" />
-
+      <span className="ruler-progress" style={{ height: targetPosition }} />
       {Array.from({ length: 21 }, (_, index) => {
         const tickValue = index * 5;
         const major = tickValue % 25 === 0;
-
         return (
           <span
             key={tickValue}
@@ -62,16 +62,9 @@ function Ruler({ value }) {
           </span>
         );
       })}
-
-      <span
-        className="ruler-marker"
-        style={{ bottom: position }}
-      />
-
-      <span
-        className="ruler-value"
-        style={{ bottom: position }}
-      >
+      <span className="ruler-target" style={{ bottom: targetPosition }} />
+      <span className="ruler-marker" style={{ bottom: markerPosition }} />
+      <span className="ruler-value" style={{ bottom: targetPosition }}>
         {value}
       </span>
     </div>
@@ -117,133 +110,6 @@ function NavIcon({ type }) {
   );
 }
 
-// Two independent, keyboard-accessible rotary controls. The arc covers 270°.
-function RotaryDial({ side, metric, value, onAdjust }) {
-  const dialRef = useRef(null);
-  const gestureRef = useRef(null);
-  const angle = -135 + value * 2.7;
-  const radius = 56;
-  const circumference = 2 * Math.PI * radius;
-  const visibleArc = circumference * 0.75;
-  const progressArc = visibleArc * (value / 100);
-
-  const polar = (degrees, radius) => {
-    const r = (degrees - 90) * Math.PI / 180;
-    return { x: 70 + radius * Math.cos(r), y: 70 + radius * Math.sin(r) };
-  };
-
-  function angleAt(event) {
-    const box = dialRef.current.getBoundingClientRect();
-    const dx = event.clientX - (box.left + box.width / 2);
-    const dy = event.clientY - (box.top + box.height / 2);
-    return Math.atan2(dx, -dy) * 180 / Math.PI;
-  }
-
-  function start(event) {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    const a = angleAt(event);
-    gestureRef.current = { id: event.pointerId, last: a, value };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  function move(event) {
-    const g = gestureRef.current;
-    if (!g || g.id !== event.pointerId) return;
-    const current = angleAt(event);
-    let delta = current - g.last;
-    if (delta > 180) delta -= 360;
-    if (delta < -180) delta += 360;
-    g.last = current;
-    g.value = Math.max(0, Math.min(100, g.value + delta / 2.7));
-    onAdjust(side, metric, Math.round(g.value));
-  }
-
-  function stop(event) {
-    if (gestureRef.current?.id !== event.pointerId) return;
-    gestureRef.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-  }
-
-  function keyDown(event) {
-    const step = event.shiftKey ? 10 : 1;
-    if (["ArrowUp", "ArrowRight", "PageUp"].includes(event.key)) {
-      event.preventDefault();
-      onAdjust(side, metric, value + (event.key === "PageUp" ? 10 : step));
-    } else if (["ArrowDown", "ArrowLeft", "PageDown"].includes(event.key)) {
-      event.preventDefault();
-      onAdjust(side, metric, value - (event.key === "PageDown" ? 10 : step));
-    } else if (event.key === "Home" || event.key === "End") {
-      event.preventDefault();
-      onAdjust(side, metric, event.key === "Home" ? 0 : 100);
-    }
-  }
-
-  return (
-    <div className="dial-card">
-      <div className="dial-side">{side} SIDE</div>
-      <div
-        ref={dialRef}
-        className="rotary-dial"
-        role="slider"
-        tabIndex={0}
-        aria-label={`${sideName(side)} shoe ${metric === "arch" ? "arch" : "cushion softness"}`}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={value}
-        aria-valuetext={`${value} percent`}
-        onPointerDown={start}
-        onPointerMove={move}
-        onPointerUp={stop}
-        onPointerCancel={stop}
-        onLostPointerCapture={() => { gestureRef.current = null; }}
-        onKeyDown={keyDown}
-      >
-        <svg viewBox="0 0 140 140" aria-hidden="true">
-          <g transform="rotate(135 70 70)">
-            <circle
-              cx="70"
-              cy="70"
-              r={radius}
-              className="dial-track"
-              fill="none"
-              strokeDasharray={`${visibleArc} ${circumference}`}
-            />
-            {value > 0 && (
-              <circle
-                cx="70"
-                cy="70"
-                r={radius}
-                className="dial-progress"
-                fill="none"
-                strokeDasharray={`${progressArc} ${circumference}`}
-              />
-            )}
-          </g>
-          {Array.from({ length: 21 }, (_, i) => {
-            const a = -135 + i * 13.5;
-            const start = polar(a, i % 5 === 0 ? 45 : 49);
-            const end = polar(a, 54);
-            return <line key={i} x1={start.x} y1={start.y} x2={end.x} y2={end.y} className="dial-tick" />;
-          })}
-          <circle cx="70" cy="70" r="41" className="dial-inner-ring" />
-          <g transform={`rotate(${angle} 70 70)`}>
-            <line x1="70" y1="70" x2="70" y2="37" className="dial-indicator" />
-          </g>
-          <circle cx="70" cy="70" r="15" className="dial-hub" />
-          <circle cx="70" cy="70" r="2.6" className="dial-center" />
-        </svg>
-      </div>
-      <output className="dial-reading">{value}<small>%</small></output>
-      <div className="dial-fine-buttons">
-        <button type="button" aria-label={`Decrease ${side} ${metric} by 1 percent`} onClick={() => onAdjust(side, metric, value - 1)}>−</button>
-        <button type="button" aria-label={`Increase ${side} ${metric} by 1 percent`} onClick={() => onAdjust(side, metric, value + 1)}>+</button>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [shoes, setShoes] = useState({
     L: { arch: 50, softness: 50, mode: null },
@@ -252,7 +118,6 @@ export default function App() {
 
   const [selected, setSelected] = useState("L");
   const [panel, setPanel] = useState(null);
-  const [tuneMetric, setTuneMetric] = useState("softness");
   const [batteryOpen, setBatteryOpen] = useState(false);
   const [charging, setCharging] = useState(false);
   const [chargingPopup, setChargingPopup] = useState(false);
@@ -273,6 +138,10 @@ export default function App() {
   });
 
   const [dragging, setDragging] = useState(null);
+  // Set point and physical/display position move independently.
+  const [displayedArch, setDisplayedArch] = useState({ L: 50, R: 50 });
+  const [archSettling, setArchSettling] = useState({ L: false, R: false });
+  const settleTimers = useRef({});
   const [feedback, setFeedback] = useState("Left shoe selected");
   const [toast, setToast] = useState("");
 
@@ -333,34 +202,40 @@ export default function App() {
 
     if (!keepVisible) {
       softTimers.current[side] = setTimeout(() => {
-        if (document.activeElement === hardenRefs.current[side]) {
-          return;
-        }
-
         setSoftVisible((previous) => ({
           ...previous,
           [side]: false,
         }));
-      }, 2800);
+      }, 700);
     }
   }
 
-  function showRuler(side, keepVisible = false) {
+  function showRuler(side, keepVisible = false, delay = 900) {
     clearTimeout(rulerTimers.current[side]);
-
-    setRulerVisible((previous) => ({
-      ...previous,
-      [side]: true,
-    }));
-
+    setRulerVisible(previous => ({ ...previous, [side]: true }));
     if (!keepVisible) {
       rulerTimers.current[side] = setTimeout(() => {
-        setRulerVisible((previous) => ({
-          ...previous,
-          [side]: false,
-        }));
-      }, 900);
+        setRulerVisible(previous => ({ ...previous, [side]: false }));
+      }, delay);
     }
+  }
+
+  function finishArchMove(side) {
+    clearTimeout(settleTimers.current[side]);
+    clearTimeout(rulerTimers.current[side]);
+    const target = shoesRef.current[side].arch;
+    // Retain ruler and target reading through the whole movement.
+    setRulerVisible(previous => ({ ...previous, [side]: true }));
+    setArchSettling(previous => ({ ...previous, [side]: true }));
+    // Set display value on the next paint so CSS interpolates from the start.
+    requestAnimationFrame(() => {
+      setDisplayedArch(previous => ({ ...previous, [side]: target }));
+    });
+    settleTimers.current[side] = setTimeout(() => {
+      setArchSettling(previous => ({ ...previous, [side]: false }));
+      setRulerVisible(previous => ({ ...previous, [side]: false }));
+    }, 1240);
+    setFeedback(`${sideName(side)} arch set to ${target}%`);
   }
 
   function adjust(side, metric, value, quiet = false) {
@@ -398,6 +273,7 @@ export default function App() {
     const started = performance.now();
 
     showSoftness(side, true);
+    adjust(side, "softness", initial + direction, true);
 
     setRulerVisible((previous) => ({
       ...previous,
@@ -412,7 +288,7 @@ export default function App() {
       adjust(
         side,
         "softness",
-        initial + direction * elapsed * 15,
+        initial + direction * (1 + elapsed * 32),
         true
       );
 
@@ -451,7 +327,7 @@ export default function App() {
     }
 
     if (previous.kind === "arch") {
-      showRuler(previous.side);
+      finishArchMove(previous.side);
     }
 
     if (previous.harden) {
@@ -488,7 +364,7 @@ export default function App() {
 
     holdTimer.current = setTimeout(
       () => startHold(harden ? -1 : 1),
-      harden ? 300 : 420
+      160
     );
   }
 
@@ -509,6 +385,10 @@ export default function App() {
 
       if (Math.abs(dy) > Math.abs(dx) * 1.2) {
         current.kind = "arch";
+        clearTimeout(settleTimers.current[current.side]);
+        clearTimeout(rulerTimers.current[current.side]);
+        setArchSettling(previous => ({ ...previous, [current.side]: false }));
+        setDisplayedArch(previous => ({ ...previous, [current.side]: current.initialArch }));
         setDragging(current.side);
 
         setSoftVisible((previous) => ({
@@ -576,7 +456,7 @@ export default function App() {
     );
 
     if (metric === "arch") {
-      showRuler(side);
+      finishArchMove(side);
     } else {
       showSoftness(side);
     }
@@ -591,15 +471,12 @@ export default function App() {
   }
 
   function applyMode(mode) {
+    setDisplayedArch({ L: PRESETS[mode].arch, R: PRESETS[mode].arch });
     updateShoes({
-      ...shoesRef.current,
-      [selected]: {
-        ...PRESETS[mode],
-        mode,
-      },
+      L: { ...PRESETS[mode], mode },
+      R: { ...PRESETS[mode], mode },
     });
-
-    announce(`${sideName(selected)} shoe · ${mode}`, false);
+    setFeedback(`${mode} applied to both shoes`);
   }
 
   function resetSelected() {
@@ -613,6 +490,13 @@ export default function App() {
     });
 
     announce(`${sideName(selected)} shoe reset`, false);
+  }
+
+  function resetSoftness(side) {
+    selectSide(side);
+    adjust(side, "softness", 50, true);
+    showSoftness(side);
+    setFeedback(`${sideName(side)} softness reset · 50%`);
   }
 
   function openBattery() {
@@ -741,6 +625,9 @@ export default function App() {
 
       Object.values(softTimers.current).forEach(clearTimeout);
       Object.values(rulerTimers.current).forEach(clearTimeout);
+      Object.values(settleTimers.current).forEach(clearTimeout);
+      setArchSettling({ L: false, R: false });
+      setDisplayedArch({ L: shoesRef.current.L.arch, R: shoesRef.current.R.arch });
 
       setDragging(null);
       setSoftVisible({ L: false, R: false });
@@ -768,6 +655,7 @@ export default function App() {
 
       Object.values(softTimers.current).forEach(clearTimeout);
       Object.values(rulerTimers.current).forEach(clearTimeout);
+      Object.values(settleTimers.current).forEach(clearTimeout);
 
       gesture.current = null;
     };
@@ -793,6 +681,7 @@ export default function App() {
               dragging === side ? "dragging" : "",
               softVisible[side] ? "show-softness" : "",
               rulerVisible[side] ? "show-ruler" : "",
+              archSettling[side] ? "arch-settling" : "",
             ]
               .filter(Boolean)
               .join(" ");
@@ -801,7 +690,7 @@ export default function App() {
               <article
                 key={side}
                 className={className}
-                style={{ "--letter-offset": `${(50 - shoe.arch) * 1.44}px` }}
+                style={{ "--letter-offset": `${(50 - displayedArch[side]) * 1.44}px` }}
                 tabIndex={0}
                 aria-label={`${sideName(side)} shoe. Arch ${
                   shoe.arch
@@ -825,7 +714,7 @@ export default function App() {
                 <div
                   className="letter-stage"
                   style={{
-                    "--offset": `${(50 - shoe.arch) * 1.44}px`,
+                    "--offset": `${(50 - displayedArch[side]) * 1.44}px`,
                   }}
                 >
                   <div
@@ -870,13 +759,17 @@ export default function App() {
                   />
                 </div>
 
-                <Ruler value={shoe.arch} />
+                <Ruler
+                  value={shoe.arch}
+                  markerValue={displayedArch[side]}
+                  animating={archSettling[side]}
+                />
 
                 <button
                   ref={(element) => {
                     hardenRefs.current[side] = element;
                   }}
-                  className="harden"
+                  className="harden softness-minus"
                   aria-label={`Hold to decrease ${sideName(
                     side
                   ).toLowerCase()} shoe softness`}
@@ -892,7 +785,7 @@ export default function App() {
                   onFocus={() => showSoftness(side, true)}
                   onBlur={() => showSoftness(side)}
                   onClick={(event) => {
-                    // 键盘或辅助技术激活时减少 5%。
+                    // Keyboard activation uses the same minus control.
                     if (event.detail !== 0) return;
 
                     selectSide(side);
@@ -902,6 +795,18 @@ export default function App() {
                       shoesRef.current[side].softness - 5
                     );
                     showSoftness(side);
+                  }}
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  className={`softness-reset ${softVisible[side] ? "visible" : ""}`}
+                  aria-label={`Reset ${sideName(side)} softness to 50 percent`}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    resetSoftness(side);
                   }}
                 >
                   ×
@@ -915,35 +820,12 @@ export default function App() {
           {toast}
         </div>
 
-        <nav className="bottom-bar" aria-label="Shoe controls">
-          <button
-            className="nav-button active"
-            onClick={() => showSoftness(selected)}
-          >
-            <span className="nav-icon">
-              <NavIcon type="control" />
-            </span>
-            <span>CONTROL</span>
-          </button>
-
-          <button
-            className="nav-button"
-            onClick={() => openPanel("mode")}
-          >
+        <nav className="bottom-bar mode-only-bar" aria-label="Shoe controls">
+          <button className="nav-button" onClick={() => openPanel("mode")}>
             <span className="nav-icon">
               <NavIcon type="mode" />
             </span>
             <span>MODE</span>
-          </button>
-
-          <button
-            className="nav-button"
-            onClick={() => openPanel("adjust")}
-          >
-            <span className="nav-icon">
-              <NavIcon type="tune" />
-            </span>
-            <span>TUNE</span>
           </button>
         </nav>
 
@@ -1091,7 +973,7 @@ export default function App() {
 
             <div className="sheet-header">
               <h2 id="sheetTitle">
-                {panel === "mode" ? "Your modes" : "Fine tune"}
+                Your modes
               </h2>
 
               <button
@@ -1104,26 +986,8 @@ export default function App() {
             </div>
 
             <p className="sheet-caption">
-              {panel === "mode"
-                ? "Choose a preset for the selected shoe."
-                : "Adjust arch height and cushion softness."}
+              Choose a preset for both shoes.
             </p>
-
-            {panel === "mode" && <div
-              className="side-tabs"
-              role="group"
-              aria-label="Select shoe"
-            >
-              {["L", "R"].map((side) => (
-                <button
-                  key={side}
-                  aria-pressed={selected === side}
-                  onClick={() => selectSide(side)}
-                >
-                  {sideName(side).toUpperCase()} SHOE
-                </button>
-              ))}
-            </div>}
 
             {panel === "mode" ? (
               <div className="mode-list">
@@ -1131,18 +995,18 @@ export default function App() {
                   <button
                     key={mode}
                     className="mode-option"
-                    aria-pressed={shoes[selected].mode === mode}
+                    aria-pressed={shoes.L.mode === mode && shoes.R.mode === mode}
                     onClick={() => applyMode(mode)}
                   >
                     <strong>{mode.toUpperCase()}</strong>
                     <span className="mode-balance" aria-hidden="true">
                       <span
                         className="mode-balance-fill mode-balance-left"
-                        style={{ width: `${12 + values.softness * 0.38}%` }}
+                        style={{ width: `${12 + values.softness * 0.30}%` }}
                       />
                       <span
                         className="mode-balance-fill mode-balance-right"
-                        style={{ width: `${12 + values.arch * 0.38}%` }}
+                        style={{ width: `${12 + values.arch * 0.30}%` }}
                       />
                     </span>
                     <span className="mode-balance-labels">
@@ -1152,30 +1016,7 @@ export default function App() {
                   </button>
                 ))}
               </div>
-            ) : (
-              <div className="tune-controls">
-                <div className="tune-switch" role="group" aria-label="Select adjustment">
-                  <button type="button" aria-pressed={tuneMetric === "softness"} onClick={() => setTuneMetric("softness")}>CUSHION</button>
-                  <button type="button" aria-pressed={tuneMetric === "arch"} onClick={() => setTuneMetric("arch")}>ARCH</button>
-                </div>
-                <div className="dial-pair">
-                  {["L", "R"].map((side) => (
-                    <RotaryDial
-                      key={`${side}-${tuneMetric}`}
-                      side={side}
-                      metric={tuneMetric}
-                      value={shoes[side][tuneMetric]}
-                      onAdjust={(target, metric, next) => adjust(target, metric, next, true)}
-                    />
-                  ))}
-                </div>
-                <div className="tune-footer">
-                  <span>{tuneMetric === "softness" ? "Cushion softness" : "Arch support"}</span>
-                  <span>L / R INDEPENDENT</span>
-                </div>
-                <p className="tune-hint">ROTATE TO ADJUST · ± FOR 1% STEPS</p>
-              </div>
-            )}
+            ) : null}
 
             {panel === "mode" && <p className="sheet-feedback" role="status">{feedback}</p>}
           </section>
@@ -1190,7 +1031,6 @@ export default function App() {
         </aside>
       )}
 
-      <div className="home-indicator" aria-hidden="true" />
     </main>
   );
 }
